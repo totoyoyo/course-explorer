@@ -1,15 +1,13 @@
-import React from 'react';
-import './App.css';
-import {CircularPacking} from "./charts/CircularPacking";
+import React from "react";
+import "./App.css";
+import { IndicatorsBoard } from "./pages/IndicatorsBoard/IndicatorsBoard";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <CircularPacking/>
-      </header>
-    </div>
-  );
+	return (
+		<div className="App">
+			<IndicatorsBoard />
+		</div>
+	);
 }
 
 export default App;
