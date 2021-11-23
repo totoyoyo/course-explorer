@@ -5,13 +5,13 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { store } from "./states/store";
+import CircularPacking from "./components/CircularPacking/CircularPacking";
 
 ReactDOM.render(
 	<Provider store={store}>
 		<React.StrictMode>
-			<App />
+			<CircularPacking data={[]} />
 		</React.StrictMode>
-		,
 	</Provider>,
 	document.getElementById("root")
 );
