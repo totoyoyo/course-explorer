@@ -39,7 +39,7 @@ const draw = (props) => {
 			d3.select(this).attr("stroke", null);
 		})
 		.on("click", (event, d) => focus !== d && (zoom(event, d), event.stopPropagation()));
-	// Draws the labels --> not working yet
+	// Draws the labels
 	const label = svg
 		.append("g")
 		.style("font", "10px sans-serif")
@@ -58,7 +58,7 @@ const draw = (props) => {
 		});
 
 	display([root.x, root.y, root.r * 2]);
-
+	//Displays lables and circles
 	function display(v) {
 		const k = width / v[2];
 
@@ -70,7 +70,7 @@ const draw = (props) => {
 		});
 		circle.attr("r", (d) => d.r * k);
 	}
-
+	//Zoom function --> displaying lables while zooming does not work yet
 	function zoom(event, d) {
 		if (d.height === 0) {
 			return;
