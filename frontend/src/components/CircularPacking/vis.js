@@ -70,7 +70,7 @@ const draw = (props) => {
 		});
 		circle.attr("r", (d) => d.r * k);
 	}
-	//Zoom function --> displaying lables while zooming does not work yet
+	//Zoom function
 	function zoom(event, d) {
 		if (d.height === 0) {
 			return;
@@ -95,7 +95,9 @@ const draw = (props) => {
 			.transition(transition)
 			.style("fill-opacity", (d) => (d.parent === focus ? 1 : 0))
 			.on("start", function (d) {
-				if (d.parent === focus) this.style.display = "inline";
+				if (d.parent === focus) {
+					return (this.style.display = "inline");
+				}
 			})
 			.on("end", function (d) {
 				if (d.parent !== focus) this.style.display = "none";

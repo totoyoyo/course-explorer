@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import draw from "./vis";
 
 export interface NodeDatum {
-	text: string;
+	name: string;
 }
 
 export interface NodeGroup {
@@ -17,21 +17,21 @@ export interface CircularPackingProps {
 const DATA = [
 	{
 		name: "indicator1",
-		children: [{ text: "student1" }, { text: "student2" }]
+		children: [{ name: "student1" }, { name: "student2" }]
 	},
 	{
 		name: "indicator2",
 		children: [
-			{ text: "student3" },
-			{ text: "student4" },
-			{ text: "student5" },
-			{ text: "student6" },
-			{ text: "student7" }
+			{ name: "student3" },
+			{ name: "student4" },
+			{ name: "student5" },
+			{ name: "student6" },
+			{ name: "student7" }
 		]
 	},
 	{
 		name: "indicator3",
-		children: [{ text: "student8" }, { text: "student9" }, { text: "student10" }]
+		children: [{ name: "student8" }, { name: "student9" }, { name: "student10" }]
 	}
 ];
 export default function CircularPacking(props: CircularPackingProps) {
