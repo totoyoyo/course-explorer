@@ -1,10 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import indicatorsReducer from "./indicators/indicatorsSlice";
-import studentReducer from "./student/studentSlice";
+import indicatorsReducer from "./indicatorsSlice";
+import studentReducer from "./studentSlice";
+import outcomeReducer from "./outcomeSlice";
+import timeIntervalReducer from "./timeIntervalSlice";
 
 export const store = configureStore({
 	reducer: {
+		outcome: outcomeReducer,
 		indicators: indicatorsReducer,
+		timeInterval: timeIntervalReducer,
 		student: studentReducer
 	}
 });

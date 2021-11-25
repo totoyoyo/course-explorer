@@ -1,16 +1,29 @@
-import React, { useState, useEffect } from "react";
-import draw, { NodeGroup } from "./vis";
+import React, { useEffect } from "react";
+import { draw } from "./vis";
+
+export interface NodeGroup {
+	id: string;
+	name: string;
+	children?: NodeGroup[];
+}
+
+export interface Link {
+	source: string;
+	target: string;
+	value: number;
+}
 
 export interface CircularPackingProps {
-	data: NodeGroup[];
+	nodes: NodeGroup[];
+	links: Link[];
 }
 
 export default function CircularPacking(props: CircularPackingProps) {
-	const [data, setData] = useState<NodeGroup[]>(props.data);
-
 	useEffect(() => {
-		draw(data);
-	}, [data]);
+		if (props.nodes.length > 0) {
+			draw(props.nodes, props.links);
+		}
+	}, [props]);
 
 	return <div className="vis-circular-packing" />;
 }
