@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../states/hooks";
 import { IndicatorsState, QueriedIndicator, selectIndicators } from "../../states/indicatorsSlice";
-import { getTime, toDate, formatISO, min, max } from "date-fns";
+import { getTime, formatISO, min, max } from "date-fns";
 import {
 	AppBar as MuiAppBar,
 	AppBarProps as MuiAppBarProps,
@@ -17,7 +17,11 @@ import { styled, useTheme } from "@mui/material/styles";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import { DateTimePicker } from "@mui/lab";
 import { Sidebar } from "./Sidebar";
-import CircularPacking, { NodeGroup } from "../../components/CircularPacking/CircularPacking";
+import CircularPacking, {
+	CircularPackingProps,
+	Link,
+	NodeGroup
+} from "../../components/CircularPacking/CircularPacking";
 import { IndicatorEditorDialog, IndicatorEditorDialogProps } from "./IndicatorEditorDialog";
 import { OutcomeState, QueriedOutcome, selectOutcome } from "../../states/outcomeSlice";
 
@@ -71,11 +75,6 @@ function TimeSlider(props: TimeSliderProps) {
 					max={getTime(max)}
 					marks={marks}
 					value={value || getTime(min)}
-					// onChange={(event: React.SyntheticEvent | Event, value: number | Array<number>) => {
-					// 	if (typeof value === "number") {
-					// 		setValue(value);
-					// 	}
-					// }}
 					onChangeCommitted={(event: React.SyntheticEvent | Event, value: number | Array<number>) => {
 						if (typeof value === "number") {
 							props.onChange(value);
@@ -93,7 +92,7 @@ function TimeSlider(props: TimeSliderProps) {
 			</Stack>
 		);
 	} else {
-		return <TextField>No query results yet!</TextField>;
+		return <Typography>No query results yet!</Typography>;
 	}
 }
 
@@ -105,7 +104,7 @@ export function IndicatorsBoard() {
 	const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 	const [dialogProps, setDialogProps] = useState<IndicatorEditorDialogProps>({ isOpened: false });
 	const [sliderIndex, setSliderIndex] = useState<number | undefined>(undefined);
-	const [packData, setPackData] = useState<NodeGroup[]>([]);
+	const [packProps, setPackProps] = useState<CircularPackingProps>({ nodes: [], links: [] });
 	const dispatch = useAppDispatch();
 	const theme = useTheme();
 
@@ -167,60 +166,76 @@ export function IndicatorsBoard() {
 		justifyContent: "flex-end"
 	}));
 
-	const computeNodeGroups = (index: number): NodeGroup[] => {
-		if (!queriedOutcome) {
-			return [];
-		}
-
-		const outcomeStudents: string[] = queriedOutcome.students.get(index) || [];
-		const indicatorStudents = queriedIndicators.map((i) => {
-			return { name: i.name, students: i.students.get(index) || [] };
-		});
-		const outcomeNode = {
-			id: "outcome",
-			name: "outcome",
+	const constructNodeGroup = (name: string, tp: string[], fp: string[]): NodeGroup => {
+		return {
+			id: name,
+			name: name,
 			children: [
-				{
-					id: "outcome-true",
-					name: "true",
-					children: outcomeStudents.map((s) => {
-						return { id: `outcome-true-${s}`, name: s, value: 1 };
-					})
-				}
+				...(tp.length === 0
+					? []
+					: [
+							{
+								id: `${name}-true`,
+								name: "true",
+								children: tp.map((s) => {
+									return { id: `${name}-true-${s}`, name: s };
+								})
+							}
+					  ]),
+				...(fp.length === 0
+					? []
+					: [
+							{
+								id: `${name}-false`,
+								name: "false",
+								children: fp.map((s) => {
+									return { id: `${name}-false-${s}`, name: s };
+								})
+							}
+					  ])
 			]
 		};
+	};
+
+	const computeCircularPackProps = (
+		outcomeStudents: string[],
+		indicatorStudents: { name: string; students: string[] }[]
+	): CircularPackingProps => {
 		const outcomeSet = new Set(outcomeStudents);
-		const indicatorNodes = indicatorStudents.map((i: { name: string; students: string[] }) => {
-			let intersect: string[] = [];
-			let diff: string[] = [];
-			i.students.forEach((s) => (outcomeSet.has(s) ? intersect.push(s) : diff.push(s)));
-			return {
-				id: i.name,
-				name: i.name,
-				children: [
-					{
-						id: `${i.name}-true`,
-						name: "true",
-						children: intersect.map((s) => {
-							return { id: `${i.name}-true-${s}`, name: s, value: 1 };
-						})
-					},
-					{
-						id: `${i.name}-false`,
-						name: "false",
-						children: diff.map((s) => {
-							return { id: `${i.name}-false-${s}`, name: s, value: 1 };
-						})
+		const props: { nodeGroup: NodeGroup; link: Link }[] = indicatorStudents.map(
+			(i: { name: string; students: string[] }) => {
+				let tp: string[] = [],
+					fp: string[] = [],
+					fn = [];
+				const indicatorSet = new Set(i.students);
+				i.students.forEach((s) => (outcomeSet.has(s) ? tp.push(s) : fp.push(s)));
+				fn = outcomeStudents.filter((s: string) => !indicatorSet.has(s));
+				let f1 = tp.length / (tp.length + 0.5 * (fp.length + fn.length));
+				return {
+					nodeGroup: constructNodeGroup(i.name, tp, fp),
+					link: {
+						source: "Outcome",
+						target: i.name,
+						value: f1
 					}
-				]
-			};
-		});
-		return [outcomeNode, ...indicatorNodes];
+				};
+			}
+		);
+		return {
+			nodes: [constructNodeGroup("Outcome", outcomeStudents, []), ...props.map((p) => p.nodeGroup)],
+			links: props.map((p) => p.link)
+		};
 	};
 
 	const onSliderChange = (date: number) => {
 		setSliderIndex(date);
-		setPackData(computeNodeGroups(date));
+		if (queriedOutcome) {
+			const outcomeStudents: string[] = queriedOutcome.students.get(date) || [];
+			const indicatorStudents = queriedIndicators.map((i) => {
+				return { name: i.name, students: i.students.get(date) || [] };
+			});
+			setPackProps(computeCircularPackProps(outcomeStudents, indicatorStudents));
+		}
 	};
 
 	return (
@@ -244,7 +259,7 @@ export function IndicatorsBoard() {
 			/>
 			<Main sidebarOpen={sidebarOpen}>
 				<SidebarHeader />
-				<CircularPacking nodes={packData} />
+				<CircularPacking {...packProps} />
 				<TimeSlider onChange={onSliderChange} value={sliderIndex} />
 				<IndicatorEditorDialog
 					isOpened={dialogProps.isOpened}

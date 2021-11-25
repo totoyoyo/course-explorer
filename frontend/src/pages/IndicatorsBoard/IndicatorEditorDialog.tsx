@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Stack, TextField } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from "@mui/material";
 import { useAppDispatch } from "../../states/hooks";
 import { Indicator, editIndicator, addIndicator } from "../../states/indicatorsSlice";
 

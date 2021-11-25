@@ -7,6 +7,7 @@ const pack = (data) =>
 		.padding(5)
 		.radius((d) => 10)(data);
 
+// recursively sets child pack x and y positions relative to its parent
 const setPackXY = (n, prevX, prevY, prevPX, prevPY) => {
 	n.pack_x = n.x - prevX + prevPX;
 	n.pack_y = n.y - prevY + prevPY;
@@ -38,35 +39,40 @@ let height = 900;
 let svg = d3.create("svg").attr("width", width).attr("height", height);
 let link = svg.append("g").attr("class", "links").attr("stroke-width", 1.5).attr("stroke", "black").selectAll("line");
 let node = svg.append("g").attr("class", "nodes").selectAll("circle");
+let label = svg.append("g").attr("class", "labels").selectAll("text");
 let simulation = d3
 	.forceSimulation(newNodes)
-	.velocityDecay(0.8)
+	.velocityDecay(0.9)
 	.force(
 		"link",
 		d3
 			.forceLink(links)
 			.id((d) => d.data.id)
-			.distance((d) => d.value * 100)
+			.distance((d) => 100 + (1 - d.value) * 300)
 	)
-	.force("x", d3.forceX().x(width * 0.5))
-	.force("y", d3.forceY().y(height * 0.5))
-	.force("charge", d3.forceManyBody().strength(-100))
+	.force("charge", d3.forceManyBody().strength(-200))
 	.force(
 		"collide",
 		d3.forceCollide().radius((d) => d.r)
 	)
 	.alphaTarget(1);
 
+// Source: https://observablehq.com/@d3/zoomable-circle-packing
 export const draw = (groups, newLinks) => {
 	d3.select(".vis-circular-packing").append(() => svg.node());
 	const root = pack(d3.hierarchy({ name: "root", children: groups }).sum((d) => 1));
-	const old = new Map(node.data().map((d) => [d.data.id, d]));
 	root.children.forEach((d) => {
 		d.pack_x = d.r;
 		d.pack_y = d.r;
 		setPackXY(d, d.x, d.y, d.pack_x, d.pack_y);
 	});
 	newNodes = root.descendants().slice(1);
+	newNodes.forEach((d) => {
+		if (d.data.id === "Outcome") {
+			d.fx = width / 2;
+			d.fy = height / 2;
+		}
+	});
 	node = node.data(newNodes, (d) => d.data.id);
 	node.exit().transition().attr("opacity", 0).remove();
 	node.transition()
@@ -102,24 +108,43 @@ export const draw = (groups, newLinks) => {
 		.append("line")
 		.call((link) => link.transition().attr("stroke-opacity", 1))
 		.merge(link);
+
+	label = label.data(newNodes, (d) => d.data.id);
+	label.exit().remove();
+	label = label
+		.enter()
+		.append("text")
+		.style("display", (d) => (d.depth === 1 ? "inline" : "none"))
+		.text((d) => d.data.name)
+		.merge(label);
+
 	simulation.nodes(newNodes);
 	simulation.force("link").links(links);
 	simulation.on("tick", ticked);
 	simulation.alpha(1).restart();
-};
 
-function ticked() {
-	node.attr("transform", (d) => {
-		if (d.depth === 1) {
-			return `translate(${d.x - d.r}, ${d.y - d.r})`;
-		} else if (d.depth > 1) {
-			const parents = d.ancestors();
-			const p = parents[parents.length - 2];
-			return `translate(${p.x - p.r}, ${p.y - p.r})`;
-		}
-	});
-	link.attr("x1", (d) => d.source.x)
-		.attr("y1", (d) => d.source.y)
-		.attr("x2", (d) => d.target.x)
-		.attr("y2", (d) => d.target.y);
-}
+	function ticked() {
+		// if top level node, translate based on force simulated x and y positions.
+		// children of a top level node should all base their translations on it.
+		const translateNode = (d) => {
+			if (d.depth === 1) {
+				return `translate(${d.x - d.r}, ${d.y - d.r})`;
+			} else if (d.depth > 1) {
+				const parents = d.ancestors();
+				const p = parents[parents.length - 2];
+				return `translate(${p.x - p.r}, ${p.y - p.r})`;
+			}
+		};
+
+		node.attr("transform", (d) => {
+			return translateNode(d);
+		});
+		label.attr("transform", (d) => {
+			return translateNode(d);
+		});
+		link.attr("x1", (d) => d.source.x)
+			.attr("y1", (d) => d.source.y)
+			.attr("x2", (d) => d.target.x)
+			.attr("y2", (d) => d.target.y);
+	}
+};

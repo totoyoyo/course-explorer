@@ -1,8 +1,3 @@
-import axios, { errorHandler } from "./handler";
-import { AxiosResponse } from "axios";
-import { Indicator } from "../states/indicatorsSlice";
-import { Outcome } from "../states/outcomeSlice";
-
 export interface QueryRequest {
 	start: string;
 	end: string;

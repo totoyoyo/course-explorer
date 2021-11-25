@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
-import QueryService, { QueryResponse, ResponseEntry } from "../services/queryService";
+import QueryService, { QueryResponse } from "../services/queryService";
 import { formatISO, milliseconds, parseISO } from "date-fns";
 import { Duration, Granularity } from "./timeIntervalSlice";
 
