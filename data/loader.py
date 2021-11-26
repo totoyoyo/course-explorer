@@ -1,5 +1,5 @@
 import db_connection
-import model.Student as student
+import model.defs as student
 import model.Clock as clock
 
 students = []
