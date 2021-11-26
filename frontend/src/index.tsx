@@ -5,11 +5,12 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { store } from "./states/store";
+import Histogram from "./components/Histogram/Histogram";
 
 ReactDOM.render(
 	<Provider store={store}>
 		<React.StrictMode>
-			<App />
+			<Histogram data={[]} />
 		</React.StrictMode>
 		,
 	</Provider>,
