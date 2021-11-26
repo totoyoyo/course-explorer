@@ -51,6 +51,18 @@ public class DSLGrammarBaseListener implements DSLGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterTime_op(DSLGrammarParser.Time_opContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTime_op(DSLGrammarParser.Time_opContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterBinary(DSLGrammarParser.BinaryContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -87,6 +99,42 @@ public class DSLGrammarBaseListener implements DSLGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterGranularity_result(DSLGrammarParser.Granularity_resultContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitGranularity_result(DSLGrammarParser.Granularity_resultContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArithmetic(DSLGrammarParser.ArithmeticContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArithmetic(DSLGrammarParser.ArithmeticContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterString(DSLGrammarParser.StringContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitString(DSLGrammarParser.StringContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTime(DSLGrammarParser.TimeContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -106,18 +154,6 @@ public class DSLGrammarBaseListener implements DSLGrammarListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitStudent_attribute(DSLGrammarParser.Student_attributeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterStudent(DSLGrammarParser.StudentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitStudent(DSLGrammarParser.StudentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -2,15 +2,18 @@
 grammar DSLGrammar;
 
 query : filter;
-// filter : logic | binary | time_op | time_between;
-filter : logic | binary | time;
+filter : logic | binary | time_op;
 logic : '('filter ('AND'|'OR') filter')' | '(''NOT' filter')';
+time_op : ('BEFORE'|'AFTER') time | 'BETWEEN' time time;
 binary : '('comparable ('>'|'<'|'<='|'>='|'!='|'==') comparable')';
-comparable : number | student_attribute | time;
-number : Number;
+comparable : number | time | string;
+number : Number | arithmetic | granularity_result | student_attribute;
+granularity_result : ('daily'|'weekly'|'monthly'|'final'|'sofar')
+                     '('student_attribute')';
+arithmetic : '('number ('+'|'-'|'*'|'/') number')';
+string : student_attribute | String;
 time : time_lit | student_attribute;
-student_attribute : student'.'attribute;
-student : String;
+student_attribute : 'student.'attribute;
 attribute : String;
 time_lit : 'time' '(' String ')';
 

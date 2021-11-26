@@ -37,6 +37,16 @@ public interface DSLGrammarListener extends ParseTreeListener {
 	 */
 	void exitLogic(DSLGrammarParser.LogicContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link DSLGrammarParser#time_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterTime_op(DSLGrammarParser.Time_opContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DSLGrammarParser#time_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitTime_op(DSLGrammarParser.Time_opContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link DSLGrammarParser#binary}.
 	 * @param ctx the parse tree
 	 */
@@ -67,6 +77,36 @@ public interface DSLGrammarListener extends ParseTreeListener {
 	 */
 	void exitNumber(DSLGrammarParser.NumberContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link DSLGrammarParser#granularity_result}.
+	 * @param ctx the parse tree
+	 */
+	void enterGranularity_result(DSLGrammarParser.Granularity_resultContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DSLGrammarParser#granularity_result}.
+	 * @param ctx the parse tree
+	 */
+	void exitGranularity_result(DSLGrammarParser.Granularity_resultContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DSLGrammarParser#arithmetic}.
+	 * @param ctx the parse tree
+	 */
+	void enterArithmetic(DSLGrammarParser.ArithmeticContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DSLGrammarParser#arithmetic}.
+	 * @param ctx the parse tree
+	 */
+	void exitArithmetic(DSLGrammarParser.ArithmeticContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DSLGrammarParser#string}.
+	 * @param ctx the parse tree
+	 */
+	void enterString(DSLGrammarParser.StringContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DSLGrammarParser#string}.
+	 * @param ctx the parse tree
+	 */
+	void exitString(DSLGrammarParser.StringContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link DSLGrammarParser#time}.
 	 * @param ctx the parse tree
 	 */
@@ -86,16 +126,6 @@ public interface DSLGrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitStudent_attribute(DSLGrammarParser.Student_attributeContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link DSLGrammarParser#student}.
-	 * @param ctx the parse tree
-	 */
-	void enterStudent(DSLGrammarParser.StudentContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link DSLGrammarParser#student}.
-	 * @param ctx the parse tree
-	 */
-	void exitStudent(DSLGrammarParser.StudentContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DSLGrammarParser#attribute}.
 	 * @param ctx the parse tree
