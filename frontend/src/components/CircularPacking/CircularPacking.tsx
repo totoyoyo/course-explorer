@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { draw } from "./vis";
+import { draw, select } from "./vis";
 
 export interface NodeGroup {
 	id: string;
@@ -23,6 +23,7 @@ export default function CircularPacking(props: CircularPackingProps) {
 		if (props.nodes.length > 0) {
 			draw(props.nodes, props.links);
 		}
+		select(props.nodes, props.links);
 	}, [props]);
 
 	return <div className="vis-circular-packing" />;

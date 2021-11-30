@@ -57,6 +57,63 @@ let simulation = d3
 	)
 	.alphaTarget(1);
 
+let selection_links = svg
+	.append("g")
+	.attr("class", "selection_links")
+	.attr("stroke-width", 1)
+	.attr("stroke", "orange")
+	.selectAll("line");
+
+let get_ancestor_post = (data) => {
+	const parents = data.ancestors();
+	const p = parents[parents.length - 2];
+	return [p.x - p.r, p.y - p.r];
+};
+
+let get_links_between_nodes = (nodes) => {
+	return nodes.map((item, index) => ({ source: item, target: nodes[(index + 1) % nodes.length] }));
+};
+
+export const select = (groups, newLinks) => {
+	const svg_selection = node;
+	svg_selection.on("mouseover", mouseover);
+	svg_selection.on("mouseout", mouseout);
+
+	function mouseover(event, node) {
+		console.log("this is event", event);
+		console.log("this is node", node);
+		console.log("this is node data", node.data);
+		const current_name = node.data.name;
+		if (current_name.includes("student")) {
+			const current = d3.selectAll("circle").filter((d) => d.data.name.includes(current_name));
+			let curr_data = current.data();
+			let linkNodes = get_links_between_nodes(curr_data);
+			// current.each((d, index) => (linkNodes[index] = d));
+			var transforms = current.attr("transform");
+			console.log("this selection", current);
+			console.log("this linkNodes", linkNodes);
+			let newLines = selection_links
+				.data(linkNodes)
+				.enter()
+				.append("line")
+				.attr("x1", (d) => get_ancestor_post(d.source)[0] + d.source.pack_x)
+				.attr("y1", (d) => get_ancestor_post(d.source)[1] + d.source.pack_y)
+				.attr("x2", (d) => get_ancestor_post(d.target)[0] + d.target.pack_x)
+				.attr("y2", (d) => get_ancestor_post(d.target)[1] + d.target.pack_y);
+			current.transition().duration(500).style("fill", "orange").attr("r", 20);
+		}
+	}
+	function mouseout(event, node) {
+		const current_name = node.data.name;
+		if (current_name.includes("student")) {
+			const current = d3.selectAll("circle").filter((d) => d.data.name.includes(current_name));
+			current.transition().duration(500).attr("r", 10).style("fill", getColor);
+			const selection = d3.select(".selection_links").selectAll("line").remove();
+			selection.remove();
+		}
+	}
+};
+
 // Source: https://observablehq.com/@d3/zoomable-circle-packing
 export const draw = (groups, newLinks) => {
 	d3.select(".vis-circular-packing").append(() => svg.node());
@@ -94,7 +151,9 @@ export const draw = (groups, newLinks) => {
 		.selection()
 		.merge(node);
 	links = newLinks.map((l) => Object.assign({}, l));
+	console.log("current links", links);
 	link = link.data(links, (d) => `${d.source}-${d.target}`);
+	console.log("data link", link);
 	link.exit()
 		.transition()
 		.attr("stroke-opacity", 0)
@@ -108,6 +167,7 @@ export const draw = (groups, newLinks) => {
 		.append("line")
 		.call((link) => link.transition().attr("stroke-opacity", 1))
 		.merge(link);
+	console.log("here's the links", link);
 
 	label = label.data(newNodes, (d) => d.data.id);
 	label.exit().remove();
@@ -117,6 +177,11 @@ export const draw = (groups, newLinks) => {
 		.style("display", (d) => (d.depth === 1 ? "inline" : "none"))
 		.text((d) => d.data.name)
 		.merge(label);
+
+	// node.on("click", function (e, d) {
+	// 	console.log(e, "dam", d);
+	// 	d3.select(this).style("fill", "orange");
+	// });
 
 	simulation.nodes(newNodes);
 	simulation.force("link").links(links);
