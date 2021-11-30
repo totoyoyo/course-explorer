@@ -10,7 +10,11 @@ export const store = configureStore({
 		indicators: indicatorsReducer,
 		timeInterval: timeIntervalReducer,
 		student: studentReducer
-	}
+	},
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware({
+			serializableCheck: false
+		})
 });
 
 export type RootState = ReturnType<typeof store.getState>;

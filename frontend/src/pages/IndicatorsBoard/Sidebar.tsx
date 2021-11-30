@@ -107,6 +107,7 @@ function IndicatorsListSetting(props: IndicatorsListProps) {
 	const listItems = indicators.map((i: Indicator) => {
 		return (
 			<ListItem
+				key={i.name}
 				secondaryAction={
 					<div>
 						<IconButton edge="end" aria-label="more" onClick={handleMoreClick}>
