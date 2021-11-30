@@ -24,6 +24,7 @@ import CircularPacking, {
 } from "../../components/CircularPacking/CircularPacking";
 import { IndicatorEditorDialog, IndicatorEditorDialogProps } from "./IndicatorEditorDialog";
 import { OutcomeState, QueriedOutcome, selectOutcome } from "../../states/outcomeSlice";
+import { selectAllStudents } from "../../states/allStudentsSlice";
 
 const SIDEBAR_WIDTH = 250; // width of sidebar in px
 
@@ -105,6 +106,7 @@ export function IndicatorsBoard() {
 	const [dialogProps, setDialogProps] = useState<IndicatorEditorDialogProps>({ isOpened: false });
 	const [sliderIndex, setSliderIndex] = useState<number | undefined>(undefined);
 	const [packProps, setPackProps] = useState<CircularPackingProps>({ nodes: [], links: [] });
+	const allStudents = useAppSelector(selectAllStudents).students;
 	const dispatch = useAppDispatch();
 	const theme = useTheme();
 
