@@ -24,6 +24,9 @@ import CircularPacking, {
 } from "../../components/CircularPacking/CircularPacking";
 import { IndicatorEditorDialog, IndicatorEditorDialogProps } from "./IndicatorEditorDialog";
 import { OutcomeState, QueriedOutcome, selectOutcome } from "../../states/outcomeSlice";
+import VizSwitcher from "../../components/VisSwitcher/VisSwitcher";
+import { RatioGroup, RatioProps } from "../../components/PieChartRatios/PieChartRatios";
+import { selectAllStudents } from "../../states/allStudentsSlice";
 
 const SIDEBAR_WIDTH = 250; // width of sidebar in px
 
@@ -101,10 +104,12 @@ export function IndicatorsBoard() {
 	const queriedIndicators: QueriedIndicator[] = indicatorsState.queriedIndicators;
 	const outcomeState: OutcomeState = useAppSelector(selectOutcome);
 	const queriedOutcome: QueriedOutcome | undefined = outcomeState.queriedOutcome;
+	const allStudents = useAppSelector(selectAllStudents).students;
 	const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 	const [dialogProps, setDialogProps] = useState<IndicatorEditorDialogProps>({ isOpened: false });
 	const [sliderIndex, setSliderIndex] = useState<number | undefined>(undefined);
 	const [packProps, setPackProps] = useState<CircularPackingProps>({ nodes: [], links: [] });
+	const [ratioProps, setRatioProps] = useState<RatioProps>({ nodes: [], links: [] });
 	const dispatch = useAppDispatch();
 	const theme = useTheme();
 
@@ -227,6 +232,60 @@ export function IndicatorsBoard() {
 		};
 	};
 
+	const constructRatioGroup = (
+		name: string,
+		tp: string[],
+		fp: string[],
+		all: string[],
+		realn: string[]
+	): RatioGroup => {
+		const n = all.filter((i) => tp.includes(i) || fp.includes(i));
+		const tn = n.filter((i) => realn.includes(i));
+		const fn = n.filter((i) => !realn.includes(i));
+		return {
+			id: name,
+			name: name,
+			truePositives: tp.length,
+			falsePositives: fp.length,
+			trueNegatives: tn.length,
+			falseNegatives: fn.length
+		};
+	};
+
+	const computeRatioProps = (
+		outcomeStudents: string[],
+		indicatorStudents: { name: string; students: string[] }[],
+		allStudents: string[]
+	): RatioProps => {
+		const outcomeSet = new Set(outcomeStudents);
+		const props: { nodeGroup: RatioGroup; link: Link }[] = indicatorStudents.map(
+			(i: { name: string; students: string[] }) => {
+				let tp: string[] = [],
+					fp: string[] = [],
+					fn = [];
+				const indicatorSet = new Set(i.students);
+				i.students.forEach((s) => (outcomeSet.has(s) ? tp.push(s) : fp.push(s)));
+				fn = outcomeStudents.filter((s: string) => !indicatorSet.has(s));
+				let f1 = tp.length / (tp.length + 0.5 * (fp.length + fn.length));
+				return {
+					nodeGroup: constructRatioGroup(i.name, tp, fp, allStudents, outcomeStudents),
+					link: {
+						source: "Outcome",
+						target: i.name,
+						value: f1
+					}
+				};
+			}
+		);
+		return {
+			nodes: [
+				constructRatioGroup("Outcome", outcomeStudents, [], allStudents, outcomeStudents),
+				...props.map((p) => p.nodeGroup)
+			],
+			links: props.map((p) => p.link)
+		};
+	};
+
 	const onSliderChange = (date: number) => {
 		setSliderIndex(date);
 		if (queriedOutcome) {
@@ -235,6 +294,7 @@ export function IndicatorsBoard() {
 				return { name: i.name, students: i.students.get(date) || [] };
 			});
 			setPackProps(computeCircularPackProps(outcomeStudents, indicatorStudents));
+			setRatioProps(computeRatioProps(outcomeStudents, indicatorStudents, allStudents));
 		}
 	};
 
@@ -259,7 +319,8 @@ export function IndicatorsBoard() {
 			/>
 			<Main sidebarOpen={sidebarOpen}>
 				<SidebarHeader />
-				<CircularPacking {...packProps} />
+
+				<VizSwitcher circularPacking={packProps} selectedVis="pieCharts" ratioChart={ratioProps} />
 				<TimeSlider onChange={onSliderChange} value={sliderIndex} />
 				<IndicatorEditorDialog
 					isOpened={dialogProps.isOpened}
