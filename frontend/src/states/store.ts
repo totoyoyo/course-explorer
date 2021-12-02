@@ -12,7 +12,11 @@ export const store = configureStore({
 		timeInterval: timeIntervalReducer,
 		student: studentReducer,
 		allStudents: allStudentsReducer
-	}
+	},
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware({
+			serializableCheck: false
+		})
 });
 
 export type RootState = ReturnType<typeof store.getState>;
