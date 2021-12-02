@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import indicatorsReducer from "./indicatorsSlice";
 import studentReducer from "./studentSlice";
 import outcomeReducer from "./outcomeSlice";
+import allStudentsReducer from "./allStudentsSlice";
 import timeIntervalReducer from "./timeIntervalSlice";
 
 export const store = configureStore({
@@ -9,7 +10,8 @@ export const store = configureStore({
 		outcome: outcomeReducer,
 		indicators: indicatorsReducer,
 		timeInterval: timeIntervalReducer,
-		student: studentReducer
+		student: studentReducer,
+		allStudents: allStudentsReducer
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({
