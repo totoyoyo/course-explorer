@@ -237,8 +237,9 @@ export function IndicatorsBoard() {
 		tp: string[],
 		fp: string[],
 		all: string[],
-		realn: string[]
+		real: string[]
 	): RatioGroup => {
+		const realn = all.filter((i) => !real.includes(i));
 		const n = all.filter((i) => !tp.includes(i) && !fp.includes(i));
 		const tn = n.filter((i) => realn.includes(i));
 		const fn = n.filter((i) => !realn.includes(i));

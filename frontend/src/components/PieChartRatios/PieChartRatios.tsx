@@ -28,5 +28,5 @@ export default function PieChartRatios(props: RatioProps) {
 		}
 	}, [props]);
 
-	return <div className="vis-pie-chart" />;
+	return <div className="vis-pie-chart" style={{ paddingBottom: 25 }} />;
 }
