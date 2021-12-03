@@ -42,6 +42,7 @@ import {
 } from "../../states/timeIntervalSlice";
 import { DateTimePicker } from "@mui/lab";
 import { IndicatorEditorAction, IndicatorEditorDialogProps } from "./IndicatorEditorDialog";
+import { queryStudentList } from "../../states/allStudentsSlice";
 
 function OutcomeSetting() {
 	const outcomeState: OutcomeState = useAppSelector(selectOutcome);
@@ -107,6 +108,7 @@ function IndicatorsListSetting(props: IndicatorsListProps) {
 	const listItems = indicators.map((i: Indicator) => {
 		return (
 			<ListItem
+				key={i.name}
 				secondaryAction={
 					<div>
 						<IconButton edge="end" aria-label="more" onClick={handleMoreClick}>
@@ -237,6 +239,7 @@ export function Sidebar(props: SidebarProps) {
 	const handleSubmitClick = () => {
 		dispatch(queryAllIndicators());
 		dispatch(queryOutcome());
+		dispatch(queryStudentList());
 	};
 
 	const SidebarHeader = styled("div")(({ theme }) => ({
