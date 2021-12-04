@@ -24,8 +24,7 @@ import CircularPacking, {
 } from "../../components/CircularPacking/CircularPacking";
 import { IndicatorEditorDialog, IndicatorEditorDialogProps } from "./IndicatorEditorDialog";
 import { OutcomeState, QueriedOutcome, selectOutcome } from "../../states/outcomeSlice";
-import VizSwitcher from "../../components/VisSwitcher/VisSwitcher";
-import { RatioGroup, RatioProps } from "../../components/PieChartRatios/PieChartRatios";
+import PieChartRatios, { RatioGroup, RatioProps } from "../../components/PieChartRatios/PieChartRatios";
 import { selectAllStudents } from "../../states/allStudentsSlice";
 
 const SIDEBAR_WIDTH = 250; // width of sidebar in px
@@ -321,7 +320,9 @@ export function IndicatorsBoard() {
 			<Main sidebarOpen={sidebarOpen}>
 				<SidebarHeader />
 
-				<VizSwitcher circularPacking={packProps} selectedVis="pieCharts" ratioChart={ratioProps} />
+				<CircularPacking {...packProps} />
+				<PieChartRatios {...ratioProps} />
+
 				<TimeSlider onChange={onSliderChange} value={sliderIndex} />
 				<IndicatorEditorDialog
 					isOpened={dialogProps.isOpened}

@@ -4,8 +4,8 @@ var x_var = "name";
 
 var keys = ["truePositives", "falsePositives", "trueNegatives", "falseNegatives"];
 
-let width = 1500;
-let height = 600;
+let width = 900;
+let height = 450;
 let svg = d3.create("svg").attr("width", width).attr("height", height);
 
 var color = d3.scaleOrdinal(["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f"]);
