@@ -8,7 +8,7 @@ let width = 900;
 let height = 450;
 let svg = d3.create("svg").attr("width", width).attr("height", height);
 
-var color = d3.scaleOrdinal(["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f"]);
+var color = d3.scaleOrdinal(["#e41a1c", "#4daf4a", "#377eb8", "#984ea3"]);
 
 var x = d3.scaleLinear().rangeRound([50, width]);
 
