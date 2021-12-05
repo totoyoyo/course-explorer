@@ -3,6 +3,7 @@ import indicatorsReducer from "./indicatorsSlice";
 import studentReducer from "./studentSlice";
 import allStudentsReducer from "./allStudentsSlice";
 import outcomeReducer from "./outcomeSlice";
+import allStudentsReducer from "./allStudentsSlice";
 import timeIntervalReducer from "./timeIntervalSlice";
 
 export const store = configureStore({
@@ -12,7 +13,11 @@ export const store = configureStore({
 		timeInterval: timeIntervalReducer,
 		student: studentReducer,
 		allStudents: allStudentsReducer
-	}
+	},
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware({
+			serializableCheck: false
+		})
 });
 
 export type RootState = ReturnType<typeof store.getState>;
