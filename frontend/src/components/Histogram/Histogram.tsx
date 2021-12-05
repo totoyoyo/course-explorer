@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from "react";
-import draw from "./VisHistogram";
-
-export interface Students {
-	name: string;
-	officeHours: number;
-	piazzaPosts: number;
-	numberOfCommits: number;
-}
+import draw from "./vis";
+import { StudentDetail } from "../../states/studentDetailsSlice";
 
 export interface HistogramProps {
-	data: Students[];
+	data: StudentDetail[];
 	attribute: string;
-	lableX: string;
-	lableY: string;
+	labelX: string;
+	labelY: string;
 }
 
 export default function Histogram(props: HistogramProps) {
@@ -20,6 +14,5 @@ export default function Histogram(props: HistogramProps) {
 		draw(props);
 	}, [props]);
 
-	const className = `${props.attribute}-histogram`;
-	return <div className={className} />;
+	return <div className={`${props.attribute}-histogram`} />;
 }
