@@ -10,9 +10,11 @@ import { useAppDispatch, useAppSelector } from "../../states/hooks";
 import React, { useEffect, useRef, useState } from "react";
 import { FormControl, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material";
 import { DateTimePicker } from "@mui/lab";
+import { Dataset, selectDatasets } from "../../states/datasetSlice";
 
 export function TimeIntervalSetting() {
 	const timeIntervalState: TimeIntervalState = useAppSelector(selectTimeInterval);
+	const selectedDataset: Dataset | undefined = useAppSelector(selectDatasets).selected;
 	const interval = timeIntervalState.interval;
 	const stepLenRef = useRef<HTMLInputElement>();
 	const [stepGranularity, setStepGranularity] = useState<Granularity>(interval.step.granularity);
@@ -25,6 +27,8 @@ export function TimeIntervalSetting() {
 		}
 	};
 
+	const isDisabled = () => selectedDataset === undefined;
+
 	useEffect(handleStepChange, [stepGranularity, dispatch]);
 
 	return (
@@ -33,6 +37,9 @@ export function TimeIntervalSetting() {
 				Time interval
 			</Typography>
 			<DateTimePicker
+				disabled={isDisabled()}
+				minDate={interval.start}
+				maxDate={interval.end}
 				value={interval.start}
 				label="Start"
 				onChange={(value) => {
@@ -41,6 +48,9 @@ export function TimeIntervalSetting() {
 				renderInput={(params) => <TextField {...params} helperText={null} />}
 			/>
 			<DateTimePicker
+				disabled={isDisabled()}
+				minDate={interval.start}
+				maxDate={interval.end}
 				value={interval.end}
 				label="End"
 				onChange={(value) => {
@@ -48,9 +58,10 @@ export function TimeIntervalSetting() {
 				}}
 				renderInput={(params) => <TextField {...params} helperText={null} />}
 			/>
-			<FormControl sx={{ m: 1 }}>
+			<FormControl sx={{ m: 1 }} disabled={isDisabled()}>
 				<Stack direction="row" spacing={1}>
 					<TextField
+						disabled={isDisabled()}
 						onChange={handleStepChange}
 						id="standard-number"
 						type="number"

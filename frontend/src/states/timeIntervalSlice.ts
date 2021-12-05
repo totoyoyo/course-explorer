@@ -27,7 +27,7 @@ export interface TimeIntervalState {
 
 const MOCK_TIME_INTERVAL: TimeInterval = {
 	start: new Date(),
-	end: addMonths(new Date(), 4),
+	end: new Date(),
 	step: { granularity: Granularity.MONTHS, length: 1 }
 };
 

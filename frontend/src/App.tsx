@@ -34,9 +34,6 @@ function App() {
 	const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 	const [tabIndex, setTabIndex] = useState<TabID>(TabID.OVERVIEW);
 	const [dialogProps, setDialogProps] = useState<IndicatorEditorDialogProps>({ isOpened: false });
-	const [sidebarContent, setSidebarContent] = useState<JSX.Element | null>(null);
-	const [tabContent, setTabContent] = useState<JSX.Element | null>(null);
-	const datasets = useAppSelector(selectDatasets).datasets;
 	const dispatch = useAppDispatch();
 
 	interface AppBarProps extends MuiAppBarProps {

@@ -1,14 +1,46 @@
 import React, { useRef } from "react";
-import { Button, Divider, Drawer, IconButton, Stack, styled, useTheme } from "@mui/material";
+import {
+	Button,
+	Checkbox,
+	Divider,
+	Drawer,
+	FormControlLabel,
+	FormGroup,
+	IconButton,
+	Stack,
+	styled,
+	Typography,
+	useTheme
+} from "@mui/material";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import { useAppDispatch, useAppSelector } from "../../states/hooks";
 import { DatasetSetting } from "../../components/Setting/DatasetSetting";
 import { TimeIntervalSetting } from "../../components/Setting/TimeIntervalSetting";
+import { Dataset, selectDatasets } from "../../states/datasetSlice";
 
 export interface OverviewSidebarProps {
 	width: number;
 	isOpened: boolean;
 	onClose: () => void;
+}
+
+function AttributeSetting() {
+	const selectedDataset: Dataset | undefined = useAppSelector(selectDatasets).selected;
+
+	return (
+		<Stack>
+			<Typography variant="h5" mb={3}>
+				Attributes
+			</Typography>
+			{selectedDataset && (
+				<FormGroup>
+					{selectedDataset.attributes.map((attr) => (
+						<FormControlLabel control={<Checkbox />} label={attr} />
+					))}
+				</FormGroup>
+			)}
+		</Stack>
+	);
 }
 
 export function OverviewSidebar(props: OverviewSidebarProps) {
@@ -46,6 +78,7 @@ export function OverviewSidebar(props: OverviewSidebarProps) {
 			<Stack m={2} spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
 				<DatasetSetting />
 				<TimeIntervalSetting />
+				<AttributeSetting />
 				<Button variant="contained" onClick={handleSubmitClick}>
 					Submit
 				</Button>

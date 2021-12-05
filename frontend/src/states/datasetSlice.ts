@@ -31,8 +31,8 @@ export const datasetSlice = createSlice({
 	name: "dataset",
 	initialState: initialState,
 	reducers: {
-		setSelected: (state: DatasetState, action: PayloadAction<string>) => {
-			state.selected = state.datasets.find((d) => (d.id = action.payload));
+		setSelected: (state: DatasetState, action: PayloadAction<Dataset>) => {
+			state.selected = action.payload;
 		}
 	},
 	extraReducers: (builder) => {
