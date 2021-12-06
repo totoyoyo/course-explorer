@@ -1,7 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import indicatorsReducer from "./indicatorsSlice";
 import studentReducer from "./studentSlice";
-import allStudentsReducer from "./allStudentsSlice";
 import outcomeReducer from "./outcomeSlice";
 import allStudentsReducer from "./allStudentsSlice";
 import timeIntervalReducer from "./timeIntervalSlice";
