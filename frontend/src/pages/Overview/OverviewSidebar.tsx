@@ -35,7 +35,7 @@ function AttributeSetting() {
 			{selectedDataset && (
 				<FormGroup>
 					{selectedDataset.attributes.map((attr) => (
-						<FormControlLabel control={<Checkbox />} label={attr} />
+						<FormControlLabel key={attr} control={<Checkbox />} label={attr} />
 					))}
 				</FormGroup>
 			)}

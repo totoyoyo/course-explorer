@@ -25,15 +25,19 @@ export function DatasetSetting() {
 				Dataset
 			</Typography>
 			<FormControl fullWidth>
-				<InputLabel id="datasets-select">Select dataset</InputLabel>
+				<InputLabel id="datasets-select">Dataset</InputLabel>
 				<Select
 					labelId="datasets-select"
 					id="datasets-select"
-					value={selected?.id}
+					value={selected?.id || ""}
 					label="Dataset"
 					onChange={handleChange}>
 					{datasets.map((d: Dataset) => {
-						return <MenuItem value={d.id}>{d.name}</MenuItem>;
+						return (
+							<MenuItem key={d.id} value={d.id}>
+								{d.name}
+							</MenuItem>
+						);
 					})}
 				</Select>
 			</FormControl>
