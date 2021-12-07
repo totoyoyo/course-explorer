@@ -37,12 +37,6 @@ export const draw = (groups, newLinks) => {
 	});
 
 	var names = groups.map((g) => g.name);
-
-	console.log(
-		groups.map(function (d) {
-			return d.sum;
-		})
-	);
 	x.domain([
 		0,
 		Math.max.apply(
@@ -145,7 +139,7 @@ function customYAxis(g) {
 	g.call(y_axis);
 	g.call((g) => g.select(".domain").attr("transform", "translate(50,0)"));
 	// g.selectAll(".tick:not(:first-of-type) line").attr("stroke", "#777").attr("stroke-dasharray", "2,2");
-	g.selectAll(".tick text").attr("x", 2).attr("dy", -4);
+	g.selectAll(".tick text").attr("x", 2);
 }
 
 function customXAxis(g) {
