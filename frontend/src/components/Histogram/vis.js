@@ -2,6 +2,10 @@ import * as d3 from "d3";
 //https://www.d3-graph-gallery.com/graph/histogram_basic.html
 //https://observablehq.com/@d3/histogram
 
+const getBarColor = (d) => {
+	return "#aeccda";
+};
+
 const draw = (props) => {
 	d3.select(`.${props.attribute}-histogram > *`).remove();
 
@@ -9,17 +13,27 @@ const draw = (props) => {
 		width = 500 - margin.left - margin.right,
 		height = 250 - margin.top - margin.bottom;
 
-	const XAxismax = d3.max(props.data, function (d) {
-		return +d[props.attribute];
-	});
+	const xAxisMax = d3.max(props.data, (d) => +d[props.attribute]);
 
 	const y = d3.scaleLinear().range([height, 0]);
 
 	// X axis --> range
 	const x = d3
 		.scaleLinear()
-		.domain([0, XAxismax + 5])
+		.domain([0, xAxisMax + 5])
 		.range([0, width]);
+
+	const tooltip = d3
+		.select("body")
+		.append("div")
+		.attr("class", "d3-tooltip")
+		.style("position", "absolute")
+		.style("z-index", "10")
+		.style("visibility", "hidden")
+		.style("padding", "15px")
+		.style("background", "rgba(0,0,0,0.6)")
+		.style("border-radius", "5px")
+		.style("color", "#fff");
 
 	let svg = d3
 		.select(`.${props.attribute}-histogram`)
@@ -36,7 +50,7 @@ const draw = (props) => {
 				.attr("fill", "currentColor")
 				.attr("text-anchor", "start")
 				.style("font", "10px sans-serif")
-				.text(props.lableY)
+				.text(props.labelY)
 		)
 		.call((g) =>
 			g
@@ -46,11 +60,11 @@ const draw = (props) => {
 				.attr("fill", "currentColor")
 				.attr("text-anchor", "end")
 				.style("font", "10px sans-serif")
-				.text(props.lableX)
+				.text(props.labelX)
 		);
 
 	const histogram = d3
-		.histogram()
+		.bin()
 		.value(function (d) {
 			return d[props.attribute];
 		})
@@ -66,26 +80,23 @@ const draw = (props) => {
 		}) + 5
 	]).ticks(1);
 
-	const hoverLable = svg
-		.append("text")
-		.attr("id", "hoverLable")
-		.attr("x", width - 250)
-		.attr("y", 5)
-		.text("Number of Students: ");
-
 	svg.selectAll("rect")
 		.data(bins)
 		.enter()
 		.append("rect")
 		.attr("x", 0)
 		.style("cursor", "pointer")
-		.on("mouseover", function (d, i) {
-			d3.select(this).attr("stroke", "#000");
-			d3.select("#hoverLable").text(`Number of Students: ${i.length}`);
+		.attr("fill", getBarColor())
+		.on("mouseover", function (e, d) {
+			d3.select(this).attr("fill", "#fdcc8b");
+			tooltip.style("visibility", "visible").text(`${d.length} students`);
 		})
-		.on("mouseout", function (d, i) {
-			d3.select(this).attr("stroke", null);
-			d3.select("#hoverLable").text(`Number of Students: ${0}`);
+		.on("mousemove", function (event) {
+			tooltip.style("top", event.pageY - 10 + "px").style("left", event.pageX + 10 + "px");
+		})
+		.on("mouseout", function () {
+			d3.select(this).attr("fill", getBarColor());
+			tooltip.style("visibility", "hidden");
 		})
 		.attr("transform", function (d) {
 			return "translate(" + x(d.x0) + "," + y(d.length) + ")";
@@ -95,8 +106,7 @@ const draw = (props) => {
 		})
 		.attr("height", function (d) {
 			return height - y(d.length);
-		})
-		.style("fill", "blue");
+		});
 
 	svg.append("g")
 		.attr("transform", "translate(0," + height + ")")
