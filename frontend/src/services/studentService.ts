@@ -58,90 +58,90 @@ const getMockDetailsResponse = (): StudentDetailsResponse => {
 					officeHours: 20,
 					piazzaPosts: 0,
 					numberOfCommits: 0,
-					lastFailure: "c3",
+					lastFailure: 3,
 					coverage: 56,
-					lastOHVisitDay: "Wednesday"
+					lastOHVisitDay: 3
 				},
 				{
 					id: "student2",
 					officeHours: 2,
 					piazzaPosts: 0,
 					numberOfCommits: 0,
-					lastFailure: "c3",
+					lastFailure: 3,
 					coverage: 45,
-					lastOHVisitDay: "Wednesday"
+					lastOHVisitDay: 3
 				},
 				{
 					id: "student3",
 					officeHours: 10,
 					piazzaPosts: 0,
 					numberOfCommits: 5,
-					lastFailure: "c2",
+					lastFailure: 2,
 					coverage: 12,
-					lastOHVisitDay: "Friday"
+					lastOHVisitDay: 5
 				},
 				{
 					id: "student4",
 					officeHours: 12,
 					piazzaPosts: 2,
 					numberOfCommits: 3,
-					lastFailure: "c2",
+					lastFailure: 2,
 					coverage: 10,
-					lastOHVisitDay: "Tuesday"
+					lastOHVisitDay: 2
 				},
 				{
 					id: "student5",
 					officeHours: 12,
 					piazzaPosts: 12,
 					numberOfCommits: 0,
-					lastFailure: "c2",
+					lastFailure: 2,
 					coverage: 34,
-					lastOHVisitDay: "Wednesday"
+					lastOHVisitDay: 3
 				},
 				{
 					id: "student6",
 					officeHours: 12,
 					piazzaPosts: 12,
 					numberOfCommits: 2,
-					lastFailure: "c1",
+					lastFailure: 1,
 					coverage: 67,
-					lastOHVisitDay: "Friday"
+					lastOHVisitDay: 5
 				},
 				{
 					id: "student7",
 					officeHours: 30,
 					piazzaPosts: 3,
 					numberOfCommits: 1,
-					lastFailure: "c2",
+					lastFailure: 2,
 					coverage: 68,
-					lastOHVisitDay: "Tuesday"
+					lastOHVisitDay: 2
 				},
 				{
 					id: "student8",
 					officeHours: 19,
 					piazzaPosts: 10,
 					numberOfCommits: 1,
-					lastFailure: "c1",
+					lastFailure: 1,
 					coverage: 70,
-					lastOHVisitDay: "Friday"
+					lastOHVisitDay: 5
 				},
 				{
 					id: "student9",
 					officeHours: 19,
 					piazzaPosts: 5,
 					numberOfCommits: 1,
-					lastFailure: "c1",
+					lastFailure: 1,
 					coverage: 45,
-					lastOHVisitDay: "Wednesday"
+					lastOHVisitDay: 3
 				},
 				{
 					id: "student10",
 					officeHours: 19,
 					piazzaPosts: 6,
 					numberOfCommits: 2,
-					lastFailure: "c2",
+					lastFailure: 2,
 					coverage: 88,
-					lastOHVisitDay: "Monday"
+					lastOHVisitDay: 1
 				}
 			],
 			"2021-11-20T14:48:00.000Z": [
@@ -150,90 +150,90 @@ const getMockDetailsResponse = (): StudentDetailsResponse => {
 					officeHours: 40,
 					piazzaPosts: 0,
 					numberOfCommits: 5,
-					lastFailure: "c2",
+					lastFailure: 2,
 					coverage: 60,
-					lastOHVisitDay: "Wednesday"
+					lastOHVisitDay: 3
 				},
 				{
 					id: "student2",
 					officeHours: 20,
 					piazzaPosts: 0,
 					numberOfCommits: 0,
-					lastFailure: "c2",
+					lastFailure: 2,
 					coverage: 87,
-					lastOHVisitDay: "Monday"
+					lastOHVisitDay: 1
 				},
 				{
 					id: "student3",
 					officeHours: 22,
 					piazzaPosts: 0,
 					numberOfCommits: 5,
-					lastFailure: "c2",
+					lastFailure: 2,
 					coverage: 54,
-					lastOHVisitDay: "Monday"
+					lastOHVisitDay: 1
 				},
 				{
 					id: "student4",
 					officeHours: 12,
 					piazzaPosts: 12,
 					numberOfCommits: 10,
-					lastFailure: "c3",
+					lastFailure: 3,
 					coverage: 64,
-					lastOHVisitDay: "Tuesday"
+					lastOHVisitDay: 2
 				},
 				{
 					id: "student5",
 					officeHours: 33,
 					piazzaPosts: 18,
 					numberOfCommits: 10,
-					lastFailure: "c3",
+					lastFailure: 3,
 					coverage: 77,
-					lastOHVisitDay: "Monday"
+					lastOHVisitDay: 1
 				},
 				{
 					id: "student6",
 					officeHours: 12,
 					piazzaPosts: 19,
 					numberOfCommits: 12,
-					lastFailure: "c3",
+					lastFailure: 3,
 					coverage: 65,
-					lastOHVisitDay: "Friday"
+					lastOHVisitDay: 5
 				},
 				{
 					id: "student7",
 					officeHours: 28,
 					piazzaPosts: 13,
 					numberOfCommits: 13,
-					lastFailure: "c1",
+					lastFailure: 1,
 					coverage: 89,
-					lastOHVisitDay: "Wednesday"
+					lastOHVisitDay: 3
 				},
 				{
 					id: "student8",
 					officeHours: 40,
 					piazzaPosts: 10,
 					numberOfCommits: 14,
-					lastFailure: "c3",
+					lastFailure: 3,
 					coverage: 100,
-					lastOHVisitDay: "Wednesday"
+					lastOHVisitDay: 3
 				},
 				{
 					id: "student9",
 					officeHours: 19,
 					piazzaPosts: 15,
 					numberOfCommits: 15,
-					lastFailure: "c1",
+					lastFailure: 1,
 					coverage: 99,
-					lastOHVisitDay: "Friday"
+					lastOHVisitDay: 5
 				},
 				{
 					id: "student10",
 					officeHours: 19,
 					piazzaPosts: 16,
 					numberOfCommits: 20,
-					lastFailure: "c2",
+					lastFailure: 2,
 					coverage: 96,
-					lastOHVisitDay: "Monday"
+					lastOHVisitDay: 1
 				}
 			],
 			"2021-11-27T14:48:00.000Z": [
@@ -242,90 +242,90 @@ const getMockDetailsResponse = (): StudentDetailsResponse => {
 					officeHours: 43,
 					piazzaPosts: 0,
 					numberOfCommits: 20,
-					lastFailure: "c2",
+					lastFailure: 2,
 					coverage: 78,
-					lastOHVisitDay: "Monday"
+					lastOHVisitDay: 1
 				},
 				{
 					id: "student2",
 					officeHours: 25,
 					piazzaPosts: 10,
 					numberOfCommits: 2,
-					lastFailure: "c1",
+					lastFailure: 1,
 					coverage: 67,
-					lastOHVisitDay: "Tuesday"
+					lastOHVisitDay: 2
 				},
 				{
 					id: "student3",
 					officeHours: 28,
 					piazzaPosts: 5,
 					numberOfCommits: 3,
-					lastFailure: "c1",
+					lastFailure: 1,
 					coverage: 68,
-					lastOHVisitDay: "Monday"
+					lastOHVisitDay: 1
 				},
 				{
 					id: "student4",
 					officeHours: 19,
 					piazzaPosts: 3,
 					numberOfCommits: 10,
-					lastFailure: "c1",
+					lastFailure: 1,
 					coverage: 87,
-					lastOHVisitDay: "Friday"
+					lastOHVisitDay: 5
 				},
 				{
 					id: "student5",
 					officeHours: 50,
 					piazzaPosts: 12,
 					numberOfCommits: 10,
-					lastFailure: "c3",
+					lastFailure: 3,
 					coverage: 98,
-					lastOHVisitDay: "Monday"
+					lastOHVisitDay: 1
 				},
 				{
 					id: "student6",
 					officeHours: 12,
 					piazzaPosts: 12,
 					numberOfCommits: 12,
-					lastFailure: "c2",
+					lastFailure: 2,
 					coverage: 99,
-					lastOHVisitDay: "Wednesday"
+					lastOHVisitDay: 3
 				},
 				{
 					id: "student7",
 					officeHours: 28,
 					piazzaPosts: 6,
 					numberOfCommits: 53,
-					lastFailure: "c2",
+					lastFailure: 2,
 					coverage: 100,
-					lastOHVisitDay: "Wednesday"
+					lastOHVisitDay: 3
 				},
 				{
 					id: "student8",
 					officeHours: 40,
 					piazzaPosts: 16,
 					numberOfCommits: 44,
-					lastFailure: "c2",
+					lastFailure: 2,
 					coverage: 100,
-					lastOHVisitDay: "Friday"
+					lastOHVisitDay: 5
 				},
 				{
 					id: "student9",
 					officeHours: 19,
 					piazzaPosts: 10,
 					numberOfCommits: 45,
-					lastFailure: "c3",
+					lastFailure: 3,
 					coverage: 56,
-					lastOHVisitDay: "Monday"
+					lastOHVisitDay: 1
 				},
 				{
 					id: "student10",
 					officeHours: 19,
 					piazzaPosts: 8,
 					numberOfCommits: 30,
-					lastFailure: "c1",
+					lastFailure: 1,
 					coverage: 55,
-					lastOHVisitDay: "Wednesday"
+					lastOHVisitDay: 3
 				}
 			]
 		}
