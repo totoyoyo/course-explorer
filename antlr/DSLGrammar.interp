@@ -64,7 +64,7 @@ WS
 
 rule names:
 query
-filter
+some_filter
 logic
 time_op
 binary

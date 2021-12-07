@@ -1,9 +1,9 @@
 // Define something crazy
 grammar DSLGrammar;
 
-query : filter;
-filter : logic | binary | time_op;
-logic : '('filter ('AND'|'OR') filter')' | '(''NOT' filter')';
+query : some_filter;
+some_filter : logic | binary | time_op;
+logic : '('some_filter ('AND'|'OR') some_filter')' | '(''NOT' some_filter')';
 time_op : ('BEFORE'|'AFTER') time | 'BETWEEN' time time;
 binary : '('comparable ('>'|'<'|'<='|'>='|'!='|'==') comparable')';
 comparable : number | time | string;
