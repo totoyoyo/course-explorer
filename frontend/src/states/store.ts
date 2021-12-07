@@ -6,6 +6,7 @@ import allStudentsReducer from "./allStudentsSlice";
 import timeIntervalReducer from "./timeIntervalSlice";
 import studentDetailsReducer from "./studentDetailsSlice";
 import datasetsReducer from "./datasetSlice";
+import attributesReducer from "./attributesSlice";
 
 export const store = configureStore({
 	reducer: {
@@ -15,7 +16,8 @@ export const store = configureStore({
 		student: studentReducer,
 		allStudents: allStudentsReducer,
 		studentDetails: studentDetailsReducer,
-		datasets: datasetsReducer
+		datasets: datasetsReducer,
+		attributes: attributesReducer
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({

@@ -21,8 +21,8 @@ import MenuRoundedIcon from "@mui/material/SvgIcon/SvgIcon";
 import { IndicatorEditorDialog, IndicatorEditorDialogProps } from "./pages/IndicatorsBoard/IndicatorEditorDialog";
 import { IndicatorsSidebar } from "./pages/IndicatorsBoard/IndicatorsSidebar";
 import { OverviewSidebar } from "./pages/Overview/OverviewSidebar";
-import { queryDatasets, selectDatasets } from "./states/datasetSlice";
-import { useAppDispatch, useAppSelector } from "./states/hooks";
+import { queryDatasets } from "./states/datasetSlice";
+import { useAppDispatch } from "./states/hooks";
 
 const SIDEBAR_WIDTH = 250; // width of sidebar in px
 enum TabID {

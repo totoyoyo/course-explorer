@@ -10,7 +10,7 @@ const MOCK_DATASETS: Dataset[] = [
 		name: "cpsc310",
 		start: 1610384400000,
 		end: 1618016700000,
-		attributes: ["officeHours", "piazzaPosts", "numberOfCommits"]
+		attributes: ["officeHours", "piazzaPosts", "numberOfCommits", "lastFailure", "coverage", "lastOHVisitDay"]
 	},
 	{
 		id: "cpsc110",

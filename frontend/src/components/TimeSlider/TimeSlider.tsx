@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Slider, Stack, TextField } from "@mui/material";
-import { DateTimePicker } from "@mui/lab";
+import { Slider, Stack } from "@mui/material";
 
-interface TimeSliderProps {
+interface TimeSliderProps extends SliderConfig {
 	onChange: (date: number) => void;
 	value: number | undefined;
+}
+
+export interface SliderConfig {
 	min: number;
 	max: number;
 	marks: { value: number; label: string }[];
@@ -18,14 +20,6 @@ export function TimeSlider(props: TimeSliderProps) {
 
 	return (
 		<Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
-			<DateTimePicker
-				value={props.min}
-				label="Start"
-				readOnly
-				disableOpenPicker
-				onChange={() => {}}
-				renderInput={(params) => <TextField {...params} helperText={null} />}
-			/>
 			<Slider
 				aria-label="Time"
 				step={null}
@@ -38,14 +32,6 @@ export function TimeSlider(props: TimeSliderProps) {
 						props.onChange(value);
 					}
 				}}
-			/>
-			<DateTimePicker
-				value={props.max}
-				label="End Time"
-				readOnly
-				disableOpenPicker
-				onChange={() => {}}
-				renderInput={(params) => <TextField {...params} helperText={null} />}
 			/>
 		</Stack>
 	);

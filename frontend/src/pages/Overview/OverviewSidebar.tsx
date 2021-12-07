@@ -1,7 +1,5 @@
-import React, { useRef } from "react";
+import React, { useEffect } from "react";
 import {
-	Button,
-	Checkbox,
 	Divider,
 	Drawer,
 	FormControlLabel,
@@ -9,14 +7,15 @@ import {
 	IconButton,
 	Stack,
 	styled,
-	Typography,
-	useTheme
+	Switch,
+	Typography
 } from "@mui/material";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import { useAppDispatch, useAppSelector } from "../../states/hooks";
 import { DatasetSetting } from "../../components/Setting/DatasetSetting";
 import { TimeIntervalSetting } from "../../components/Setting/TimeIntervalSetting";
 import { Dataset, selectDatasets } from "../../states/datasetSlice";
+import { Attribute, selectAttributes, handleSelection, setSelected } from "../../states/attributesSlice";
 
 export interface OverviewSidebarProps {
 	width: number;
@@ -26,6 +25,20 @@ export interface OverviewSidebarProps {
 
 function AttributeSetting() {
 	const selectedDataset: Dataset | undefined = useAppSelector(selectDatasets).selected;
+	const selectedAttributes: Attribute[] = useAppSelector(selectAttributes).selected;
+	const dispatch = useAppDispatch();
+
+	useEffect(() => {
+		if (selectedDataset) {
+			dispatch(setSelected(selectedDataset.attributes));
+		}
+	}, [selectedDataset]);
+
+	const handleCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
+		dispatch(handleSelection(event.target.name));
+	};
+
+	const checked = (attr: string) => selectedAttributes.includes(attr);
 
 	return (
 		<Stack>
@@ -35,7 +48,11 @@ function AttributeSetting() {
 			{selectedDataset && (
 				<FormGroup>
 					{selectedDataset.attributes.map((attr) => (
-						<FormControlLabel key={attr} control={<Checkbox />} label={attr} />
+						<FormControlLabel
+							key={attr}
+							control={<Switch checked={checked(attr)} onChange={handleCheck} name={attr} />}
+							label={attr}
+						/>
 					))}
 				</FormGroup>
 			)}
@@ -44,11 +61,6 @@ function AttributeSetting() {
 }
 
 export function OverviewSidebar(props: OverviewSidebarProps) {
-	const theme = useTheme();
-	const dispatch = useAppDispatch();
-
-	const handleSubmitClick = () => {};
-
 	const SidebarHeader = styled("div")(({ theme }) => ({
 		display: "flex",
 		alignItems: "center",
@@ -79,9 +91,6 @@ export function OverviewSidebar(props: OverviewSidebarProps) {
 				<DatasetSetting />
 				<TimeIntervalSetting />
 				<AttributeSetting />
-				<Button variant="contained" onClick={handleSubmitClick}>
-					Submit
-				</Button>
 			</Stack>
 		</Drawer>
 	);
