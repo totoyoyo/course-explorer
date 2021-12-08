@@ -1,16 +1,16 @@
-from typing import List
+from typing import List, Dict
 from datetime import datetime
 
 from pydantic import BaseModel
-from .student import StudentBase
 
 
 class QueryResponse(BaseModel):
-    result: List[StudentBase]
+    __root__: Dict[datetime, List[str]]
 
 
 class QueryRequest(BaseModel):
     start: datetime
     end: datetime
-    step: str
+    step: int
+    name: str
     query: str

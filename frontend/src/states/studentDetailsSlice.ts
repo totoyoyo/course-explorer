@@ -1,12 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { parseISO } from "date-fns";
-import StudentService, { StudentDetailsRequest, StudentDetailsResponse } from "../services/studentService";
+import StudentService, {
+	StudentDetailResponse,
+	StudentDetailsRequest,
+	StudentDetailsResponse
+} from "../services/studentService";
 import { PayloadAction } from "@reduxjs/toolkit/dist/createAction";
+import { Attribute } from "./attributesSlice";
 
 export interface StudentDetail {
 	id: string;
-	[attribute: string]: string | number;
+	[attribute: Attribute]: string | number;
 }
 
 export interface StudentDetailsState {
@@ -24,8 +29,11 @@ export const queryAllStudentDetails = createAsyncThunk<
 >("studentDetails/queryAll", async (arg) => {
 	return StudentService.getStudentDetails(arg).then((res: StudentDetailsResponse) => {
 		const details = new Map<number, StudentDetail[]>();
-		Object.keys(res.results).forEach((time: string) => {
-			details.set(parseISO(time).getTime(), res.results[time]);
+		Object.keys(res).forEach((time: string) => {
+			const flattened: StudentDetail[] = res[time].map((detail: StudentDetailResponse) => {
+				return { id: detail.id, ...detail.attributes };
+			});
+			details.set(parseISO(time).getTime(), flattened);
 		});
 		return details;
 	});

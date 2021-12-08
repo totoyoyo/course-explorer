@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import draw from "./vis";
 import { StudentDetail } from "../../states/studentDetailsSlice";
 

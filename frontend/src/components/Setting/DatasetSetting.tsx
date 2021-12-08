@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../states/hooks";
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import { setEndTime, setStartTime } from "../../states/timeIntervalSlice";
 import React from "react";
-import { toDate } from "date-fns";
+import { parseISO } from "date-fns";
 
 export function DatasetSetting() {
 	const datasets: Dataset[] = useAppSelector(selectDatasets).datasets;
@@ -14,8 +14,8 @@ export function DatasetSetting() {
 		const selected = datasets.find((d) => d.id === event.target.value);
 		if (selected) {
 			dispatch(setSelected(selected));
-			dispatch(setStartTime(toDate(selected.start)));
-			dispatch(setEndTime(toDate(selected.end)));
+			dispatch(setStartTime(parseISO(selected.start)));
+			dispatch(setEndTime(parseISO(selected.end)));
 		}
 	};
 

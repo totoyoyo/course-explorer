@@ -57,8 +57,8 @@ export const queryAllIndicators = createAsyncThunk<QueriedIndicator[], void, { s
 				QueryService.query({ start: start, end: end, step: step, query: i.query, name: i.name }).then(
 					(res: QueryResponse) => {
 						const students = new Map<number, string[]>();
-						Object.keys(res.results).forEach((time: string) => {
-							students.set(parseISO(time).getTime(), res.results[time]);
+						Object.keys(res).forEach((time: string) => {
+							students.set(parseISO(time).getTime(), res[time]);
 						});
 						return {
 							...i,
