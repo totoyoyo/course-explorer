@@ -56,7 +56,7 @@ class PiazzaContribution:
         self.is_project = is_project
 
 def make_contrib(row, conn):
-    result = QueueVisit(conn, *row)
+    result = PiazzaContribution(conn, *row)
     return result
 
 
