@@ -1,10 +1,18 @@
+from antlr.DSLGrammarLexer import DSLGrammarLexer
 from antlr.DSLGrammarParser import DSLGrammarParser
 from antlr.DSLGrammarVisitor import DSLGrammarVisitor
+from antlr4.error.ErrorListener import ErrorListener
+from antlr4 import InputStream, CommonTokenStream
 
 class OurVisitor(DSLGrammarVisitor):
 
+    def __init__(self):
+        super().__init__()
+        self.hahahahah = 0
+
     def visitQuery(self, ctx: DSLGrammarParser.QueryContext):
-        #fill this
+        # fill this
+        print("Wow a query")
         return super().visitQuery(ctx)
 
     def visitSome_filter(self, ctx: DSLGrammarParser.Some_filterContext):
@@ -55,3 +63,29 @@ class OurVisitor(DSLGrammarVisitor):
 
     def visitTime_lit(self, ctx: DSLGrammarParser.Time_litContext):
         return super().visitTime_lit(ctx)
+
+
+class OurErrorListener(ErrorListener):
+    def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
+        raise Exception("Something happened")
+
+# Read file
+input_text_path = "test_input1.txt"
+file = open(input_text_path)
+data = InputStream(file.read())
+
+# for throwing exception
+error_listener = OurErrorListener()
+
+# Lexer
+lexer = DSLGrammarLexer(data)
+lexer.addErrorListener(error_listener)
+stream = CommonTokenStream(lexer)
+
+# Parser
+parser = DSLGrammarParser(stream)
+parser.addErrorListener(error_listener)
+tree = parser.query()
+
+visitor = OurVisitor()
+out = visitor.visit(tree)

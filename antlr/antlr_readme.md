@@ -17,7 +17,6 @@ grun DSLGrammar query -tree
 grun DSLGrammar query -gui
 (or something like)
 grun DSLGrammar query -gui test_input.txt
-
 ```
 
 This assumes you have antlr4, grun, and javac set up though....
