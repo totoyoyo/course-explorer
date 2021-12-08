@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from schemas.query import QueryBody, QueryResult
+from schemas.query import QueryRequest, QueryResponse
 
 router = APIRouter(
     prefix="/query",
@@ -8,6 +8,7 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=QueryResult)
-async def query(body: QueryBody):
+@router.post("/", response_model=QueryResponse)
+async def query(body: QueryRequest):
+    print(body)
     return {"result": [{"id": "123"}]}

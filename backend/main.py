@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api import students, query
+from api import students, query, datasets
 
 origins = [
     "http://localhost:3000",
@@ -17,6 +17,7 @@ app.add_middleware(
 )
 app.include_router(students.router)
 app.include_router(query.router)
+app.include_router(datasets.router)
 
 
 @app.get("/")
