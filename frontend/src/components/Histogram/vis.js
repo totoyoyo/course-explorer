@@ -1,6 +1,4 @@
 import * as d3 from "d3";
-//https://www.d3-graph-gallery.com/graph/histogram_basic.html
-//https://observablehq.com/@d3/histogram
 
 const getBarColor = (d) => {
 	return "#aeccda";
