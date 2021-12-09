@@ -1,1 +1,1 @@
-((student.what > 2) AND (student.why <12))
+((daily(student.num_piazza_posts) > 2) AND (student.num_piazza_posts <12))
