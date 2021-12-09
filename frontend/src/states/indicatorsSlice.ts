@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import QueryService, { QueryResponse } from "../services/queryService";
 import { formatISO, milliseconds, parseISO } from "date-fns";
-import { Duration, Granularity } from "./timeIntervalSlice";
+import { toFnsDuration } from "./timeIntervalSlice";
 
 export interface Indicator {
 	name: string;
@@ -43,19 +43,6 @@ const MOCK_INDICATORS: Indicator[] = [
 const initialState: IndicatorsState = {
 	indicators: MOCK_INDICATORS,
 	queriedIndicators: [] as QueriedIndicator[]
-};
-
-const toFnsDuration = (d: Duration) => {
-	switch (d.granularity) {
-		case Granularity.HOURS:
-			return { hours: d.length };
-		case Granularity.DAYS:
-			return { days: d.length };
-		case Granularity.WEEKS:
-			return { weeks: d.length };
-		case Granularity.MONTHS:
-			return { months: d.length };
-	}
 };
 
 export const queryAllIndicators = createAsyncThunk<QueriedIndicator[], void, { state: RootState }>(

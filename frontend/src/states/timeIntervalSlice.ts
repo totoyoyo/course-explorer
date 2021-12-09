@@ -1,4 +1,3 @@
-import { addMonths } from "date-fns";
 import { createSlice } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit/dist/createAction";
 import { RootState } from "./store";
@@ -15,6 +14,19 @@ export interface Duration {
 	granularity: Granularity;
 }
 
+export const toFnsDuration = (d: Duration) => {
+	switch (d.granularity) {
+		case Granularity.HOURS:
+			return { hours: d.length };
+		case Granularity.DAYS:
+			return { days: d.length };
+		case Granularity.WEEKS:
+			return { weeks: d.length };
+		case Granularity.MONTHS:
+			return { months: d.length };
+	}
+};
+
 export interface TimeInterval {
 	start: Date;
 	end: Date;
@@ -27,7 +39,7 @@ export interface TimeIntervalState {
 
 const MOCK_TIME_INTERVAL: TimeInterval = {
 	start: new Date(),
-	end: addMonths(new Date(), 4),
+	end: new Date(),
 	step: { granularity: Granularity.MONTHS, length: 1 }
 };
 
