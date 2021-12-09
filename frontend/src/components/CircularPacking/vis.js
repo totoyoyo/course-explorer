@@ -85,7 +85,7 @@ export const select = (groups, newLinks) => {
 		console.log("this is node data", node.data);
 		const current_name = node.data.name;
 		if (current_name.includes("student")) {
-			const current = d3.selectAll("circle").filter((d) => d.data.name.includes(current_name));
+			const current = d3.selectAll("circle").filter((d) => d.data.name === current_name);
 			let curr_data = current.data();
 			let linkNodes = get_links_between_nodes(curr_data);
 			// current.each((d, index) => (linkNodes[index] = d));
