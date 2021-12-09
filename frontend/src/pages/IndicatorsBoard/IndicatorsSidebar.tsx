@@ -3,15 +3,12 @@ import {
 	Button,
 	Divider,
 	Drawer,
-	FormControl,
 	IconButton,
 	List,
 	ListItem,
 	ListItemText,
 	Menu,
 	MenuItem,
-	Select,
-	SelectChangeEvent,
 	Stack,
 	styled,
 	TextField,
@@ -32,17 +29,10 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import { useAppDispatch, useAppSelector } from "../../states/hooks";
 import { OutcomeState, queryOutcome, selectOutcome, setOutcome } from "../../states/outcomeSlice";
-import {
-	selectTimeInterval,
-	setEndTime,
-	setStartTime,
-	setStep,
-	Granularity,
-	TimeIntervalState
-} from "../../states/timeIntervalSlice";
-import { DateTimePicker } from "@mui/lab";
 import { IndicatorEditorAction, IndicatorEditorDialogProps } from "./IndicatorEditorDialog";
 import { queryStudentList } from "../../states/allStudentsSlice";
+import { DatasetSetting } from "../../components/Setting/DatasetSetting";
+import { TimeIntervalSetting } from "../../components/Setting/TimeIntervalSetting";
 
 function OutcomeSetting() {
 	const outcomeState: OutcomeState = useAppSelector(selectOutcome);
@@ -151,83 +141,14 @@ function IndicatorsListSetting(props: IndicatorsListProps) {
 	);
 }
 
-function TimeIntervalSetting() {
-	const timeIntervalState: TimeIntervalState = useAppSelector(selectTimeInterval);
-	const interval = timeIntervalState.interval;
-	const stepLenRef = useRef<HTMLInputElement>();
-	const [stepGranularity, setStepGranularity] = useState<Granularity>(interval.step.granularity);
-	const dispatch = useAppDispatch();
-
-	const handleStepChange = () => {
-		const len = stepLenRef.current;
-		if (!!len && !!stepGranularity) {
-			dispatch(setStep({ length: Number(len.value), granularity: stepGranularity }));
-		}
-	};
-
-	useEffect(handleStepChange, [stepGranularity, dispatch]);
-
-	return (
-		<Stack spacing={1}>
-			<Typography variant="h5" mb={3}>
-				Time interval
-			</Typography>
-			<DateTimePicker
-				value={interval.start}
-				label="Start"
-				onChange={(value) => {
-					if (value) dispatch(setStartTime(value!));
-				}}
-				renderInput={(params) => <TextField {...params} helperText={null} />}
-			/>
-			<DateTimePicker
-				value={interval.end}
-				label="End"
-				onChange={(value) => {
-					if (value) dispatch(setEndTime(value!));
-				}}
-				renderInput={(params) => <TextField {...params} helperText={null} />}
-			/>
-			<FormControl sx={{ m: 1 }}>
-				<Stack direction="row" spacing={1}>
-					<TextField
-						onChange={handleStepChange}
-						id="standard-number"
-						type="number"
-						label="Step"
-						InputLabelProps={{
-							shrink: true
-						}}
-						variant="outlined"
-						value={interval.step.length}
-						inputRef={stepLenRef}
-					/>
-					<Select
-						onChange={(e: SelectChangeEvent<string>) => {
-							setStepGranularity(e.target.value as Granularity);
-						}}
-						value={interval.step.granularity}
-						autoWidth>
-						{Object.values(Granularity).map((g: string) => (
-							<MenuItem key={g} value={g}>
-								{g}
-							</MenuItem>
-						))}
-					</Select>
-				</Stack>
-			</FormControl>
-		</Stack>
-	);
-}
-
-export interface SidebarProps {
+export interface IndicatorsSidebarProps {
 	width: number;
 	isOpened: boolean;
 	onClose: () => void;
 	setDialogProps: (props: IndicatorEditorDialogProps) => void;
 }
 
-export function Sidebar(props: SidebarProps) {
+export function IndicatorsSidebar(props: IndicatorsSidebarProps) {
 	const [isOpened, setIsOpened] = useState(props.isOpened);
 	const theme = useTheme();
 	const dispatch = useAppDispatch();
@@ -269,9 +190,10 @@ export function Sidebar(props: SidebarProps) {
 				</IconButton>
 			</SidebarHeader>
 			<Stack m={2} spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
+				<DatasetSetting />
+				<TimeIntervalSetting />
 				<OutcomeSetting />
 				<IndicatorsListSetting setDialogProps={props.setDialogProps} />
-				<TimeIntervalSetting />
 				<Button variant="contained" onClick={handleSubmitClick}>
 					Submit
 				</Button>

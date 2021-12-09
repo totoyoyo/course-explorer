@@ -1,4 +1,4 @@
-# Generated from C:/Users/ToToYoYo/PycharmProjects/course-explorer/antlr\DSLGrammar.g4 by ANTLR 4.9.2
+# Generated from DSLGrammar.g4 by ANTLR 4.9.3
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO
@@ -11,39 +11,37 @@ else:
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\37")
-        buf.write("i\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\"")
+        buf.write("f\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b")
         buf.write("\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16\t")
-        buf.write("\16\4\17\t\17\3\2\3\2\3\3\3\3\3\3\5\3$\n\3\3\4\3\4\3\4")
-        buf.write("\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4\61\n\4\3\5\3\5\3")
-        buf.write("\5\3\5\3\5\3\5\5\59\n\5\3\6\3\6\3\6\3\6\3\6\3\6\3\7\3")
-        buf.write("\7\3\7\5\7D\n\7\3\b\3\b\3\b\3\b\5\bJ\n\b\3\t\3\t\3\t\3")
-        buf.write("\t\3\t\3\n\3\n\3\n\3\n\3\n\3\n\3\13\3\13\5\13Y\n\13\3")
-        buf.write("\f\3\f\5\f]\n\f\3\r\3\r\3\r\3\16\3\16\3\17\3\17\3\17\3")
-        buf.write("\17\3\17\3\17\2\2\20\2\4\6\b\n\f\16\20\22\24\26\30\32")
-        buf.write("\34\2\7\3\2\4\5\3\2\b\t\3\2\13\20\3\2\21\25\3\2\26\31")
-        buf.write("\2e\2\36\3\2\2\2\4#\3\2\2\2\6\60\3\2\2\2\b8\3\2\2\2\n")
-        buf.write(":\3\2\2\2\fC\3\2\2\2\16I\3\2\2\2\20K\3\2\2\2\22P\3\2\2")
-        buf.write("\2\24X\3\2\2\2\26\\\3\2\2\2\30^\3\2\2\2\32a\3\2\2\2\34")
-        buf.write("c\3\2\2\2\36\37\5\4\3\2\37\3\3\2\2\2 $\5\6\4\2!$\5\n\6")
-        buf.write("\2\"$\5\b\5\2# \3\2\2\2#!\3\2\2\2#\"\3\2\2\2$\5\3\2\2")
-        buf.write("\2%&\7\3\2\2&\'\5\4\3\2\'(\t\2\2\2()\5\4\3\2)*\7\6\2\2")
-        buf.write("*\61\3\2\2\2+,\7\3\2\2,-\7\7\2\2-.\5\4\3\2./\7\6\2\2/")
-        buf.write("\61\3\2\2\2\60%\3\2\2\2\60+\3\2\2\2\61\7\3\2\2\2\62\63")
-        buf.write("\t\3\2\2\639\5\26\f\2\64\65\7\n\2\2\65\66\5\26\f\2\66")
-        buf.write("\67\5\26\f\2\679\3\2\2\28\62\3\2\2\28\64\3\2\2\29\t\3")
-        buf.write("\2\2\2:;\7\3\2\2;<\5\f\7\2<=\t\4\2\2=>\5\f\7\2>?\7\6\2")
-        buf.write("\2?\13\3\2\2\2@D\5\16\b\2AD\5\26\f\2BD\5\24\13\2C@\3\2")
-        buf.write("\2\2CA\3\2\2\2CB\3\2\2\2D\r\3\2\2\2EJ\7\34\2\2FJ\5\22")
-        buf.write("\n\2GJ\5\20\t\2HJ\5\30\r\2IE\3\2\2\2IF\3\2\2\2IG\3\2\2")
-        buf.write("\2IH\3\2\2\2J\17\3\2\2\2KL\t\5\2\2LM\7\3\2\2MN\5\30\r")
-        buf.write("\2NO\7\6\2\2O\21\3\2\2\2PQ\7\3\2\2QR\5\16\b\2RS\t\6\2")
-        buf.write("\2ST\5\16\b\2TU\7\6\2\2U\23\3\2\2\2VY\5\30\r\2WY\7\35")
-        buf.write("\2\2XV\3\2\2\2XW\3\2\2\2Y\25\3\2\2\2Z]\5\34\17\2[]\5\30")
-        buf.write("\r\2\\Z\3\2\2\2\\[\3\2\2\2]\27\3\2\2\2^_\7\32\2\2_`\5")
-        buf.write("\32\16\2`\31\3\2\2\2ab\7\35\2\2b\33\3\2\2\2cd\7\33\2\2")
-        buf.write("de\7\3\2\2ef\7\35\2\2fg\7\6\2\2g\35\3\2\2\2\t#\608CIX")
-        buf.write("\\")
+        buf.write("\16\4\17\t\17\3\2\3\2\3\3\3\3\5\3#\n\3\3\4\3\4\3\4\3\4")
+        buf.write("\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4\60\n\4\3\5\3\5\3\5\3")
+        buf.write("\5\3\5\3\5\3\6\3\6\3\6\3\6\5\6<\n\6\3\7\3\7\3\7\3\7\3")
+        buf.write("\7\3\7\3\7\3\7\3\7\5\7G\n\7\3\b\3\b\3\t\3\t\3\t\3\t\3")
+        buf.write("\t\3\n\3\n\3\n\3\n\3\n\3\n\3\13\3\13\5\13X\n\13\3\f\3")
+        buf.write("\f\3\r\3\r\3\r\3\16\3\16\3\17\3\17\3\17\3\17\3\17\3\17")
+        buf.write("\2\2\20\2\4\6\b\n\f\16\20\22\24\26\30\32\34\2\7\3\2\4")
+        buf.write("\5\3\2\b\r\3\2\16\23\3\2\24\30\3\2\31\34\2a\2\36\3\2\2")
+        buf.write("\2\4\"\3\2\2\2\6/\3\2\2\2\b\61\3\2\2\2\n;\3\2\2\2\fF\3")
+        buf.write("\2\2\2\16H\3\2\2\2\20J\3\2\2\2\22O\3\2\2\2\24W\3\2\2\2")
+        buf.write("\26Y\3\2\2\2\30[\3\2\2\2\32^\3\2\2\2\34`\3\2\2\2\36\37")
+        buf.write("\5\4\3\2\37\3\3\2\2\2 #\5\6\4\2!#\5\b\5\2\" \3\2\2\2\"")
+        buf.write("!\3\2\2\2#\5\3\2\2\2$%\7\3\2\2%&\5\4\3\2&\'\t\2\2\2\'")
+        buf.write("(\5\4\3\2()\7\6\2\2)\60\3\2\2\2*+\7\3\2\2+,\7\7\2\2,-")
+        buf.write("\5\4\3\2-.\7\6\2\2.\60\3\2\2\2/$\3\2\2\2/*\3\2\2\2\60")
+        buf.write("\7\3\2\2\2\61\62\7\3\2\2\62\63\5\n\6\2\63\64\t\3\2\2\64")
+        buf.write("\65\5\n\6\2\65\66\7\6\2\2\66\t\3\2\2\2\67<\5\f\7\28<\5")
+        buf.write("\26\f\29<\5\24\13\2:<\5\30\r\2;\67\3\2\2\2;8\3\2\2\2;")
+        buf.write("9\3\2\2\2;:\3\2\2\2<\13\3\2\2\2=G\7\37\2\2>G\5\22\n\2")
+        buf.write("?G\5\20\t\2@G\5\30\r\2AB\5\16\b\2BC\7\3\2\2CD\5\30\r\2")
+        buf.write("DE\7\6\2\2EG\3\2\2\2F=\3\2\2\2F>\3\2\2\2F?\3\2\2\2F@\3")
+        buf.write("\2\2\2FA\3\2\2\2G\r\3\2\2\2HI\t\4\2\2I\17\3\2\2\2JK\t")
+        buf.write("\5\2\2KL\7\3\2\2LM\5\30\r\2MN\7\6\2\2N\21\3\2\2\2OP\7")
+        buf.write("\3\2\2PQ\5\f\7\2QR\t\6\2\2RS\5\f\7\2ST\7\6\2\2T\23\3\2")
+        buf.write("\2\2UX\5\30\r\2VX\7 \2\2WU\3\2\2\2WV\3\2\2\2X\25\3\2\2")
+        buf.write("\2YZ\5\34\17\2Z\27\3\2\2\2[\\\7\35\2\2\\]\5\32\16\2]\31")
+        buf.write("\3\2\2\2^_\7 \2\2_\33\3\2\2\2`a\7\36\2\2ab\7\3\2\2bc\7")
+        buf.write(" \2\2cd\7\6\2\2d\35\3\2\2\2\7\"/;FW")
         return buf.getvalue()
 
 
@@ -58,10 +56,10 @@ class DSLGrammarParser ( Parser ):
     sharedContextCache = PredictionContextCache()
 
     literalNames = [ "<INVALID>", "'('", "'AND'", "'OR'", "')'", "'NOT'", 
-                     "'BEFORE'", "'AFTER'", "'BETWEEN'", "'>'", "'<'", "'<='", 
-                     "'>='", "'!='", "'=='", "'daily'", "'weekly'", "'monthly'", 
-                     "'final'", "'sofar'", "'+'", "'-'", "'*'", "'/'", "'student.'", 
-                     "'time'" ]
+                     "'>'", "'<'", "'<='", "'>='", "'!='", "'=='", "'avg'", 
+                     "'count'", "'max'", "'min'", "'sum'", "'val'", "'daily'", 
+                     "'weekly'", "'monthly'", "'final'", "'sofar'", "'+'", 
+                     "'-'", "'*'", "'/'", "'student.'", "'time'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
@@ -69,16 +67,16 @@ class DSLGrammarParser ( Parser ):
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "Number", "String", "ID", 
-                      "WS" ]
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                      "<INVALID>", "Number", "String", "ID", "WS" ]
 
     RULE_query = 0
     RULE_some_filter = 1
     RULE_logic = 2
-    RULE_time_op = 3
-    RULE_binary = 4
-    RULE_comparable = 5
-    RULE_number = 6
+    RULE_binary = 3
+    RULE_comparable = 4
+    RULE_number = 5
+    RULE_aggr_op = 6
     RULE_granularity_result = 7
     RULE_arithmetic = 8
     RULE_string = 9
@@ -87,8 +85,8 @@ class DSLGrammarParser ( Parser ):
     RULE_attribute = 12
     RULE_time_lit = 13
 
-    ruleNames =  [ "query", "some_filter", "logic", "time_op", "binary", 
-                   "comparable", "number", "granularity_result", "arithmetic", 
+    ruleNames =  [ "query", "some_filter", "logic", "binary", "comparable", 
+                   "number", "aggr_op", "granularity_result", "arithmetic", 
                    "string", "time", "student_attribute", "attribute", "time_lit" ]
 
     EOF = Token.EOF
@@ -117,14 +115,17 @@ class DSLGrammarParser ( Parser ):
     T__22=23
     T__23=24
     T__24=25
-    Number=26
-    String=27
-    ID=28
-    WS=29
+    T__25=26
+    T__26=27
+    T__27=28
+    Number=29
+    String=30
+    ID=31
+    WS=32
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
-        self.checkVersion("4.9.2")
+        self.checkVersion("4.9.3")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 
@@ -186,10 +187,6 @@ class DSLGrammarParser ( Parser ):
             return self.getTypedRuleContext(DSLGrammarParser.BinaryContext,0)
 
 
-        def time_op(self):
-            return self.getTypedRuleContext(DSLGrammarParser.Time_opContext,0)
-
-
         def getRuleIndex(self):
             return DSLGrammarParser.RULE_some_filter
 
@@ -207,7 +204,7 @@ class DSLGrammarParser ( Parser ):
         localctx = DSLGrammarParser.Some_filterContext(self, self._ctx, self.state)
         self.enterRule(localctx, 2, self.RULE_some_filter)
         try:
-            self.state = 33
+            self.state = 32
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,0,self._ctx)
             if la_ == 1:
@@ -220,12 +217,6 @@ class DSLGrammarParser ( Parser ):
                 self.enterOuterAlt(localctx, 2)
                 self.state = 31
                 self.binary()
-                pass
-
-            elif la_ == 3:
-                self.enterOuterAlt(localctx, 3)
-                self.state = 32
-                self.time_op()
                 pass
 
 
@@ -270,108 +261,40 @@ class DSLGrammarParser ( Parser ):
         self.enterRule(localctx, 4, self.RULE_logic)
         self._la = 0 # Token type
         try:
-            self.state = 46
+            self.state = 45
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,1,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 35
+                self.state = 34
                 self.match(DSLGrammarParser.T__0)
-                self.state = 36
+                self.state = 35
                 self.some_filter()
-                self.state = 37
+                self.state = 36
                 _la = self._input.LA(1)
                 if not(_la==DSLGrammarParser.T__1 or _la==DSLGrammarParser.T__2):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
-                self.state = 38
+                self.state = 37
                 self.some_filter()
-                self.state = 39
+                self.state = 38
                 self.match(DSLGrammarParser.T__3)
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 41
+                self.state = 40
                 self.match(DSLGrammarParser.T__0)
-                self.state = 42
+                self.state = 41
                 self.match(DSLGrammarParser.T__4)
-                self.state = 43
+                self.state = 42
                 self.some_filter()
-                self.state = 44
+                self.state = 43
                 self.match(DSLGrammarParser.T__3)
                 pass
 
-
-        except RecognitionException as re:
-            localctx.exception = re
-            self._errHandler.reportError(self, re)
-            self._errHandler.recover(self, re)
-        finally:
-            self.exitRule()
-        return localctx
-
-
-    class Time_opContext(ParserRuleContext):
-        __slots__ = 'parser'
-
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
-            super().__init__(parent, invokingState)
-            self.parser = parser
-
-        def time(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(DSLGrammarParser.TimeContext)
-            else:
-                return self.getTypedRuleContext(DSLGrammarParser.TimeContext,i)
-
-
-        def getRuleIndex(self):
-            return DSLGrammarParser.RULE_time_op
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitTime_op" ):
-                return visitor.visitTime_op(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-
-
-    def time_op(self):
-
-        localctx = DSLGrammarParser.Time_opContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 6, self.RULE_time_op)
-        self._la = 0 # Token type
-        try:
-            self.state = 54
-            self._errHandler.sync(self)
-            token = self._input.LA(1)
-            if token in [DSLGrammarParser.T__5, DSLGrammarParser.T__6]:
-                self.enterOuterAlt(localctx, 1)
-                self.state = 48
-                _la = self._input.LA(1)
-                if not(_la==DSLGrammarParser.T__5 or _la==DSLGrammarParser.T__6):
-                    self._errHandler.recoverInline(self)
-                else:
-                    self._errHandler.reportMatch(self)
-                    self.consume()
-                self.state = 49
-                self.time()
-                pass
-            elif token in [DSLGrammarParser.T__7]:
-                self.enterOuterAlt(localctx, 2)
-                self.state = 50
-                self.match(DSLGrammarParser.T__7)
-                self.state = 51
-                self.time()
-                self.state = 52
-                self.time()
-                pass
-            else:
-                raise NoViableAltException(self)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -411,24 +334,24 @@ class DSLGrammarParser ( Parser ):
     def binary(self):
 
         localctx = DSLGrammarParser.BinaryContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 8, self.RULE_binary)
+        self.enterRule(localctx, 6, self.RULE_binary)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 56
+            self.state = 47
             self.match(DSLGrammarParser.T__0)
-            self.state = 57
+            self.state = 48
             self.comparable()
-            self.state = 58
+            self.state = 49
             _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << DSLGrammarParser.T__8) | (1 << DSLGrammarParser.T__9) | (1 << DSLGrammarParser.T__10) | (1 << DSLGrammarParser.T__11) | (1 << DSLGrammarParser.T__12) | (1 << DSLGrammarParser.T__13))) != 0)):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << DSLGrammarParser.T__5) | (1 << DSLGrammarParser.T__6) | (1 << DSLGrammarParser.T__7) | (1 << DSLGrammarParser.T__8) | (1 << DSLGrammarParser.T__9) | (1 << DSLGrammarParser.T__10))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
-            self.state = 59
+            self.state = 50
             self.comparable()
-            self.state = 60
+            self.state = 51
             self.match(DSLGrammarParser.T__3)
         except RecognitionException as re:
             localctx.exception = re
@@ -458,6 +381,10 @@ class DSLGrammarParser ( Parser ):
             return self.getTypedRuleContext(DSLGrammarParser.StringContext,0)
 
 
+        def student_attribute(self):
+            return self.getTypedRuleContext(DSLGrammarParser.Student_attributeContext,0)
+
+
         def getRuleIndex(self):
             return DSLGrammarParser.RULE_comparable
 
@@ -473,27 +400,33 @@ class DSLGrammarParser ( Parser ):
     def comparable(self):
 
         localctx = DSLGrammarParser.ComparableContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 10, self.RULE_comparable)
+        self.enterRule(localctx, 8, self.RULE_comparable)
         try:
-            self.state = 65
+            self.state = 57
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,3,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,2,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 62
+                self.state = 53
                 self.number()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 63
+                self.state = 54
                 self.time()
                 pass
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 64
+                self.state = 55
                 self.string()
+                pass
+
+            elif la_ == 4:
+                self.enterOuterAlt(localctx, 4)
+                self.state = 56
+                self.student_attribute()
                 pass
 
 
@@ -528,6 +461,10 @@ class DSLGrammarParser ( Parser ):
             return self.getTypedRuleContext(DSLGrammarParser.Student_attributeContext,0)
 
 
+        def aggr_op(self):
+            return self.getTypedRuleContext(DSLGrammarParser.Aggr_opContext,0)
+
+
         def getRuleIndex(self):
             return DSLGrammarParser.RULE_number
 
@@ -543,34 +480,88 @@ class DSLGrammarParser ( Parser ):
     def number(self):
 
         localctx = DSLGrammarParser.NumberContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 12, self.RULE_number)
+        self.enterRule(localctx, 10, self.RULE_number)
         try:
-            self.state = 71
+            self.state = 68
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [DSLGrammarParser.Number]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 67
+                self.state = 59
                 self.match(DSLGrammarParser.Number)
                 pass
             elif token in [DSLGrammarParser.T__0]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 68
+                self.state = 60
                 self.arithmetic()
                 pass
-            elif token in [DSLGrammarParser.T__14, DSLGrammarParser.T__15, DSLGrammarParser.T__16, DSLGrammarParser.T__17, DSLGrammarParser.T__18]:
+            elif token in [DSLGrammarParser.T__17, DSLGrammarParser.T__18, DSLGrammarParser.T__19, DSLGrammarParser.T__20, DSLGrammarParser.T__21]:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 69
+                self.state = 61
                 self.granularity_result()
                 pass
-            elif token in [DSLGrammarParser.T__23]:
+            elif token in [DSLGrammarParser.T__26]:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 70
+                self.state = 62
                 self.student_attribute()
+                pass
+            elif token in [DSLGrammarParser.T__11, DSLGrammarParser.T__12, DSLGrammarParser.T__13, DSLGrammarParser.T__14, DSLGrammarParser.T__15, DSLGrammarParser.T__16]:
+                self.enterOuterAlt(localctx, 5)
+                self.state = 63
+                self.aggr_op()
+                self.state = 64
+                self.match(DSLGrammarParser.T__0)
+                self.state = 65
+                self.student_attribute()
+                self.state = 66
+                self.match(DSLGrammarParser.T__3)
                 pass
             else:
                 raise NoViableAltException(self)
 
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class Aggr_opContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+
+        def getRuleIndex(self):
+            return DSLGrammarParser.RULE_aggr_op
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitAggr_op" ):
+                return visitor.visitAggr_op(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def aggr_op(self):
+
+        localctx = DSLGrammarParser.Aggr_opContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 12, self.RULE_aggr_op)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 70
+            _la = self._input.LA(1)
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << DSLGrammarParser.T__11) | (1 << DSLGrammarParser.T__12) | (1 << DSLGrammarParser.T__13) | (1 << DSLGrammarParser.T__14) | (1 << DSLGrammarParser.T__15) | (1 << DSLGrammarParser.T__16))) != 0)):
+                self._errHandler.recoverInline(self)
+            else:
+                self._errHandler.reportMatch(self)
+                self.consume()
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -610,18 +601,18 @@ class DSLGrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 73
+            self.state = 72
             _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << DSLGrammarParser.T__14) | (1 << DSLGrammarParser.T__15) | (1 << DSLGrammarParser.T__16) | (1 << DSLGrammarParser.T__17) | (1 << DSLGrammarParser.T__18))) != 0)):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << DSLGrammarParser.T__17) | (1 << DSLGrammarParser.T__18) | (1 << DSLGrammarParser.T__19) | (1 << DSLGrammarParser.T__20) | (1 << DSLGrammarParser.T__21))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
-            self.state = 74
+            self.state = 73
             self.match(DSLGrammarParser.T__0)
-            self.state = 75
+            self.state = 74
             self.student_attribute()
-            self.state = 76
+            self.state = 75
             self.match(DSLGrammarParser.T__3)
         except RecognitionException as re:
             localctx.exception = re
@@ -665,20 +656,20 @@ class DSLGrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 78
+            self.state = 77
             self.match(DSLGrammarParser.T__0)
-            self.state = 79
+            self.state = 78
             self.number()
-            self.state = 80
+            self.state = 79
             _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << DSLGrammarParser.T__19) | (1 << DSLGrammarParser.T__20) | (1 << DSLGrammarParser.T__21) | (1 << DSLGrammarParser.T__22))) != 0)):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << DSLGrammarParser.T__22) | (1 << DSLGrammarParser.T__23) | (1 << DSLGrammarParser.T__24) | (1 << DSLGrammarParser.T__25))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
-            self.state = 81
+            self.state = 80
             self.number()
-            self.state = 82
+            self.state = 81
             self.match(DSLGrammarParser.T__3)
         except RecognitionException as re:
             localctx.exception = re
@@ -720,17 +711,17 @@ class DSLGrammarParser ( Parser ):
         localctx = DSLGrammarParser.StringContext(self, self._ctx, self.state)
         self.enterRule(localctx, 18, self.RULE_string)
         try:
-            self.state = 86
+            self.state = 85
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [DSLGrammarParser.T__23]:
+            if token in [DSLGrammarParser.T__26]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 84
+                self.state = 83
                 self.student_attribute()
                 pass
             elif token in [DSLGrammarParser.String]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 85
+                self.state = 84
                 self.match(DSLGrammarParser.String)
                 pass
             else:
@@ -756,10 +747,6 @@ class DSLGrammarParser ( Parser ):
             return self.getTypedRuleContext(DSLGrammarParser.Time_litContext,0)
 
 
-        def student_attribute(self):
-            return self.getTypedRuleContext(DSLGrammarParser.Student_attributeContext,0)
-
-
         def getRuleIndex(self):
             return DSLGrammarParser.RULE_time
 
@@ -777,22 +764,9 @@ class DSLGrammarParser ( Parser ):
         localctx = DSLGrammarParser.TimeContext(self, self._ctx, self.state)
         self.enterRule(localctx, 20, self.RULE_time)
         try:
-            self.state = 90
-            self._errHandler.sync(self)
-            token = self._input.LA(1)
-            if token in [DSLGrammarParser.T__24]:
-                self.enterOuterAlt(localctx, 1)
-                self.state = 88
-                self.time_lit()
-                pass
-            elif token in [DSLGrammarParser.T__23]:
-                self.enterOuterAlt(localctx, 2)
-                self.state = 89
-                self.student_attribute()
-                pass
-            else:
-                raise NoViableAltException(self)
-
+            self.enterOuterAlt(localctx, 1)
+            self.state = 87
+            self.time_lit()
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -831,9 +805,9 @@ class DSLGrammarParser ( Parser ):
         self.enterRule(localctx, 22, self.RULE_student_attribute)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 92
-            self.match(DSLGrammarParser.T__23)
-            self.state = 93
+            self.state = 89
+            self.match(DSLGrammarParser.T__26)
+            self.state = 90
             self.attribute()
         except RecognitionException as re:
             localctx.exception = re
@@ -872,7 +846,7 @@ class DSLGrammarParser ( Parser ):
         self.enterRule(localctx, 24, self.RULE_attribute)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 95
+            self.state = 92
             self.match(DSLGrammarParser.String)
         except RecognitionException as re:
             localctx.exception = re
@@ -911,13 +885,13 @@ class DSLGrammarParser ( Parser ):
         self.enterRule(localctx, 26, self.RULE_time_lit)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 97
-            self.match(DSLGrammarParser.T__24)
-            self.state = 98
+            self.state = 94
+            self.match(DSLGrammarParser.T__27)
+            self.state = 95
             self.match(DSLGrammarParser.T__0)
-            self.state = 99
+            self.state = 96
             self.match(DSLGrammarParser.String)
-            self.state = 100
+            self.state = 97
             self.match(DSLGrammarParser.T__3)
         except RecognitionException as re:
             localctx.exception = re
