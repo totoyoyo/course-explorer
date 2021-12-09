@@ -6,8 +6,8 @@ import DatasetService, { DatasetResponse } from "../services/datasetService";
 export interface Dataset {
 	id: string;
 	name: string;
-	start: number;
-	end: number;
+	start: string;
+	end: string;
 	attributes: string[];
 }
 
@@ -23,7 +23,7 @@ const initialState: DatasetState = {
 
 export const queryDatasets = createAsyncThunk<Dataset[], void, { state: RootState }>("datasets/getAll", async () => {
 	return DatasetService.getDatasets().then((res: DatasetResponse) => {
-		return res.results;
+		return res.datasets;
 	});
 });
 
