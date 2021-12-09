@@ -44,14 +44,14 @@ let svg = d3.create("svg").attr("width", width).attr("height", height);
 let link = svg.append("g").attr("class", "links").attr("stroke", "black").selectAll("line");
 let node = svg.append("g").attr("class", "nodes").selectAll("circle");
 let label = svg.append("g").attr("class", "labels").selectAll("text");
-let zoomListenerRet = svg
-	.append("rect")
-	.attr("class", "zoom-listener-rect")
-	.attr("x", 0)
-	.attr("y", 0)
-	.attr("width", width)
-	.attr("height", height)
-	.style("opacity", 0);
+// let zoomListenerRet = svg
+// 	.append("rect")
+// 	.attr("class", "zoom-listener-rect")
+// 	.attr("x", 0)
+// 	.attr("y", 0)
+// 	.attr("width", width)
+// 	.attr("height", height)
+// 	.style("opacity", 0).on("mouseover");
 let simulation = d3
 	.forceSimulation(newNodes)
 	.velocityDecay(0.9)
@@ -110,18 +110,26 @@ export const select = (groups, newLinks) => {
 				.data(linkNodes)
 				.enter()
 				.append("line")
-				.attr("x1", (d) => get_ancestor_post(d.source)[0] + d.source.pack_x)
-				.attr("y1", (d) => get_ancestor_post(d.source)[1] + d.source.pack_y)
-				.attr("x2", (d) => get_ancestor_post(d.target)[0] + d.target.pack_x)
-				.attr("y2", (d) => get_ancestor_post(d.target)[1] + d.target.pack_y);
-			current.transition().duration(500).style("fill", "orange").attr("r", 20);
+				.attr("x1", (d) => transform.applyX(get_ancestor_post(d.source)[0] + d.source.pack_x))
+				.attr("y1", (d) => transform.applyY(get_ancestor_post(d.source)[1] + d.source.pack_y))
+				.attr("x2", (d) => transform.applyX(get_ancestor_post(d.target)[0] + d.target.pack_x))
+				.attr("y2", (d) => transform.applyY(get_ancestor_post(d.target)[1] + d.target.pack_y));
+			current
+				.transition()
+				.duration(500)
+				.style("fill", "orange")
+				.attr("r", (d) => Math.max(d.r, d.r * transform.k) * 1.5);
 		}
 	}
 	function mouseout(event, node) {
 		const current_name = node.data.name;
 		if (current_name.includes("student")) {
 			const current = d3.selectAll("circle").filter((d) => d.data.name.includes(current_name));
-			current.transition().duration(500).attr("r", 10).style("fill", getColor);
+			current
+				.transition()
+				.duration(500)
+				.attr("r", (d) => Math.max(d.r, d.r * transform.k))
+				.style("fill", getNodeColor);
 			const selection = d3.select(".selection_links").selectAll("line").remove();
 			selection.remove();
 		}
@@ -165,9 +173,7 @@ export const draw = (groups, newLinks) => {
 		.selection()
 		.merge(node);
 	links = newLinks.map((l) => Object.assign({}, l));
-	console.log("current links", links);
 	link = link.data(links, (d) => `${d.source}-${d.target}`);
-	console.log("data link", link);
 	link.exit()
 		.transition()
 		.attr("stroke-opacity", 0)
@@ -207,7 +213,8 @@ export const draw = (groups, newLinks) => {
 		.attr("y", (d) => (isTopLevel(d) ? -5 : Math.max(d.pack_y, d.pack_y * transform.k)))
 		.attr("text-anchor", "middle")
 		.text((d) => d.data.name)
-		.merge(label);
+		.merge(label)
+		.style("pointer-events", "none");
 
 	// node.on("click", function (e, d) {
 	// 	console.log(e, "dam", d);
@@ -220,7 +227,7 @@ export const draw = (groups, newLinks) => {
 	simulation.alpha(1).restart();
 
 	zoom.on("zoom", zoomed);
-	zoomListenerRet.call(zoom);
+	svg.call(zoom);
 
 	function ticked() {
 		// if top level node, translate based on force simulated x and y positions.
