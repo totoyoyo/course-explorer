@@ -7,6 +7,10 @@ const pack = (data) =>
 		.padding(5)
 		.radius((d) => 10)(data);
 
+const isTopLevel = (d) => d.depth === 1;
+const isLeaf = (d) => d.children === undefined;
+const isInternal = (d) => d.depth > 1 && !isLeaf(d);
+
 // recursively sets child pack x and y positions relative to its parent
 const setPackXY = (n, prevX, prevY, prevPX, prevPY) => {
 	n.pack_x = n.x - prevX + prevPX;
@@ -18,14 +22,14 @@ const setPackXY = (n, prevX, prevY, prevPX, prevPY) => {
 	}
 };
 
-const getStroke = (d) => {
-	if (d.depth === 1) {
+const getNodeStroke = (d) => {
+	if (isTopLevel(d)) {
 		return "black";
 	}
 };
 
-const getColor = (d) => {
-	if (d.depth === 3) {
+const getNodeColor = (d) => {
+	if (isLeaf(d)) {
 		return d.parent.data.name === "true" ? "#ffbde0" : "#bdffdc";
 	} else {
 		return "white";
@@ -37,9 +41,17 @@ let links = [];
 let width = 900;
 let height = 900;
 let svg = d3.create("svg").attr("width", width).attr("height", height);
-let link = svg.append("g").attr("class", "links").attr("stroke-width", 1.5).attr("stroke", "black").selectAll("line");
+let link = svg.append("g").attr("class", "links").attr("stroke", "black").selectAll("line");
 let node = svg.append("g").attr("class", "nodes").selectAll("circle");
 let label = svg.append("g").attr("class", "labels").selectAll("text");
+let zoomListenerRet = svg
+	.append("rect")
+	.attr("class", "zoom-listener-rect")
+	.attr("x", 0)
+	.attr("y", 0)
+	.attr("width", width)
+	.attr("height", height)
+	.style("opacity", 0);
 let simulation = d3
 	.forceSimulation(newNodes)
 	.velocityDecay(0.9)
@@ -56,6 +68,8 @@ let simulation = d3
 		d3.forceCollide().radius((d) => d.r)
 	)
 	.alphaTarget(1);
+const zoom = d3.zoom().scaleExtent([1, 8]);
+let transform = d3.zoomIdentity;
 
 let selection_links = svg
 	.append("g")
@@ -133,19 +147,19 @@ export const draw = (groups, newLinks) => {
 	node = node.data(newNodes, (d) => d.data.id);
 	node.exit().transition().attr("opacity", 0).remove();
 	node.transition()
-		.attr("stroke", getStroke)
-		.attr("fill", getColor)
-		.attr("cx", (d) => d.pack_x)
-		.attr("cy", (d) => d.pack_y)
-		.attr("r", (d) => d.r);
+		.attr("stroke", getNodeStroke)
+		.attr("fill", getNodeColor)
+		.attr("r", (d) => Math.max(d.r, d.r * transform.k))
+		.attr("cx", (d) => Math.max(d.pack_x, d.pack_x * transform.k))
+		.attr("cy", (d) => Math.max(d.pack_y, d.pack_y * transform.k));
 	node = node
 		.enter()
 		.append("circle")
-		.attr("cx", (d) => d.pack_x)
-		.attr("cy", (d) => d.pack_y)
-		.attr("r", (d) => d.r)
-		.attr("stroke", getStroke)
-		.attr("fill", getColor)
+		.attr("r", (d) => Math.max(d.r, d.r * transform.k))
+		.attr("cx", (d) => Math.max(d.pack_x, d.pack_x * transform.k))
+		.attr("cy", (d) => Math.max(d.pack_y, d.pack_y * transform.k))
+		.attr("stroke", getNodeStroke)
+		.attr("fill", getNodeColor)
 		.transition()
 		.attr("opacity", 1)
 		.selection()
@@ -165,16 +179,33 @@ export const draw = (groups, newLinks) => {
 	link = link
 		.enter()
 		.append("line")
+		.attr("transform", transform.toString())
+		.attr("stroke-width", 1.5 / transform.k)
 		.call((link) => link.transition().attr("stroke-opacity", 1))
 		.merge(link);
 	console.log("here's the links", link);
 
 	label = label.data(newNodes, (d) => d.data.id);
 	label.exit().remove();
+
+	const setOpacityScale = (d) => {
+		const area = Math.PI * Math.pow(d.r, 2);
+		d.scaleThreshold = Math.sqrt(1000 / area);
+		d.opacityScale = d3
+			.scaleLinear()
+			.domain([d.scaleThreshold, d.scaleThreshold * 1.3])
+			.range([0, 1]);
+	};
+	label.each(setOpacityScale);
 	label = label
 		.enter()
 		.append("text")
-		.style("display", (d) => (d.depth === 1 ? "inline" : "none"))
+		.each(setOpacityScale)
+		.attr("display", (d) => (isInternal(d) ? "none" : "inline"))
+		.attr("opacity", (d) => (transform.k > d.scaleThreshold ? d.opacityScale(transform.k) : 0))
+		.attr("x", (d) => Math.max(d.pack_x, d.pack_x * transform.k))
+		.attr("y", (d) => (isTopLevel(d) ? -5 : Math.max(d.pack_y, d.pack_y * transform.k)))
+		.attr("text-anchor", "middle")
 		.text((d) => d.data.name)
 		.merge(label);
 
@@ -188,17 +219,24 @@ export const draw = (groups, newLinks) => {
 	simulation.on("tick", ticked);
 	simulation.alpha(1).restart();
 
+	zoom.on("zoom", zoomed);
+	zoomListenerRet.call(zoom);
+
 	function ticked() {
 		// if top level node, translate based on force simulated x and y positions.
 		// children of a top level node should all base their translations on it.
 		const translateNode = (d) => {
+			let dx, dy;
 			if (d.depth === 1) {
-				return `translate(${d.x - d.r}, ${d.y - d.r})`;
+				dx = d.x - d.r;
+				dy = d.y - d.r;
 			} else if (d.depth > 1) {
 				const parents = d.ancestors();
 				const p = parents[parents.length - 2];
-				return `translate(${p.x - p.r}, ${p.y - p.r})`;
+				dx = p.x - p.r;
+				dy = p.y - p.r;
 			}
+			return `translate(${transform.apply([dx, dy]).toString()})`;
 		};
 
 		node.attr("transform", (d) => {
@@ -211,5 +249,18 @@ export const draw = (groups, newLinks) => {
 			.attr("y1", (d) => d.source.y)
 			.attr("x2", (d) => d.target.x)
 			.attr("y2", (d) => d.target.y);
+	}
+
+	function zoomed(event) {
+		transform = event.transform;
+		node.attr("r", (d) => Math.max(d.r, d.r * transform.k))
+			.attr("cx", (d) => Math.max(d.pack_x, d.pack_x * transform.k))
+			.attr("cy", (d) => Math.max(d.pack_y, d.pack_y * transform.k));
+		link.attr("transform", transform.toString()).attr("stroke-width", 1.5 / transform.k);
+		label
+			.attr("x", (d) => Math.max(d.pack_x, d.pack_x * transform.k))
+			.attr("y", (d) => (isTopLevel(d) ? -5 : Math.max(d.pack_y, d.pack_y * transform.k)))
+			.attr("opacity", (d) => (transform.k > d.scaleThreshold ? d.opacityScale(transform.k) : 0));
+		ticked();
 	}
 };
