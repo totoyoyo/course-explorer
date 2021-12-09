@@ -1,4 +1,4 @@
-# Generated from C:/Users/ToToYoYo/PycharmProjects/course-explorer/antlr\DSLGrammar.g4 by ANTLR 4.9.2
+# Generated from DSLGrammar.g4 by ANTLR 4.9.3
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .DSLGrammarParser import DSLGrammarParser
@@ -24,11 +24,6 @@ class DSLGrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by DSLGrammarParser#time_op.
-    def visitTime_op(self, ctx:DSLGrammarParser.Time_opContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by DSLGrammarParser#binary.
     def visitBinary(self, ctx:DSLGrammarParser.BinaryContext):
         return self.visitChildren(ctx)
@@ -41,6 +36,11 @@ class DSLGrammarVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by DSLGrammarParser#number.
     def visitNumber(self, ctx:DSLGrammarParser.NumberContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by DSLGrammarParser#aggr_op.
+    def visitAggr_op(self, ctx:DSLGrammarParser.Aggr_opContext):
         return self.visitChildren(ctx)
 
 
