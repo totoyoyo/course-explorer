@@ -2,9 +2,6 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from functools import reduce
 
-import data.model.attribute.num_piazza_posts as num_piazza_posts
-import data.model.attribute.num_commits as num_commits
-
 
 class Granularity(Enum):
     DAILY = 1
@@ -28,6 +25,7 @@ class Aggregation(Enum):
     MAX = 3
     MIN = 4
     SUM = 5
+    COUNT = 6
 
 
 class BasicAttribute(ABC):
@@ -60,6 +58,8 @@ class TimeVaryingAttribute(BasicAttribute):
                 return min(split_lists)
             case Aggregation.SUM:
                 return sum(split_lists)
+            case Aggregation.COUNT:
+                return len(split_lists)
 
     def generate_split_lists(self, attr_list):
         split_lists = {}
@@ -103,11 +103,3 @@ class TimeVaryingAttribute(BasicAttribute):
     @abstractmethod
     def reduce_attribute_list(self, student, list):
         pass
-
-
-def make_attribute(name):
-    match name:
-        case 'num_piazza_posts':
-            return num_piazza_posts.NumPiazzaPosts()
-        case 'num_commits':
-            return num_commits.NumCommits()

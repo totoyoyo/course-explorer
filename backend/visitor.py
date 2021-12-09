@@ -9,6 +9,7 @@ import data.db_connection as db_connection
 import data.model.defs as student
 import data.model.Clock as clock
 import data.model.attribute.helpers as attr
+import data.model.attribute.factory as fact
 
 
 class OurVisitor(DSLGrammarVisitor):
@@ -33,23 +34,20 @@ class OurVisitor(DSLGrammarVisitor):
 
         return not super().visitSome_filter(ctx.some_filter()[0])
 
-    def visitTime_op(self, ctx: DSLGrammarParser.Time_opContext):
-        return super().visitTime_op(ctx)
-
     def visitBinary(self, ctx: DSLGrammarParser.BinaryContext):
         comp1 = super().visitComparable(ctx.comparable()[0])
         comp2 = super().visitComparable(ctx.comparable()[1])
-        if len(ctx.getTokens(9)) > 0:
+        if len(ctx.getTokens(6)) > 0:
             return comp1 > comp2
-        if len(ctx.getTokens(10)) > 0:
+        if len(ctx.getTokens(7)) > 0:
             return comp1 < comp2
-        if len(ctx.getTokens(11)) > 0:
+        if len(ctx.getTokens(8)) > 0:
             return comp1 <= comp2
-        if len(ctx.getTokens(12)) > 0:
+        if len(ctx.getTokens(9)) > 0:
             return comp1 >= comp2
-        if len(ctx.getTokens(13)) > 0:
+        if len(ctx.getTokens(10)) > 0:
             return comp1 != comp2
-        if len(ctx.getTokens(14)) > 0:
+        if len(ctx.getTokens(11)) > 0:
             return comp1 == comp2
 
     def visitComparable(self, ctx: DSLGrammarParser.ComparableContext):
@@ -60,6 +58,8 @@ class OurVisitor(DSLGrammarVisitor):
 
     def visitNumber(self, ctx: DSLGrammarParser.NumberContext):
         res = super().visitNumber(ctx)
+        if isinstance(res, attr.TimeVaryingAttribute) and ctx.aggr_op():
+            res = self.apply_aggregation(ctx, res)
         if isinstance(res, attr.BasicAttribute):
             return res.get_value_for(self.student)  # when the attribute is compared we compute just in time
         return float(ctx.getText())
@@ -68,28 +68,48 @@ class OurVisitor(DSLGrammarVisitor):
                                 ctx: DSLGrammarParser.Granularity_resultContext):
         res = super().visitGranularity_result(ctx)  # we must visit the child attribute
         if isinstance(res, attr.TimeVaryingAttribute):
-            if len(ctx.getTokens(15)) > 0:
+            if len(ctx.getTokens(18)) > 0:
                 res.set_granularity(attr.Granularity.DAILY)
-            elif len(ctx.getTokens(16)) > 0:
-                res.set_granularity(attr.Granularity.WEEKLY)
-            elif len(ctx.getTokens(17)) > 0:
-                res.set_granularity(attr.Granularity.MONTHLY)
-            elif len(ctx.getTokens(18)) > 0:
-                res.set_granularity(attr.Granularity.MAX)  # TODO remove this
             elif len(ctx.getTokens(19)) > 0:
+                res.set_granularity(attr.Granularity.WEEKLY)
+            elif len(ctx.getTokens(20)) > 0:
+                res.set_granularity(attr.Granularity.MONTHLY)
+            elif len(ctx.getTokens(21)) > 0:
+                res.set_granularity(attr.Granularity.MAX)  # TODO remove this
+            elif len(ctx.getTokens(22)) > 0:
                 res.set_granularity(attr.Granularity.MAX)
         return res
+
+
+    def apply_aggregation(self, ctx: DSLGrammarParser.NumberContext, res: attr.TimeVaryingAttribute):
+        if len(ctx.getTokens(12)) > 0:
+            res.set_aggregation(attr.Aggregation.AVG)
+        elif len(ctx.getTokens(13)) > 0:
+            res.set_aggregation(attr.Aggregation.COUNT)
+        elif len(ctx.getTokens(14)) > 0:
+            res.set_aggregation(attr.Aggregation.MAX)
+        elif len(ctx.getTokens(15)) > 0:
+            res.set_aggregation(attr.Aggregation.MIN)
+        elif len(ctx.getTokens(16)) > 0:
+            res.set_aggregation(attr.Aggregation.SUM)
+        elif len(ctx.getTokens(17)) > 0:
+            res.set_aggregation(attr.Aggregation.LATEST)
+        return res
+
+
+    def visitAggr_op(self, ctx:DSLGrammarParser.Aggr_opContext):
+        return self.visitChildren(ctx)
 
     def visitArithmetic(self, ctx: DSLGrammarParser.ArithmeticContext):
         num1 = super().visitNumber(ctx.number()[0])
         num2 = super().visitNumber(ctx.number()[1])
-        if len(ctx.getTokens(20)):
-            return num1 + num2
-        if len(ctx.getTokens(21)):
-            return num1 - num2
-        if len(ctx.getTokens(22)):
-            return num1 * num2
         if len(ctx.getTokens(23)):
+            return num1 + num2
+        if len(ctx.getTokens(24)):
+            return num1 - num2
+        if len(ctx.getTokens(25)):
+            return num1 * num2
+        if len(ctx.getTokens(26)):
             return num1 / num2
 
     def visitString(self, ctx: DSLGrammarParser.StringContext):
@@ -103,7 +123,7 @@ class OurVisitor(DSLGrammarVisitor):
         return super().visitStudent_attribute(ctx)
 
     def visitAttribute(self, ctx: DSLGrammarParser.AttributeContext):
-        return attr.make_attribute(ctx.getText())
+        return fact.make_attribute(ctx.getText())
 
     def visitTime_lit(self, ctx: DSLGrammarParser.Time_litContext):
         return super().visitTime_lit(ctx)
@@ -143,4 +163,4 @@ for row in db_connection.sql('SELECT * from users_scores'):
     s = student.make_student(row, db_connection, clock.Clock(9999999999999999999))
     students.append(s)
 
-print(run_query("((daily(student.num_piazza_posts) > 2) AND (student.num_piazza_posts <12))", students))
+print(run_query("((weekly(student.num_piazza_posts) > 2) AND (student.num_piazza_posts <12))", students))
