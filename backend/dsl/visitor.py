@@ -4,10 +4,6 @@ from antlr.DSLGrammarVisitor import DSLGrammarVisitor
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4 import InputStream, CommonTokenStream
 from datetime import datetime
-
-import data.db_connection as db_connection
-import data.model.defs as student
-import data.model.Clock as clock
 import data.model.attribute.helpers as attr
 import data.model.attribute.factory as fact
 
@@ -157,10 +153,8 @@ def run_query(query, istudents):
     return [ii for ii in istudents if OurVisitor(ii).visit(tree)]
 
 
-students = []
-
-for row in db_connection.sql('SELECT * from users_scores'):
-    s = student.make_student(row, db_connection, clock.Clock(9999999999999999999))
-    students.append(s)
-
-print(run_query("((weekly(student.num_piazza_posts) > 2) AND (student.num_piazza_posts <12))", students))
+# this is just an execution of an example query
+# from data.loader import get_students
+# from data.loader import get_clock
+# get_clock().time = 99999999999999
+# print(run_query("((daily(student.num_piazza_posts) > 2) AND (student.num_piazza_posts <12))", get_students()))
