@@ -14,7 +14,7 @@ router = APIRouter(
 @router.post("/", response_model=QueryResponse)
 async def query(body: QueryRequest):
     start = datetime.datetime.strptime(body.start, "%Y-%m-%dT%H:%M:%S%z").timestamp()
-    end = datetime.datetime.strptime(body.start, "%Y-%m-%dT%H:%M:%S%z").timestamp()
+    end = datetime.datetime.strptime(body.end, "%Y-%m-%dT%H:%M:%S%z").timestamp()
     step = body.step / 1000  # step is passed in ms
 
     students = get_students()

@@ -1,7 +1,7 @@
 import datetime
 from fastapi import APIRouter
 from data.loader import get_students, get_clock
-from data.model.attribute.factory import make_attribute
+from data.model.attribute.factory import make_attribute, get_all_attributes
 
 from schemas.student import Student, StudentList, StudentDetailsRequest, StudentDetailsResponse
 
@@ -24,11 +24,13 @@ async def get_all_students():
 
 @router.post("/details", response_model=StudentDetailsResponse)
 async def get_student_details(req: StudentDetailsRequest):
-    start = datetime.datetime.strptime(req.start, "%Y-%m-%dT%H:%M:%S%z").timestamp()
-    end = datetime.datetime.strptime(req.start, "%Y-%m-%dT%H:%M:%S%z").timestamp()
-    step = req.step / 1000  # step is passed in ms
+    start = int(req.start)
+    end = int(req.end)
+    step = int(req.step)  # step is passed in ms
 
-    students = [s for s in get_students() if (s.anon_id in req.ids)]
+    attributes = get_all_attributes() if req.attributes is None else req.attributes
+
+    students = get_students() if req.ids is None else [s for s in get_students() if (s.anon_id in req.ids)]
     clock = get_clock()
     clock.time = start
 
@@ -38,10 +40,10 @@ async def get_student_details(req: StudentDetailsRequest):
         students_at_time = []
         for s in students:
             attrib_map = {}
-            for attrib in req.attributes:
+            for attrib in attributes:
                 attrib_map[attrib] = make_attribute(attrib).get_value_for(s)
             students_at_time.append({"id": s.anon_id, "attributes": attrib_map})
-        results[datetime.datetime.utcfromtimestamp(clock.time).strftime("%Y-%m-%dT%H:%M:%S%z")] = students_at_time;
+        results[datetime.datetime.utcfromtimestamp(clock.time / 1000).strftime("%Y-%m-%dT%H:%M:%S%z")] = students_at_time
         clock.time += step
 
     return results
