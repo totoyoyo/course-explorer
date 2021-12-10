@@ -3,6 +3,7 @@ import { RootState } from "./store";
 import QueryService, { QueryResponse } from "../services/queryService";
 import { formatISO, milliseconds, parseISO } from "date-fns";
 import { toFnsDuration } from "./timeIntervalSlice";
+import { Attribute } from "./attributesSlice";
 
 export interface Indicator {
 	name: string;
@@ -18,6 +19,7 @@ export function NewIndicator(): Indicator {
 
 export interface QueriedIndicator extends Indicator {
 	students: Map<number, string[]>;
+	attributes: Attribute[];
 }
 
 export interface IndicatorsState {
@@ -62,7 +64,8 @@ export const queryAllIndicators = createAsyncThunk<QueriedIndicator[], void, { s
 						});
 						return {
 							...i,
-							students: students
+							students: students,
+							attributes: res.attributes
 						};
 					}
 				)

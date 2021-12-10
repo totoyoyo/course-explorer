@@ -5,6 +5,7 @@ import outcomeReducer from "./outcomeSlice";
 import allStudentsReducer from "./allStudentsSlice";
 import timeIntervalReducer from "./timeIntervalSlice";
 import studentDetailsReducer from "./studentDetailsSlice";
+import widgetDetailsReducer from "./widgetDetailsSlice";
 import datasetsReducer from "./datasetSlice";
 import attributesReducer from "./attributesSlice";
 
@@ -16,6 +17,7 @@ export const store = configureStore({
 		student: studentReducer,
 		allStudents: allStudentsReducer,
 		studentDetails: studentDetailsReducer,
+		widgetStudentDetails: widgetDetailsReducer,
 		datasets: datasetsReducer,
 		attributes: attributesReducer
 	},

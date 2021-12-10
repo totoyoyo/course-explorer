@@ -17,7 +17,7 @@ import {
 	Tabs,
 	Tab
 } from "@mui/material";
-import MenuRoundedIcon from "@mui/material/SvgIcon/SvgIcon";
+import MenuIcon from "@mui/icons-material/Menu";
 import { IndicatorEditorDialog, IndicatorEditorDialogProps } from "./pages/IndicatorsBoard/IndicatorEditorDialog";
 import { IndicatorsSidebar } from "./pages/IndicatorsBoard/IndicatorsSidebar";
 import { OverviewSidebar } from "./pages/Overview/OverviewSidebar";
@@ -129,7 +129,7 @@ function App() {
 								onClick={onOpenSidebar}
 								edge="start"
 								sx={{ mr: 2, ...(sidebarOpen && { display: "none" }) }}>
-								<MenuRoundedIcon />
+								<MenuIcon />
 							</IconButton>
 							<Typography>Course Friction Explorer</Typography>
 						</Toolbar>

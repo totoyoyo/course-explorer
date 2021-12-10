@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../states/hooks";
 import { IndicatorsState, QueriedIndicator, selectIndicators } from "../../states/indicatorsSlice";
 import CircularPacking, {
@@ -10,17 +10,29 @@ import { OutcomeState, QueriedOutcome, selectOutcome } from "../../states/outcom
 import { selectAllStudents } from "../../states/allStudentsSlice";
 import { TimeSlider } from "../../components/TimeSlider/TimeSlider";
 import { formatISO, getTime, max, min } from "date-fns";
-import { Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import PieChartRatios, { RatioGroup, RatioProps } from "../../components/PieChartRatios/PieChartRatios";
+import HistogramWidget, { HistogramWidgetProps } from "../../components/HistogramWidget/HistogramWidget";
+import { Dataset, selectDatasets } from "../../states/datasetSlice";
+import {
+	queryWidgetStudentDetails,
+	selectWidgetStudentDetails,
+	setSelectedIndicator,
+	WidgetStudentDetail
+} from "../../states/widgetDetailsSlice";
+import { Attribute } from "../../states/attributesSlice";
 
 export function IndicatorsBoard() {
 	const indicatorsState: IndicatorsState = useAppSelector(selectIndicators);
 	const queriedIndicators: QueriedIndicator[] = indicatorsState.queriedIndicators;
-	const outcomeState: OutcomeState = useAppSelector(selectOutcome);
-	const queriedOutcome: QueriedOutcome | undefined = outcomeState.queriedOutcome;
+	const queriedOutcome: QueriedOutcome | undefined = useAppSelector(selectOutcome).queriedOutcome;
 	const allStudents = useAppSelector(selectAllStudents).students;
 	const [sliderIndex, setSliderIndex] = useState<number | undefined>(undefined);
-	const [packProps, setPackProps] = useState<CircularPackingProps>({ nodes: [], links: [] });
+	const [packProps, setPackProps] = useState<CircularPackingProps>({
+		nodes: [],
+		links: [],
+		onSelectIndicator: (i: string) => {}
+	});
 	const [ratioProps, setRatioProps] = useState<RatioProps>({ nodes: [], links: [] });
 	const dispatch = useAppDispatch();
 
@@ -81,7 +93,9 @@ export function IndicatorsBoard() {
 		);
 		return {
 			nodes: [constructNodeGroup("Outcome", outcomeStudents, []), ...props.map((p) => p.nodeGroup)],
-			links: props.map((p) => p.link)
+			links: props.map((p) => p.link),
+			onSelectIndicator: (i: string | undefined) =>
+				dispatch(setSelectedIndicator(queriedIndicators.find((indicator) => indicator.name === i)))
 		};
 	};
 
@@ -168,8 +182,13 @@ export function IndicatorsBoard() {
 
 	return queriedIndicators.length > 0 && queriedOutcome! ? (
 		<div>
-			<CircularPacking {...packProps} />
-			<PieChartRatios {...ratioProps} />
+			<Stack direction="row">
+				<Stack>
+					<CircularPacking {...packProps} />
+					<PieChartRatios {...ratioProps} />
+				</Stack>
+				<HistogramWidgetList sliderIndex={sliderIndex} />
+			</Stack>
 			<TimeSlider
 				onChange={onSliderChange}
 				value={sliderIndex}
@@ -182,4 +201,60 @@ export function IndicatorsBoard() {
 	) : (
 		<Typography>Nothing to show yet!</Typography>
 	);
+}
+
+export interface HistogramWidgetListProps {
+	sliderIndex: number | undefined;
+}
+
+function HistogramWidgetList(props: HistogramWidgetListProps) {
+	const widgetDetails: WidgetStudentDetail[] = useAppSelector(selectWidgetStudentDetails).details;
+	const selectedIndicator: QueriedIndicator | undefined = useAppSelector(selectWidgetStudentDetails).selected;
+	const queriedOutcome: QueriedOutcome | undefined = useAppSelector(selectOutcome).queriedOutcome;
+	const selectedDataset: Dataset | undefined = useAppSelector(selectDatasets).selected;
+	const dispatch = useAppDispatch();
+
+	const getHistogramWidgetProps = (attr: Attribute): HistogramWidgetProps => {
+		const indicator = {
+			name: selectedIndicator!.name,
+			students: new Set(selectedIndicator!.students.get(props.sliderIndex!) || [])
+		};
+		return {
+			indicator: indicator,
+			outcome: { name: "Outcome", students: new Set(queriedOutcome!.students.get(props.sliderIndex!) || []) },
+			data: widgetDetails,
+			attribute: attr,
+			labelX: attr,
+			labelY: "Number of Students"
+		};
+	};
+
+	useEffect(() => {
+		if (selectedDataset && selectedIndicator && queriedOutcome && props.sliderIndex) {
+			const outcomeStudents = queriedOutcome.students.get(props.sliderIndex) || [];
+			const indicatorStudents = selectedIndicator.students.get(props.sliderIndex) || [];
+			const attributes = new Set(queriedOutcome.attributes.concat(selectedIndicator.attributes));
+			dispatch(
+				queryWidgetStudentDetails({
+					datasetId: selectedDataset.id,
+					time: props.sliderIndex,
+					attributes: Array.from(attributes),
+					ids: Array.from(new Set([...outcomeStudents, ...indicatorStudents]))
+				})
+			);
+		}
+	}, [selectedIndicator, props.sliderIndex]);
+
+	if (selectedIndicator && queriedOutcome && widgetDetails.length > 0 && props.sliderIndex) {
+		const attributes = Array.from(new Set(selectedIndicator.attributes.concat(queriedOutcome.attributes)));
+		return (
+			<Stack>
+				{attributes.map((attr) => (
+					<HistogramWidget key={attr} {...getHistogramWidgetProps(attr)} />
+				))}
+			</Stack>
+		);
+	} else {
+		return <Stack>Select indicator to see details</Stack>;
+	}
 }

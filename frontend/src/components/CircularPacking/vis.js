@@ -41,9 +41,6 @@ let links = [];
 let width = 900;
 let height = 900;
 let svg = d3.create("svg").attr("width", width).attr("height", height);
-let link = svg.append("g").attr("class", "links").attr("stroke", "black").selectAll("line");
-let node = svg.append("g").attr("class", "nodes").selectAll("circle");
-let label = svg.append("g").attr("class", "labels").selectAll("text");
 let zoomListenerRet = svg
 	.append("rect")
 	.attr("class", "zoom-listener-rect")
@@ -52,6 +49,9 @@ let zoomListenerRet = svg
 	.attr("width", width)
 	.attr("height", height)
 	.style("opacity", 0);
+let link = svg.append("g").attr("class", "links").attr("stroke", "black").selectAll("line");
+let node = svg.append("g").attr("class", "nodes").selectAll("circle");
+let label = svg.append("g").attr("class", "labels").selectAll("text");
 let simulation = d3
 	.forceSimulation(newNodes)
 	.velocityDecay(0.9)
@@ -70,9 +70,10 @@ let simulation = d3
 	.alphaTarget(1);
 const zoom = d3.zoom().scaleExtent([1, 8]);
 let transform = d3.zoomIdentity;
+let selected = undefined;
 
 // Source: https://observablehq.com/@d3/zoomable-circle-packing
-export const draw = (groups, newLinks) => {
+export const draw = (groups, newLinks, onSelectIndicator) => {
 	d3.select(".vis-circular-packing").append(() => svg.node());
 	const root = pack(d3.hierarchy({ name: "root", children: groups }).sum((d) => 1));
 	root.children.forEach((d) => {
@@ -91,6 +92,7 @@ export const draw = (groups, newLinks) => {
 	node.exit().transition().attr("opacity", 0).remove();
 	node.transition()
 		.attr("stroke", getNodeStroke)
+		.attr("stroke-width", 1)
 		.attr("fill", getNodeColor)
 		.attr("r", (d) => Math.max(d.r, d.r * transform.k))
 		.attr("cx", (d) => Math.max(d.pack_x, d.pack_x * transform.k))
@@ -102,11 +104,33 @@ export const draw = (groups, newLinks) => {
 		.attr("cx", (d) => Math.max(d.pack_x, d.pack_x * transform.k))
 		.attr("cy", (d) => Math.max(d.pack_y, d.pack_y * transform.k))
 		.attr("stroke", getNodeStroke)
+		.attr("stroke-width", 1)
 		.attr("fill", getNodeColor)
-		.transition()
 		.attr("opacity", 1)
+		.attr("cursor", "pointer")
 		.selection()
 		.merge(node);
+	node.on("click", function (event, d) {
+		if (isTopLevel(d) && selected !== d) {
+			selected = d;
+			d3.select(this).attr("stroke-width", 3);
+			onSelectIndicator(d.data.name);
+		} else if (isInternal(d) && selected !== d.parent) {
+			selected = d.parent;
+			d3.select(this.parentNode).attr("stroke-width", 3);
+			onSelectIndicator(d.parent.data.name);
+		} else if (isTopLevel(d)) {
+			selected = undefined;
+			d3.select(this).attr("stroke-width", 1);
+			onSelectIndicator(selected);
+		} else {
+			selected = undefined;
+			d3.select(this.parentNode).attr("stroke-width", 1);
+			onSelectIndicator(selected);
+		}
+		event.stopPropagation();
+	});
+
 	links = newLinks.map((l) => Object.assign({}, l));
 	link = link.data(links, (d) => `${d.source}-${d.target}`);
 	link.exit()

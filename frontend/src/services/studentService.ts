@@ -334,9 +334,10 @@ const getMockDetailsResponse = (): StudentDetailsResponse => {
 
 export interface StudentDetailsRequest {
 	datasetId: string;
-	start: number;
-	end: number;
-	step: number; //ms
+	start?: number;
+	end?: number;
+	step?: number; //ms
+	time?: number;
 	attributes?: string[];
 	ids?: string[];
 }
