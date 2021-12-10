@@ -66,11 +66,14 @@ let transform = d3.zoomIdentity;
 
 const getSelectNodeColor = (d) => {
 	if (isLeaf(d)) {
-		console.log(d);
 		return d.parent.data.name === "true" ? "#ff00bb" : "#14d000";
 	} else {
 		return "white";
 	}
+};
+
+const getSelectLinkColor = (d) => {
+	return d.source.parent.data.name === "true" ? "#ff00bb" : "#14d000";
 };
 
 let selection_links = svg.append("g").attr("class", "selection_links").attr("stroke-width", 1).selectAll("line");
@@ -92,9 +95,6 @@ export const select = (groups, newLinks) => {
 };
 
 function mouseover(event, node) {
-	console.log("this is event", event);
-	console.log("this is node", node);
-	console.log("this is node data", node.data);
 	const current_name = node.data.name;
 	if (current_name.includes("student")) {
 		const current = d3.selectAll("circle").filter((d) => d.data.name === current_name);
@@ -102,13 +102,11 @@ function mouseover(event, node) {
 		let linkNodes = get_links_between_nodes(curr_data);
 		// current.each((d, index) => (linkNodes[index] = d));
 		var transforms = current.attr("transform");
-		console.log("this selection", current);
-		console.log("this linkNodes", linkNodes);
 		selection_links = selection_links.data(linkNodes);
 		let newLines = selection_links
 			.enter()
 			.append("line")
-			.attr("stroke", getSelectNodeColor)
+			.attr("stroke", getSelectLinkColor)
 			.attr("x1", (d) => transform.applyX(get_ancestor_post(d.source)[0] + d.source.pack_x))
 			.attr("y1", (d) => transform.applyY(get_ancestor_post(d.source)[1] + d.source.pack_y))
 			.attr("x2", (d) => transform.applyX(get_ancestor_post(d.target)[0] + d.target.pack_x))
@@ -186,8 +184,6 @@ export const draw = (groups, newLinks) => {
 		.attr("stroke-width", 1.5 / transform.k)
 		.call((link) => link.transition().attr("stroke-opacity", 1))
 		.merge(link);
-	console.log("here's the links", link);
-
 	label = label.data(newNodes, (d) => d.data.id);
 	label.exit().remove();
 
@@ -213,10 +209,6 @@ export const draw = (groups, newLinks) => {
 		.merge(label)
 		.style("pointer-events", "none");
 
-	// node.on("click", function (e, d) {
-	// 	console.log(e, "dam", d);
-	// 	d3.select(this).style("fill", "orange");
-	// });
 
 	simulation.nodes(newNodes);
 	simulation.force("link").links(links);
