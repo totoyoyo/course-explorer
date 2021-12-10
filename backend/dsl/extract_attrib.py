@@ -3,9 +3,6 @@ from antlr.DSLGrammarParser import DSLGrammarParser
 from antlr.DSLGrammarVisitor import DSLGrammarVisitor
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4 import InputStream, CommonTokenStream
-from datetime import datetime
-import data.model.attribute.helpers as attr
-import data.model.attribute.factory as fact
 
 
 class AttributeExtractingVisitor(DSLGrammarVisitor):
@@ -55,7 +52,8 @@ class AttributeExtractingVisitor(DSLGrammarVisitor):
         return super().visitStudent_attribute(ctx)
 
     def visitAttribute(self, ctx: DSLGrammarParser.AttributeContext):
-        return ctx.getText()
+        print("found " + ctx.getText())
+        return {ctx.getText()}
 
     def visitTime_lit(self, ctx: DSLGrammarParser.Time_litContext):
         return super().visitTime_lit(ctx)
@@ -64,8 +62,8 @@ class AttributeExtractingVisitor(DSLGrammarVisitor):
     def aggregateResult(self, aggregate, nextResult):
         if not isinstance(aggregate, set):
             aggregate = set()
-        if nextResult is not None:
-            aggregate.add(nextResult)
+        if isinstance(nextResult, set):
+            aggregate = aggregate.union(nextResult)
         return aggregate
 
 
@@ -74,7 +72,7 @@ class OurErrorListener(ErrorListener):
         raise Exception("Something happened")
 
 
-def run_query(query):
+def extract_attributes(query):
     data = InputStream(query)
     # for throwing exception
     error_listener = OurErrorListener()

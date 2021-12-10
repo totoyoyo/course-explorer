@@ -5,7 +5,8 @@ from pydantic import BaseModel
 
 
 class QueryResponse(BaseModel):
-    __root__: Dict[datetime, List[str]]
+    results: Dict[datetime, List[str]]
+    attributes: List[str]
 
 
 class QueryRequest(BaseModel):
