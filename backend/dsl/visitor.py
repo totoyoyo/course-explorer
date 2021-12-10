@@ -94,7 +94,7 @@ class OurVisitor(DSLGrammarVisitor):
 
 
     def visitAggr_op(self, ctx:DSLGrammarParser.Aggr_opContext):
-        return self.visitChildren(ctx)
+        return self.visitAggr_op(ctx)
 
     def visitArithmetic(self, ctx: DSLGrammarParser.ArithmeticContext):
         num1 = super().visitNumber(ctx.number()[0])
@@ -151,7 +151,6 @@ def run_query(query, istudents):
     tree = parser.query()
 
     return [ii for ii in istudents if OurVisitor(ii).visit(tree)]
-
 
 # this is just an execution of an example query
 # from data.loader import get_students

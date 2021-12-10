@@ -19,8 +19,8 @@ class StudentDetail(BaseModel):
 
 class StudentDetailsRequest(BaseModel):
     datasetId: str
-    start: datetime
-    end: datetime
+    start: str
+    end: str
     step: int
     attributes: Optional[List[str]]
     ids: Optional[List[str]]
