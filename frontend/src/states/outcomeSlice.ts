@@ -3,7 +3,7 @@ import { PayloadAction } from "@reduxjs/toolkit/dist/createAction";
 import { RootState } from "./store";
 import { formatISO, milliseconds, parseISO } from "date-fns";
 import QueryService, { QueryResponse } from "../services/queryService";
-import { Duration, Granularity } from "./timeIntervalSlice";
+import { toFnsDuration } from "./timeIntervalSlice";
 
 export interface Outcome {
 	query: string;
@@ -27,19 +27,6 @@ const initialState: OutcomeState = {
 	queriedOutcome: undefined
 };
 
-const toFnsDuration = (d: Duration) => {
-	switch (d.granularity) {
-		case Granularity.HOURS:
-			return { hours: d.length };
-		case Granularity.DAYS:
-			return { days: d.length };
-		case Granularity.WEEKS:
-			return { weeks: d.length };
-		case Granularity.MONTHS:
-			return { months: d.length };
-	}
-};
-
 export const queryOutcome = createAsyncThunk<QueriedOutcome, void, { state: RootState }>(
 	"outcome/query",
 	async (arg, thunkAPI) => {
@@ -55,8 +42,8 @@ export const queryOutcome = createAsyncThunk<QueriedOutcome, void, { state: Root
 			name: "Outcome"
 		}).then((res: QueryResponse) => {
 			const students = new Map<number, string[]>();
-			Object.keys(res.results).forEach((time: string) => {
-				students.set(parseISO(time).getTime(), res.results[time]);
+			Object.keys(res).forEach((time: string) => {
+				students.set(parseISO(time).getTime(), res[time]);
 			});
 			return {
 				...outcome.outcome,
