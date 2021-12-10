@@ -92,7 +92,7 @@ export const draw = (groups, newLinks, onSelectIndicator) => {
 	node.exit().transition().attr("opacity", 0).remove();
 	node.transition()
 		.attr("stroke", getNodeStroke)
-		.attr("stroke-width", 1)
+		.attr("stroke-width", (d) => (d.data.selected ? 3 : 1))
 		.attr("fill", getNodeColor)
 		.attr("r", (d) => Math.max(d.r, d.r * transform.k))
 		.attr("cx", (d) => Math.max(d.pack_x, d.pack_x * transform.k))
@@ -113,19 +113,15 @@ export const draw = (groups, newLinks, onSelectIndicator) => {
 	node.on("click", function (event, d) {
 		if (isTopLevel(d) && selected !== d) {
 			selected = d;
-			d3.select(this).attr("stroke-width", 3);
 			onSelectIndicator(d.data.name);
 		} else if (isInternal(d) && selected !== d.parent) {
 			selected = d.parent;
-			d3.select(this.parentNode).attr("stroke-width", 3);
 			onSelectIndicator(d.parent.data.name);
 		} else if (isTopLevel(d)) {
 			selected = undefined;
-			d3.select(this).attr("stroke-width", 1);
 			onSelectIndicator(selected);
 		} else {
 			selected = undefined;
-			d3.select(this.parentNode).attr("stroke-width", 1);
 			onSelectIndicator(selected);
 		}
 		event.stopPropagation();

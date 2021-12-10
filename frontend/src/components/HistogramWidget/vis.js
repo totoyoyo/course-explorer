@@ -39,7 +39,7 @@ const draw = (props) => {
 	});
 	const x = d3
 		.scaleLinear()
-		.domain([0, xAxisMax + 5]) // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
+		.domain([0, xAxisMax + 5])
 		.range([0, width]);
 	svg.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
 
@@ -70,7 +70,7 @@ const draw = (props) => {
 			return "translate(" + x(d.x0) + "," + y(d.length) + ")";
 		})
 		.attr("width", function (d) {
-			return x(d.x1) - x(d.x0) - 1;
+			return x(d.x1) - x(d.x0);
 		})
 		.attr("height", function (d) {
 			return height - y(d.length);
@@ -87,7 +87,7 @@ const draw = (props) => {
 			return "translate(" + x(d.x0) + "," + y(d.length) + ")";
 		})
 		.attr("width", function (d) {
-			return x(d.x1) - x(d.x0) - 1;
+			return x(d.x1) - x(d.x0);
 		})
 		.attr("height", function (d) {
 			return height - y(d.length);

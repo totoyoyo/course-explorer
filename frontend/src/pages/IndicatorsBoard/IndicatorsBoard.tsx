@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../states/hooks";
-import { IndicatorsState, QueriedIndicator, selectIndicators } from "../../states/indicatorsSlice";
+import { QueriedIndicator, selectIndicators } from "../../states/indicatorsSlice";
 import CircularPacking, {
 	CircularPackingProps,
 	Link,
 	NodeGroup
 } from "../../components/CircularPacking/CircularPacking";
-import { OutcomeState, QueriedOutcome, selectOutcome } from "../../states/outcomeSlice";
+import { QueriedOutcome, selectOutcome } from "../../states/outcomeSlice";
 import { selectAllStudents } from "../../states/allStudentsSlice";
 import { TimeSlider } from "../../components/TimeSlider/TimeSlider";
 import { formatISO, getTime, max, min } from "date-fns";
-import { Stack, Typography } from "@mui/material";
+import { List, ListItem, ListSubheader, Stack, styled, Typography } from "@mui/material";
 import PieChartRatios, { RatioGroup, RatioProps } from "../../components/PieChartRatios/PieChartRatios";
-import HistogramWidget, { HistogramWidgetProps } from "../../components/HistogramWidget/HistogramWidget";
-import { Dataset, selectDatasets } from "../../states/datasetSlice";
 import {
 	queryWidgetStudentDetails,
 	selectWidgetStudentDetails,
@@ -21,10 +19,11 @@ import {
 	WidgetStudentDetail
 } from "../../states/widgetDetailsSlice";
 import { Attribute } from "../../states/attributesSlice";
+import HistogramWidget, { HistogramWidgetProps } from "../../components/HistogramWidget/HistogramWidget";
+import { Dataset, selectDatasets } from "../../states/datasetSlice";
 
 export function IndicatorsBoard() {
-	const indicatorsState: IndicatorsState = useAppSelector(selectIndicators);
-	const queriedIndicators: QueriedIndicator[] = indicatorsState.queriedIndicators;
+	const queriedIndicators: QueriedIndicator[] = useAppSelector(selectIndicators).queriedIndicators;
 	const queriedOutcome: QueriedOutcome | undefined = useAppSelector(selectOutcome).queriedOutcome;
 	const allStudents = useAppSelector(selectAllStudents).students;
 	const [sliderIndex, setSliderIndex] = useState<number | undefined>(undefined);
@@ -245,14 +244,59 @@ function HistogramWidgetList(props: HistogramWidgetListProps) {
 		}
 	}, [selectedIndicator, props.sliderIndex]);
 
+	const HistogramWidgetLegend = styled("div")(({ theme }) => ({
+		display: "flex",
+		alignItems: "start"
+	}));
+
+	const HistogramWidgetLegendItem = styled("div")(({ theme }) => ({
+		display: "flex",
+		flexDirection: "row",
+		alignItems: "center",
+		padding: theme.spacing(0, 1)
+	}));
+
+	const HistogramWidgetLegendColor = styled("div")(({ theme }) => ({
+		width: "1rem",
+		height: "1rem",
+		marginRight: "0.5rem"
+	}));
+
+	const HistogramWidgetLegendText = styled("p")(({ theme }) => ({
+		fontSize: "1rem",
+		margin: 0
+	}));
+
 	if (selectedIndicator && queriedOutcome && widgetDetails.length > 0 && props.sliderIndex) {
 		const attributes = Array.from(new Set(selectedIndicator.attributes.concat(queriedOutcome.attributes)));
 		return (
-			<Stack>
+			<List
+				subheader={
+					<ListSubheader>
+						<HistogramWidgetLegend className="histogram-widget-legend">
+							<HistogramWidgetLegendItem>
+								<HistogramWidgetLegendColor
+									className="histogram-widget-legend-color"
+									style={{ background: "#69b3a2" }}
+								/>
+								<HistogramWidgetLegendText>{selectedIndicator.name}</HistogramWidgetLegendText>
+							</HistogramWidgetLegendItem>
+							<HistogramWidgetLegendItem>
+								<HistogramWidgetLegendColor
+									className="histogram-widget-legend-color"
+									style={{ background: "#404080" }}
+								/>
+								<HistogramWidgetLegendText>Outcome</HistogramWidgetLegendText>
+							</HistogramWidgetLegendItem>
+						</HistogramWidgetLegend>
+					</ListSubheader>
+				}>
 				{attributes.map((attr) => (
-					<HistogramWidget key={attr} {...getHistogramWidgetProps(attr)} />
+					<ListItem key={attr}>
+						<HistogramWidget {...getHistogramWidgetProps(attr)} />
+					</ListItem>
 				))}
-			</Stack>
+			</List>
 		);
 	} else {
 		return <Stack>Select indicator to see details</Stack>;
