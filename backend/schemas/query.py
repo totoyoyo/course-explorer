@@ -1,15 +1,16 @@
-from typing import List
+from typing import List, Dict
+from datetime import datetime
 
 from pydantic import BaseModel
-from .student import StudentBase
 
 
-class QueryResult(BaseModel):
-    result: List[StudentBase]
+class QueryResponse(BaseModel):
+    __root__: Dict[datetime, List[str]]
 
 
-class QueryBody(BaseModel):
-    start: str
-    end: str
-    step: str
+class QueryRequest(BaseModel):
+    start: datetime
+    end: datetime
+    step: int
+    name: str
     query: str
