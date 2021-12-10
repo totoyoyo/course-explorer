@@ -14,6 +14,14 @@ class OurVisitor(DSLGrammarVisitor):
         super().__init__()
         self.student = student
 
+    def visitModified_attributes(self,
+                                 ctx: DSLGrammarParser.Modified_attributesContext):
+        return super().visitModified_attributes(ctx)
+
+    def visitGranularity_operator(self,
+                                  ctx: DSLGrammarParser.Granularity_operatorContext):
+        return super().visitGranularity_operator(ctx)
+
     def visitQuery(self, ctx: DSLGrammarParser.QueryContext):
         # fill this
         return super().visitQuery(ctx)
@@ -60,6 +68,7 @@ class OurVisitor(DSLGrammarVisitor):
             return res.get_value_for(self.student)  # when the attribute is compared we compute just in time
         return float(ctx.getText())
 
+    # TODO: Might need to change this, after the added visitGranularity_operator and visitModified_attributes
     def visitGranularity_result(self,
                                 ctx: DSLGrammarParser.Granularity_resultContext):
         res = super().visitGranularity_result(ctx)  # we must visit the child attribute
