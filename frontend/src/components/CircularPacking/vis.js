@@ -44,14 +44,7 @@ let svg = d3.create("svg").attr("width", width).attr("height", height);
 let link = svg.append("g").attr("class", "links").attr("stroke", "black").selectAll("line");
 let node = svg.append("g").attr("class", "nodes").selectAll("circle");
 let label = svg.append("g").attr("class", "labels").selectAll("text");
-// let zoomListenerRet = svg
-// 	.append("rect")
-// 	.attr("class", "zoom-listener-rect")
-// 	.attr("x", 0)
-// 	.attr("y", 0)
-// 	.attr("width", width)
-// 	.attr("height", height)
-// 	.style("opacity", 0).on("mouseover");
+
 let simulation = d3
 	.forceSimulation(newNodes)
 	.velocityDecay(0.9)
@@ -71,12 +64,16 @@ let simulation = d3
 const zoom = d3.zoom().scaleExtent([1, 8]);
 let transform = d3.zoomIdentity;
 
-let selection_links = svg
-	.append("g")
-	.attr("class", "selection_links")
-	.attr("stroke-width", 1)
-	.attr("stroke", "orange")
-	.selectAll("line");
+const getSelectNodeColor = (d) => {
+	if (isLeaf(d)) {
+		console.log(d);
+		return d.parent.data.name === "true" ? "#ff00bb" : "#14d000";
+	} else {
+		return "white";
+	}
+};
+
+let selection_links = svg.append("g").attr("class", "selection_links").attr("stroke-width", 1).selectAll("line");
 
 let get_ancestor_post = (data) => {
 	const parents = data.ancestors();
@@ -92,49 +89,50 @@ export const select = (groups, newLinks) => {
 	const svg_selection = node;
 	svg_selection.on("mouseover", mouseover);
 	svg_selection.on("mouseout", mouseout);
-
-	function mouseover(event, node) {
-		console.log("this is event", event);
-		console.log("this is node", node);
-		console.log("this is node data", node.data);
-		const current_name = node.data.name;
-		if (current_name.includes("student")) {
-			const current = d3.selectAll("circle").filter((d) => d.data.name === current_name);
-			let curr_data = current.data();
-			let linkNodes = get_links_between_nodes(curr_data);
-			// current.each((d, index) => (linkNodes[index] = d));
-			var transforms = current.attr("transform");
-			console.log("this selection", current);
-			console.log("this linkNodes", linkNodes);
-			let newLines = selection_links
-				.data(linkNodes)
-				.enter()
-				.append("line")
-				.attr("x1", (d) => transform.applyX(get_ancestor_post(d.source)[0] + d.source.pack_x))
-				.attr("y1", (d) => transform.applyY(get_ancestor_post(d.source)[1] + d.source.pack_y))
-				.attr("x2", (d) => transform.applyX(get_ancestor_post(d.target)[0] + d.target.pack_x))
-				.attr("y2", (d) => transform.applyY(get_ancestor_post(d.target)[1] + d.target.pack_y));
-			current
-				.transition()
-				.duration(500)
-				.style("fill", "orange")
-				.attr("r", (d) => Math.max(d.r, d.r * transform.k) * 1.5);
-		}
-	}
-	function mouseout(event, node) {
-		const current_name = node.data.name;
-		if (current_name.includes("student")) {
-			const current = d3.selectAll("circle").filter((d) => d.data.name.includes(current_name));
-			current
-				.transition()
-				.duration(500)
-				.attr("r", (d) => Math.max(d.r, d.r * transform.k))
-				.style("fill", getNodeColor);
-			const selection = d3.select(".selection_links").selectAll("line").remove();
-			selection.remove();
-		}
-	}
 };
+
+function mouseover(event, node) {
+	console.log("this is event", event);
+	console.log("this is node", node);
+	console.log("this is node data", node.data);
+	const current_name = node.data.name;
+	if (current_name.includes("student")) {
+		const current = d3.selectAll("circle").filter((d) => d.data.name === current_name);
+		let curr_data = current.data();
+		let linkNodes = get_links_between_nodes(curr_data);
+		// current.each((d, index) => (linkNodes[index] = d));
+		var transforms = current.attr("transform");
+		console.log("this selection", current);
+		console.log("this linkNodes", linkNodes);
+		selection_links = selection_links.data(linkNodes);
+		let newLines = selection_links
+			.enter()
+			.append("line")
+			.attr("stroke", getSelectNodeColor)
+			.attr("x1", (d) => transform.applyX(get_ancestor_post(d.source)[0] + d.source.pack_x))
+			.attr("y1", (d) => transform.applyY(get_ancestor_post(d.source)[1] + d.source.pack_y))
+			.attr("x2", (d) => transform.applyX(get_ancestor_post(d.target)[0] + d.target.pack_x))
+			.attr("y2", (d) => transform.applyY(get_ancestor_post(d.target)[1] + d.target.pack_y));
+		current
+			.transition()
+			.duration(500)
+			.style("fill", getSelectNodeColor)
+			.attr("r", (d) => Math.max(d.r, d.r * transform.k) * 1.5);
+	}
+}
+function mouseout(event, node) {
+	const current_name = node.data.name;
+	if (current_name.includes("student")) {
+		const current = d3.selectAll("circle").filter((d) => d.data.name.includes(current_name));
+		current
+			.transition()
+			.duration(500)
+			.attr("r", (d) => Math.max(d.r, d.r * transform.k))
+			.style("fill", getNodeColor);
+		const selection = d3.select(".selection_links").selectAll("line").remove();
+		selection.remove();
+	}
+}
 
 // Source: https://observablehq.com/@d3/zoomable-circle-packing
 export const draw = (groups, newLinks) => {
@@ -168,7 +166,6 @@ export const draw = (groups, newLinks) => {
 		.attr("cy", (d) => Math.max(d.pack_y, d.pack_y * transform.k))
 		.attr("stroke", getNodeStroke)
 		.attr("fill", getNodeColor)
-		.transition()
 		.attr("opacity", 1)
 		.selection()
 		.merge(node);
@@ -256,6 +253,13 @@ export const draw = (groups, newLinks) => {
 			.attr("y1", (d) => d.source.y)
 			.attr("x2", (d) => d.target.x)
 			.attr("y2", (d) => d.target.y);
+		selection_links
+			.enter()
+			.selectAll("line")
+			.attr("x1", (d) => transform.applyX(get_ancestor_post(d.source)[0] + d.source.pack_x))
+			.attr("y1", (d) => transform.applyY(get_ancestor_post(d.source)[1] + d.source.pack_y))
+			.attr("x2", (d) => transform.applyX(get_ancestor_post(d.target)[0] + d.target.pack_x))
+			.attr("y2", (d) => transform.applyY(get_ancestor_post(d.target)[1] + d.target.pack_y));
 	}
 
 	function zoomed(event) {
