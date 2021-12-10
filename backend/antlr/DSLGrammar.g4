@@ -7,11 +7,12 @@ logic : '('some_filter ('AND'|'OR') some_filter')'
       | '(''NOT' some_filter')';
 binary : '('comparable ('>'|'<'|'<='|'>='|'!='|'==') comparable')';
 comparable : number | time | string | student_attribute;
-number : Number | arithmetic | granularity_result | student_attribute
-        | aggr_op'('student_attribute')'  ;
+number : Number | arithmetic | modified_attributes;
+modified_attributes : student_attribute
+        | granularity_operator'('modified_attributes')'
+        | aggr_op'('modified_attributes')' ;
+granularity_operator : 'daily'|'weekly'|'monthly'|'final'|'sofar';
 aggr_op : 'avg' | 'count' | 'max' | 'min' | 'sum' | 'val' ;
-granularity_result : ('daily'|'weekly'|'monthly'|'final'|'sofar')
-                     '('student_attribute')';
 arithmetic : '('number ('+'|'-'|'*'|'/') number')';
 string : student_attribute | String;
 time : time_lit ;
