@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { parseISO } from "date-fns";
 import StudentService, {
-	StudentDetailResponse,
-	StudentDetailsRequest,
-	StudentDetailsResponse
+	StudentDetailListRequest,
+	StudentDetailListResponse,
+	StudentDetailResponse
 } from "../services/studentService";
 import { PayloadAction } from "@reduxjs/toolkit/dist/createAction";
 import { Attribute } from "./attributesSlice";
@@ -24,10 +24,10 @@ const initialState: StudentDetailsState = {
 
 export const queryAllStudentDetails = createAsyncThunk<
 	Map<number, StudentDetail[]>,
-	StudentDetailsRequest,
+	StudentDetailListRequest,
 	{ state: RootState }
 >("studentDetails/queryAll", async (arg) => {
-	return StudentService.getStudentDetails(arg).then((res: StudentDetailsResponse) => {
+	return StudentService.getStudentDetails(arg).then((res: StudentDetailListResponse) => {
 		const details = new Map<number, StudentDetail[]>();
 		Object.keys(res).forEach((time: string) => {
 			const flattened: StudentDetail[] = res[time].map((detail: StudentDetailResponse) => {

@@ -1,6 +1,7 @@
 import axios, { errorHandler } from "./handler";
 import { AxiosResponse } from "axios";
 import { Attribute } from "../states/attributesSlice";
+import { StudentDetail } from "../states/studentDetailsSlice";
 
 export interface StudentResponse {
 	id: string;
@@ -29,12 +30,11 @@ const getAllStudents = (): Promise<StudentListResponse> => {
 		.catch((err) => errorHandler(err));
 };
 
-export interface StudentDetailsRequest {
+export interface StudentDetailListRequest {
 	datasetId: string;
-	start?: number;
-	end?: number;
-	step?: number; //ms
-	time?: number;
+	start: number; // start of interval
+	end: number; // end of interval
+	step: number; //ms
 	attributes?: string[];
 	ids?: string[];
 }
@@ -44,14 +44,14 @@ export interface StudentDetailResponse {
 	attributes: { [attribute: Attribute]: string | number };
 }
 
-export interface StudentDetailsResponse {
+export interface StudentDetailListResponse {
 	[time: string]: StudentDetailResponse[];
 }
 
-const getStudentDetails = (req: StudentDetailsRequest): Promise<StudentDetailsResponse> => {
+const getStudentDetails = (req: StudentDetailListRequest): Promise<StudentDetailListResponse> => {
 	return axios
 		.post("/students/details", req)
-		.then((res: AxiosResponse<StudentDetailsResponse>) => {
+		.then((res: AxiosResponse<StudentDetailListResponse>) => {
 			return res.data;
 		})
 		.catch((err) => errorHandler(err));

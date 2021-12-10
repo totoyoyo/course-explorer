@@ -1,31 +1,34 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
-import StudentService, { StudentDetailsRequest, StudentDetailsResponse } from "../services/studentService";
+import StudentService, { StudentDetailListRequest, StudentDetailListResponse } from "../services/studentService";
 import { PayloadAction } from "@reduxjs/toolkit/dist/createAction";
 import { QueriedIndicator } from "./indicatorsSlice";
-
-export interface WidgetStudentDetail {
-	id: string;
-	[attribute: string]: string | number;
-}
+import { StudentDetail } from "./studentDetailsSlice";
 
 export interface WidgetStudentDetailsState {
 	selected: QueriedIndicator | undefined;
-	details: WidgetStudentDetail[];
+	details: StudentDetail[];
 }
 
 const initialState: WidgetStudentDetailsState = {
 	selected: undefined,
-	details: [] as WidgetStudentDetail[]
+	details: [] as StudentDetail[]
 };
 
 export const queryWidgetStudentDetails = createAsyncThunk<
-	WidgetStudentDetail[],
-	StudentDetailsRequest,
+	StudentDetail[],
+	StudentDetailListRequest,
 	{ state: RootState }
 >("widgetStudentDetails/query", async (arg) => {
-	return StudentService.getStudentDetails(arg).then((res: StudentDetailsResponse) => {
-		return Object.values(res.results)[0];
+	return StudentService.getStudentDetails(arg).then((res: StudentDetailListResponse) => {
+		// widget should only be for single time point
+		if (Object.values(res).length > 0) {
+			return Object.values(res)[0].map((detail) => {
+				return { id: detail.id, ...detail.attributes };
+			});
+		} else {
+			return [];
+		}
 	});
 });
 
@@ -41,7 +44,7 @@ export const widgetStudentDetailsSlice = createSlice({
 		}
 	},
 	extraReducers: (builder) => {
-		builder.addCase(queryWidgetStudentDetails.fulfilled, (state, action: PayloadAction<WidgetStudentDetail[]>) => {
+		builder.addCase(queryWidgetStudentDetails.fulfilled, (state, action: PayloadAction<StudentDetail[]>) => {
 			state.details = action.payload;
 		});
 	}

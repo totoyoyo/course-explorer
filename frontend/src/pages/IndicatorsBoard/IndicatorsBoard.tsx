@@ -15,12 +15,12 @@ import PieChartRatios, { RatioGroup, RatioProps } from "../../components/PieChar
 import {
 	queryWidgetStudentDetails,
 	selectWidgetStudentDetails,
-	setSelectedIndicator,
-	WidgetStudentDetail
+	setSelectedIndicator
 } from "../../states/widgetDetailsSlice";
 import { Attribute } from "../../states/attributesSlice";
 import HistogramWidget, { HistogramWidgetProps } from "../../components/HistogramWidget/HistogramWidget";
 import { Dataset, selectDatasets } from "../../states/datasetSlice";
+import { StudentDetail } from "../../states/studentDetailsSlice";
 
 export function IndicatorsBoard() {
 	const queriedIndicators: QueriedIndicator[] = useAppSelector(selectIndicators).queriedIndicators;
@@ -207,7 +207,7 @@ export interface HistogramWidgetListProps {
 }
 
 function HistogramWidgetList(props: HistogramWidgetListProps) {
-	const widgetDetails: WidgetStudentDetail[] = useAppSelector(selectWidgetStudentDetails).details;
+	const widgetDetails: StudentDetail[] = useAppSelector(selectWidgetStudentDetails).details;
 	const selectedIndicator: QueriedIndicator | undefined = useAppSelector(selectWidgetStudentDetails).selected;
 	const queriedOutcome: QueriedOutcome | undefined = useAppSelector(selectOutcome).queriedOutcome;
 	const selectedDataset: Dataset | undefined = useAppSelector(selectDatasets).selected;
@@ -236,7 +236,9 @@ function HistogramWidgetList(props: HistogramWidgetListProps) {
 			dispatch(
 				queryWidgetStudentDetails({
 					datasetId: selectedDataset.id,
-					time: props.sliderIndex,
+					start: props.sliderIndex,
+					end: props.sliderIndex,
+					step: 0,
 					attributes: Array.from(attributes),
 					ids: Array.from(new Set([...outcomeStudents, ...indicatorStudents]))
 				})

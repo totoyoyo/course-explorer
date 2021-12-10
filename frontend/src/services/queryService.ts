@@ -10,11 +10,8 @@ export interface QueryRequest {
 	query: string;
 }
 
-export interface ResponseEntry {
-	[time: string]: string[];
-}
 export interface QueryResponse {
-	results: ResponseEntry;
+	results: { [time: string]: string[] };
 	attributes: Attribute[];
 }
 
