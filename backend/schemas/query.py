@@ -9,8 +9,8 @@ class QueryResponse(BaseModel):
 
 
 class QueryRequest(BaseModel):
-    start: datetime
-    end: datetime
+    start: str
+    end: str
     step: int
     name: str
     query: str
