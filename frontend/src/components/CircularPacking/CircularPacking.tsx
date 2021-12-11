@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { draw, select_student_mouse } from "./vis";
+import { draw } from "./vis";
 
 export interface NodeGroup {
 	id: string;
@@ -16,13 +16,13 @@ export interface Link {
 export interface CircularPackingProps {
 	nodes: NodeGroup[];
 	links: Link[];
+	onSelectIndicator: (i: string) => void;
 }
 
 export default function CircularPacking(props: CircularPackingProps) {
 	useEffect(() => {
 		if (props.nodes.length > 0) {
-			draw(props.nodes, props.links);
-			select_student_mouse();
+			draw(props.nodes, props.links, props.onSelectIndicator);
 		}
 	}, [props]);
 

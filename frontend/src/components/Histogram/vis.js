@@ -67,7 +67,7 @@ const draw = (props) => {
 			return d[props.attribute];
 		})
 		.domain(x.domain()) // then the domain of the graphic
-		.thresholds(x.ticks(6)); //number of bins
+		.thresholds(x.ticks(10)); //number of bins
 
 	const bins = histogram(props.data);
 
@@ -75,7 +75,7 @@ const draw = (props) => {
 		0,
 		d3.max(bins, function (d) {
 			return d.length;
-		}) + 5
+		}) + 1
 	]).ticks(1);
 
 	svg.selectAll("rect")

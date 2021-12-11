@@ -63,6 +63,7 @@ let simulation = d3
 	.alphaTarget(1);
 const zoom = d3.zoom().scaleExtent([1, 8]);
 let transform = d3.zoomIdentity;
+let selected = undefined;
 
 const getSelectNodeColor = (d) => {
 	if (isLeaf(d)) {
@@ -139,7 +140,7 @@ function mouseout(event, node) {
 }
 
 // Source: https://observablehq.com/@d3/zoomable-circle-packing
-export const draw = (groups, newLinks) => {
+export const draw = (groups, newLinks, onSelectIndicator) => {
 	d3.select(".vis-circular-packing").append(() => svg.node());
 	const root = pack(d3.hierarchy({ name: "root", children: groups }).sum((d) => 1));
 	root.children.forEach((d) => {
@@ -169,10 +170,29 @@ export const draw = (groups, newLinks) => {
 		.attr("cx", (d) => Math.max(d.pack_x, d.pack_x * transform.k))
 		.attr("cy", (d) => Math.max(d.pack_y, d.pack_y * transform.k))
 		.attr("stroke", getNodeStroke)
+		.attr("stroke-width", 1)
 		.attr("fill", getNodeColor)
 		.attr("opacity", 1)
+		.attr("cursor", "pointer")
 		.selection()
 		.merge(node);
+	node.on("click", function (event, d) {
+		if (isTopLevel(d) && selected !== d) {
+			selected = d;
+			onSelectIndicator(d.data.name);
+		} else if (isInternal(d) && selected !== d.parent) {
+			selected = d.parent;
+			onSelectIndicator(d.parent.data.name);
+		} else if (isTopLevel(d)) {
+			selected = undefined;
+			onSelectIndicator(selected);
+		} else {
+			selected = undefined;
+			onSelectIndicator(selected);
+		}
+		event.stopPropagation();
+	});
+
 	links = newLinks.map((l) => Object.assign({}, l));
 	link = link.data(links, (d) => `${d.source}-${d.target}`);
 	link.exit()
@@ -222,6 +242,7 @@ export const draw = (groups, newLinks) => {
 
 	zoom.on("zoom", zoomed);
 	svg.call(zoom);
+	select_student_mouse();
 
 	function ticked() {
 		// if top level node, translate based on force simulated x and y positions.
