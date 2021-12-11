@@ -8,7 +8,7 @@ import CircularPacking, {
 } from "../../components/CircularPacking/CircularPacking";
 import { QueriedOutcome, selectOutcome } from "../../states/outcomeSlice";
 import { selectAllStudents } from "../../states/allStudentsSlice";
-import { TimeSlider } from "../../components/TimeSlider/TimeSlider";
+import { SliderConfig, TimeSlider } from "../../components/TimeSlider/TimeSlider";
 import { formatISO, getTime, max, min } from "date-fns";
 import { List, ListItem, ListSubheader, Stack, styled, Typography } from "@mui/material";
 import PieChartRatios, { RatioGroup, RatioProps } from "../../components/PieChartRatios/PieChartRatios";
@@ -71,8 +71,9 @@ export function IndicatorsBoard() {
 		indicatorStudents: { name: string; students: string[] }[]
 	): CircularPackingProps => {
 		const outcomeSet = new Set(outcomeStudents);
-		const props: { nodeGroup: NodeGroup; link: Link }[] = indicatorStudents.map(
-			(i: { name: string; students: string[] }) => {
+		let props: { nodeGroup: NodeGroup; link: Link }[] = [];
+		indicatorStudents.forEach((i: { name: string; students: string[] }) => {
+			if (outcomeSet.size > 0 && i.students.length > 0) {
 				let tp: string[] = [],
 					fp: string[] = [],
 					fn = [];
@@ -80,16 +81,16 @@ export function IndicatorsBoard() {
 				i.students.forEach((s) => (outcomeSet.has(s) ? tp.push(s) : fp.push(s)));
 				fn = outcomeStudents.filter((s: string) => !indicatorSet.has(s));
 				let f1 = tp.length / (tp.length + 0.5 * (fp.length + fn.length));
-				return {
+				props.push({
 					nodeGroup: constructNodeGroup(i.name, tp, fp),
 					link: {
 						source: "Outcome",
 						target: i.name,
 						value: f1
 					}
-				};
+				});
 			}
-		);
+		});
 		return {
 			nodes: [constructNodeGroup("Outcome", outcomeStudents, []), ...props.map((p) => p.nodeGroup)],
 			links: props.map((p) => p.link),
@@ -153,7 +154,10 @@ export function IndicatorsBoard() {
 		};
 	};
 
-	const getSliderConfigs = (indicatorMaps: Map<number, string[]>[], outcomeMap: Map<number, string[]>) => {
+	const getSliderConfigs = (
+		indicatorMaps: Map<number, string[]>[],
+		outcomeMap: Map<number, string[]>
+	): SliderConfig => {
 		const allDates: number[] = Array.from(new Set(...indicatorMaps.flatMap((m) => m.keys()), outcomeMap.keys()));
 		return {
 			min: getTime(min(allDates)),
@@ -179,27 +183,26 @@ export function IndicatorsBoard() {
 		}
 	};
 
-	return queriedIndicators.length > 0 && queriedOutcome! ? (
-		<div>
-			<Stack direction="row">
-				<Stack>
-					<CircularPacking {...packProps} />
-					<PieChartRatios {...ratioProps} />
+	if (queriedIndicators.length > 0 && queriedOutcome!) {
+		const sliderConfigs = getSliderConfigs(
+			queriedIndicators.map((i) => i.students),
+			queriedOutcome!.students
+		);
+		return (
+			<div>
+				<Stack direction="row">
+					<Stack>
+						<CircularPacking {...packProps} />
+						<PieChartRatios {...ratioProps} />
+					</Stack>
+					<HistogramWidgetList sliderIndex={sliderIndex} />
 				</Stack>
-				<HistogramWidgetList sliderIndex={sliderIndex} />
-			</Stack>
-			<TimeSlider
-				onChange={onSliderChange}
-				value={sliderIndex}
-				{...getSliderConfigs(
-					queriedIndicators.map((i) => i.students),
-					queriedOutcome!.students
-				)}
-			/>
-		</div>
-	) : (
-		<Typography>Nothing to show yet!</Typography>
-	);
+				<TimeSlider onChange={onSliderChange} value={sliderIndex} {...sliderConfigs} />
+			</div>
+		);
+	} else {
+		return <Typography>Nothing to show yet!</Typography>;
+	}
 }
 
 export interface HistogramWidgetListProps {
@@ -238,7 +241,7 @@ function HistogramWidgetList(props: HistogramWidgetListProps) {
 					datasetId: selectedDataset.id,
 					start: props.sliderIndex,
 					end: props.sliderIndex,
-					step: 0,
+					step: 1,
 					attributes: Array.from(attributes),
 					ids: Array.from(new Set([...outcomeStudents, ...indicatorStudents]))
 				})
