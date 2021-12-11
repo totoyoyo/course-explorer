@@ -76,7 +76,12 @@ const getSelectLinkColor = (d) => {
 	return d.source.parent.data.name === "true" ? "#ff00bb" : "#14d000";
 };
 
-let selection_links = svg.append("g").attr("class", "selection_links").attr("stroke-width", 1).selectAll("line");
+let selection_links = svg
+	.append("g")
+	.attr("class", "selection_links")
+	.attr("stroke-width", 1)
+	.selectAll("line")
+	.style("pointer-events", "none");
 
 let get_ancestor_post = (data) => {
 	const parents = data.ancestors();
@@ -88,7 +93,7 @@ let get_links_between_nodes = (nodes) => {
 	return nodes.map((item, index) => ({ source: item, target: nodes[(index + 1) % nodes.length] }));
 };
 
-export const select = (groups, newLinks) => {
+export const select_student_mouse = () => {
 	const svg_selection = node;
 	svg_selection.on("mouseover", mouseover);
 	svg_selection.on("mouseout", mouseout);
@@ -110,7 +115,8 @@ function mouseover(event, node) {
 			.attr("x1", (d) => transform.applyX(get_ancestor_post(d.source)[0] + d.source.pack_x))
 			.attr("y1", (d) => transform.applyY(get_ancestor_post(d.source)[1] + d.source.pack_y))
 			.attr("x2", (d) => transform.applyX(get_ancestor_post(d.target)[0] + d.target.pack_x))
-			.attr("y2", (d) => transform.applyY(get_ancestor_post(d.target)[1] + d.target.pack_y));
+			.attr("y2", (d) => transform.applyY(get_ancestor_post(d.target)[1] + d.target.pack_y))
+			.style("pointer-events", "none");
 		current
 			.transition()
 			.duration(500)
@@ -208,7 +214,6 @@ export const draw = (groups, newLinks) => {
 		.text((d) => d.data.name)
 		.merge(label)
 		.style("pointer-events", "none");
-
 
 	simulation.nodes(newNodes);
 	simulation.force("link").links(links);
