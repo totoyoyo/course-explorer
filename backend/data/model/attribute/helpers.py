@@ -45,7 +45,7 @@ class TimeVaryingAttribute(BasicAttribute):
         attr_list = self.get_time_attribute_list(student)  # returns a list of tuples (time, data)
 
         split_lists = [attr_list]
-        split_lists = [self.reduce_attribute_list(student, x) for x in split_lists]
+        split_lists = [self.reduce_attribute_list(student, x[1]) for x in split_lists]
 
         match self.aggregation:
             case Aggregation.LATEST:

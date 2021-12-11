@@ -31,7 +31,7 @@ class QueueVisit:
         self.conn = conn
         self.anon_id = anon_id
         self.enqueue = enqueue
-        self.answer_start = answer_finish
+        self.answer_finish = answer_finish
         self.answerer_id = answerer_id
         self.qid = qid
         self.dequeue = dequeue
