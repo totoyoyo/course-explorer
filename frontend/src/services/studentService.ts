@@ -1,7 +1,6 @@
 import axios, { errorHandler } from "./handler";
 import { AxiosResponse } from "axios";
 import { Attribute } from "../states/attributesSlice";
-import { StudentDetail } from "../states/studentDetailsSlice";
 
 export interface StudentResponse {
 	id: string;

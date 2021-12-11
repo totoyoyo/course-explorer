@@ -44,13 +44,13 @@ export const queryOutcome = createAsyncThunk<QueriedOutcome, void, { state: Root
 			name: "Outcome"
 		}).then((res: QueryResponse) => {
 			const students = new Map<number, string[]>();
-			Object.keys(res).forEach((time: string) => {
-				students.set(parseISO(time).getTime(), res[time]);
+			Object.keys(res.results).forEach((time: string) => {
+				students.set(parseISO(time).getTime(), res.results[time]);
 			});
 			return {
 				...outcome.outcome,
 				students: students,
-				attributes: []
+				attributes: res.attributes
 			};
 		});
 	}
