@@ -54,7 +54,7 @@ class OurVisitor(DSLGrammarVisitor):
 
     def visitNumber(self, ctx: DSLGrammarParser.NumberContext):
         res = super().visitNumber(ctx)
-        if isinstance(res, attr.TimeVaryingAttribute) and ctx.aggr_op():
+        if isinstance(res, attr.TimeAccumulatingAttribute) and ctx.aggr_op():
             res = self.apply_aggregation(ctx, res)
         if isinstance(res, attr.BasicAttribute):
             return res.get_value_for(self.student)  # when the attribute is compared we compute just in time
@@ -63,7 +63,7 @@ class OurVisitor(DSLGrammarVisitor):
     def visitGranularity_result(self,
                                 ctx: DSLGrammarParser.Granularity_resultContext):
         res = super().visitGranularity_result(ctx)  # we must visit the child attribute
-        if isinstance(res, attr.TimeVaryingAttribute):
+        if isinstance(res, attr.TimeAccumulatingAttribute):
             if len(ctx.getTokens(18)) > 0:
                 res.set_granularity(attr.Granularity.DAILY)
             elif len(ctx.getTokens(19)) > 0:
@@ -77,7 +77,7 @@ class OurVisitor(DSLGrammarVisitor):
         return res
 
 
-    def apply_aggregation(self, ctx: DSLGrammarParser.NumberContext, res: attr.TimeVaryingAttribute):
+    def apply_aggregation(self, ctx: DSLGrammarParser.NumberContext, res: attr.TimeAccumulatingAttribute):
         if len(ctx.getTokens(12)) > 0:
             res.set_aggregation(attr.Aggregation.AVG)
         elif len(ctx.getTokens(13)) > 0:

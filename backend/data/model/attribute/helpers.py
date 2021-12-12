@@ -35,7 +35,7 @@ class BasicAttribute(ABC):
         pass
 
 
-class TimeVaryingAttribute(BasicAttribute):
+class TimeAccumulatingAttribute(BasicAttribute):
 
     def __init__(self):
         self.granularity = Granularity.MAX
@@ -44,7 +44,7 @@ class TimeVaryingAttribute(BasicAttribute):
     def get_value_for(self, student):
         attr_list = self.get_time_attribute_list(student)  # returns a list of tuples (time, data)
 
-        split_lists = [attr_list]
+        split_lists = self.generate_split_lists(attr_list)
         split_lists = [self.reduce_attribute_list(student, x[1]) for x in split_lists]
 
         match self.aggregation:
@@ -103,3 +103,17 @@ class TimeVaryingAttribute(BasicAttribute):
     @abstractmethod
     def reduce_attribute_list(self, student, list):
         pass
+
+
+class TimeVaryingAttribute(TimeAccumulatingAttribute, ABC):
+
+    def get_granularity_step(self):
+        match self.granularity:
+            case Granularity.DAILY:
+                return DAY_SECONDS
+            case Granularity.WEEKLY:
+                return WEEKLY_SECONDS
+            case Granularity.MONTHLY:
+                return MONTHLY_SECONDS
+            case Granularity.MAX:
+                return 0  # we want to cause infinite sampling
