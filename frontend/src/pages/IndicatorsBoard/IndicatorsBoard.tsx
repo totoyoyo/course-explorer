@@ -10,7 +10,7 @@ import { QueriedOutcome, selectOutcome } from "../../states/outcomeSlice";
 import { selectAllStudents } from "../../states/allStudentsSlice";
 import { SliderConfig, TimeSlider } from "../../components/TimeSlider/TimeSlider";
 import { formatISO, getTime, max, min } from "date-fns";
-import { Box, List, ListItem, ListSubheader, Stack, styled, Typography, useTheme } from "@mui/material";
+import { Box, List, ListItem, ListSubheader, styled, Typography, useTheme } from "@mui/material";
 import PieChartRatios, { RatioGroup, RatioProps } from "../../components/PieChartRatios/PieChartRatios";
 import {
 	queryWidgetStudentDetails,
@@ -60,7 +60,7 @@ export function IndicatorsBoard() {
 								id: `${name}-true`,
 								name: "true",
 								children: tp.map((s) => {
-									return { id: `${name}-true-${s}`, name: s.substring(0, 5) };
+									return { id: `${name}-true-${s}`, name: s };
 								})
 							}
 					  ]),
@@ -71,7 +71,7 @@ export function IndicatorsBoard() {
 								id: `${name}-false`,
 								name: "false",
 								children: fp.map((s) => {
-									return { id: `${name}-false-${s}`, name: s.substring(0, 5) };
+									return { id: `${name}-false-${s}`, name: s };
 								})
 							}
 					  ])
@@ -83,16 +83,17 @@ export function IndicatorsBoard() {
 		outcomeStudents: string[],
 		indicatorStudents: { name: string; students: string[] }[]
 	): CircularPackingProps => {
-		const outcomeSet = new Set(outcomeStudents);
+		const outcomeSet = new Set(outcomeStudents.map((s) => s.substring(0, 5)));
 		let props: { nodeGroup: NodeGroup; link: Link }[] = [];
 		indicatorStudents.forEach((i: { name: string; students: string[] }) => {
-			if (outcomeSet.size > 0 && i.students.length > 0) {
+			const students = i.students.map((s) => s.substring(0, 5));
+			if (outcomeSet.size > 0 && students.length > 0) {
 				let tp: string[] = [],
 					fp: string[] = [],
 					fn = [];
-				const indicatorSet = new Set(i.students);
-				i.students.forEach((s) => (outcomeSet.has(s) ? tp.push(s) : fp.push(s)));
-				fn = outcomeStudents.filter((s: string) => !indicatorSet.has(s));
+				const indicatorSet = new Set(students);
+				students.forEach((s) => (outcomeSet.has(s) ? tp.push(s) : fp.push(s)));
+				fn = Array.from(outcomeSet).filter((s: string) => !indicatorSet.has(s));
 				let f1 = tp.length / (tp.length + 0.5 * (fp.length + fn.length));
 				props.push({
 					nodeGroup: constructNodeGroup(i.name, tp, fp),
@@ -105,7 +106,14 @@ export function IndicatorsBoard() {
 			}
 		});
 		return {
-			nodes: [constructNodeGroup("Outcome", outcomeStudents, []), ...props.map((p) => p.nodeGroup)],
+			nodes: [
+				constructNodeGroup(
+					"Outcome",
+					outcomeStudents.map((s) => s.substring(0, 5)),
+					[]
+				),
+				...props.map((p) => p.nodeGroup)
+			],
 			links: props.map((p) => p.link),
 			onSelectIndicator: (i: string | undefined) =>
 				dispatch(setSelectedIndicator(queriedIndicators.find((indicator) => indicator.name === i)))
@@ -206,12 +214,24 @@ export function IndicatorsBoard() {
 							flexDirection: "column",
 							justifyContent: "flex-start",
 							height: "100%",
+							width: "100%",
 							flexBasis: "80%"
 						}}>
 						<CircularPacking {...packProps} />
 						<PieChartRatios {...ratioProps} />
 					</Box>
-					<HistogramWidgetList sliderIndex={sliderIndex} />
+					<Box
+						sx={{
+							display: "flex",
+							height: "100%",
+							width: "100%",
+							flexBasis: "20%",
+							border: 1,
+							borderColor: "rgba(0, 0, 0, 0.12)",
+							margin: theme.spacing(1)
+						}}>
+						<HistogramWidgetList sliderIndex={sliderIndex} />
+					</Box>
 				</Box>
 				<TimeSlider onChange={onSliderChange} value={sliderIndex} {...sliderConfigs} />
 			</Box>
@@ -311,15 +331,16 @@ function HistogramWidgetList(props: HistogramWidgetListProps) {
 							</HistogramWidgetLegendItem>
 						</HistogramWidgetLegend>
 					</ListSubheader>
-				}>
+				}
+				sx={{ width: "100%" }}>
 				{attributes.map((attr) => (
-					<ListItem key={attr}>
+					<ListItem key={attr} sx={{ width: "100%" }}>
 						<HistogramWidget {...getHistogramWidgetProps(attr)} />
 					</ListItem>
 				))}
 			</List>
 		);
 	} else {
-		return <Box sx={{ flexBasis: "30%" }}>Select indicator to see details</Box>;
+		return <Typography>Select an indicator to see details</Typography>;
 	}
 }

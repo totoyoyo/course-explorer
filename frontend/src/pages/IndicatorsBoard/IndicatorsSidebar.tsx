@@ -12,8 +12,7 @@ import {
 	Stack,
 	styled,
 	TextField,
-	Typography,
-	useTheme
+	Typography
 } from "@mui/material";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import { useEffect, useState } from "react";
@@ -22,7 +21,6 @@ import {
 	selectIndicators,
 	remIndicator,
 	NewIndicator,
-	IndicatorsState,
 	queryAllIndicators
 } from "../../states/indicatorsSlice";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
@@ -187,7 +185,7 @@ export function IndicatorsSidebar(props: IndicatorsSidebarProps) {
 	}));
 
 	const isSubmitDisabled = () => {
-		return selectedDataset === undefined || !outcome;
+		return selectedDataset === undefined || !outcome || indicators.length === 0;
 	};
 
 	return (

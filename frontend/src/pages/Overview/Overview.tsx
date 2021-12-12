@@ -1,13 +1,12 @@
 import Histogram from "../../components/Histogram/Histogram";
 import { Box, Typography, useTheme } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../states/hooks";
+import { useAppSelector } from "../../states/hooks";
 import { SliderConfig, TimeSlider } from "../../components/TimeSlider/TimeSlider";
-import { queryAllStudentDetails, selectStudentDetails, StudentDetail } from "../../states/studentDetailsSlice";
-import { formatISO, getTime, max, milliseconds, min } from "date-fns";
+import { selectStudentDetails, StudentDetail } from "../../states/studentDetailsSlice";
+import { formatISO, getTime, max, min } from "date-fns";
 import Grid from "@mui/material/Grid";
 import { Dataset, selectDatasets } from "../../states/datasetSlice";
-import { selectTimeInterval, TimeInterval, toFnsDuration } from "../../states/timeIntervalSlice";
 import { Attribute, selectAttributes } from "../../states/attributesSlice";
 
 export function Overview() {
@@ -17,7 +16,6 @@ export function Overview() {
 	const [sliderIndex, setSliderIndex] = useState<number | undefined>(undefined);
 	const [sliderConfigs, setSliderConfigs] = useState<SliderConfig | undefined>(undefined);
 	const labelY = "Number of Students";
-	const dispatch = useAppDispatch();
 	const theme = useTheme();
 
 	useEffect(() => {

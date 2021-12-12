@@ -1,11 +1,12 @@
 import * as d3 from "d3";
 
-const margin = { top: 10, right: 30, bottom: 30, left: 40 },
-	width = 360 - margin.left - margin.right,
-	height = 300 - margin.top - margin.bottom;
+const margin = { top: 10, right: 30, bottom: 30, left: 40 };
 
-const draw = (props) => {
+const draw = (props, size) => {
 	d3.select(`.${props.attribute}-histogram-widget > *`).remove();
+
+	const width = size.width - margin.left - margin.right;
+	const height = 300 - margin.top - margin.bottom;
 
 	const svg = d3
 		.select(`.${props.attribute}-histogram-widget`)

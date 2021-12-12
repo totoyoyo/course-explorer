@@ -181,11 +181,16 @@ export const draw = (groups, newLinks, onSelectIndicator, size) => {
 	node.on("click", function (event, d) {
 		if (isTopLevel(d) && selected !== d) {
 			selected = d;
+			d3.select(this).attr("stroke-width", 3);
 			onSelectIndicator(d.data.name);
 		} else if (isInternal(d) && selected !== d.parent) {
 			selected = d.parent;
+			d3.selectAll("circle")
+				.filter((d) => d.data.name === selected.data.name)
+				.attr("stroke-width", 3);
 			onSelectIndicator(d.parent.data.name);
 		} else if (isTopLevel(d)) {
+			d3.select(this).attr("stroke-width", 1);
 			selected = undefined;
 			onSelectIndicator(selected);
 		} else {
