@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./App.css";
 import { IndicatorsBoard } from "./pages/IndicatorsBoard/IndicatorsBoard";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -63,8 +62,7 @@ function App() {
 		flexGrow: 1,
 		display: "flex",
 		flexDirection: "column",
-		justifyContent: "space-between",
-		padding: theme.spacing(3),
+		justifyContent: "flex-start",
 		transition: theme.transitions.create("margin", {
 			easing: theme.transitions.easing.sharp,
 			duration: theme.transitions.duration.leavingScreen
@@ -122,7 +120,7 @@ function App() {
 	return (
 		<LocalizationProvider dateAdapter={AdapterDateFns}>
 			<StyledEngineProvider injectFirst>
-				<Box className="App" sx={{ display: "flex" }}>
+				<Box className="App" sx={{ display: "flex", height: "100%" }}>
 					<AppBar position="fixed" sidebarOpen={sidebarOpen}>
 						<Toolbar>
 							<IconButton
@@ -142,7 +140,7 @@ function App() {
 					/>
 					<Main sidebarOpen={sidebarOpen}>
 						<SidebarHeader />
-						<Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+						<Box sx={{ borderBottom: 1, borderColor: "divider", flexGrow: 0 }}>
 							<Tabs value={tabIndex} onChange={handleTabSwitch}>
 								<Tab label={TabID.OVERVIEW} value={TabID.OVERVIEW} />
 								<Tab label={TabID.INDICATORS} value={TabID.INDICATORS} />
@@ -216,9 +214,14 @@ function TabPanel(props: TabPanelProps) {
 	const { children, value, index, ...other } = props;
 
 	return (
-		<div role="tabpanel" hidden={value !== index} id={`tabpanel-${index}`} {...other}>
+		<Box
+			role="tabpanel"
+			hidden={value !== index}
+			id={`tabpanel-${index}`}
+			{...other}
+			sx={{ flexGrow: 1, height: "100%" }}>
 			{value === index && children}
-		</div>
+		</Box>
 	);
 }
 

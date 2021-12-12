@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { draw } from "./vis";
+import { Box } from "@mui/material";
 
 export interface NodeGroup {
 	id: string;
@@ -26,5 +27,5 @@ export default function CircularPacking(props: CircularPackingProps) {
 		}
 	}, [props]);
 
-	return <div className="vis-circular-packing" />;
+	return <Box sx={{ overflow: "hidden" }} className="vis-circular-packing" />;
 }

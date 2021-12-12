@@ -1,5 +1,5 @@
 import Histogram from "../../components/Histogram/Histogram";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../states/hooks";
 import { SliderConfig, TimeSlider } from "../../components/TimeSlider/TimeSlider";
@@ -19,6 +19,7 @@ export function Overview() {
 	const [sliderConfigs, setSliderConfigs] = useState<SliderConfig | undefined>(undefined);
 	const labelY = "Number of Students";
 	const dispatch = useAppDispatch();
+	const theme = useTheme();
 
 	useEffect(() => {
 		const configs = getSliderConfigs(allStudentDetails);
@@ -58,7 +59,14 @@ export function Overview() {
 	};
 
 	return sliderIndex && selected && sliderConfigs ? (
-		<Box sx={{ display: "flex", flexDirection: "column" }}>
+		<Box
+			sx={{
+				display: "flex",
+				flexDirection: "column",
+				justifyContent: "space-between",
+				padding: theme.spacing(2),
+				height: "100%"
+			}}>
 			<Grid container spacing={2}>
 				{selected.attributes
 					.filter((attr) => selectedAttributes.includes(attr))
