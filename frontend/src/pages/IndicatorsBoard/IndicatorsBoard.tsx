@@ -10,7 +10,7 @@ import { QueriedOutcome, selectOutcome } from "../../states/outcomeSlice";
 import { selectAllStudents } from "../../states/allStudentsSlice";
 import { SliderConfig, TimeSlider } from "../../components/TimeSlider/TimeSlider";
 import { formatISO, getTime, max, min } from "date-fns";
-import { Container, List, ListItem, ListSubheader, Stack, styled, Typography } from "@mui/material";
+import { List, ListItem, ListSubheader, Stack, styled, Typography } from "@mui/material";
 import PieChartRatios, { RatioGroup, RatioProps } from "../../components/PieChartRatios/PieChartRatios";
 import {
 	queryWidgetStudentDetails,

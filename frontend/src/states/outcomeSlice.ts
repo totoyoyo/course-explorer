@@ -20,12 +20,8 @@ export interface OutcomeState {
 	queriedOutcome: QueriedOutcome | undefined;
 }
 
-const MOCK_OUTCOME: Outcome = {
-	query: ""
-};
-
 const initialState: OutcomeState = {
-	outcome: MOCK_OUTCOME,
+	outcome: { query: "" },
 	queriedOutcome: undefined
 };
 
