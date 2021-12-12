@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Slider, Stack } from "@mui/material";
 import { hide_marks } from "./vis";
+import { formatISO } from "date-fns";
 
 interface TimeSliderProps extends SliderConfig {
 	onChange: (date: number) => void;
@@ -28,8 +29,9 @@ export function TimeSlider(props: TimeSliderProps) {
 				min={props.min}
 				max={props.max}
 				marks={props.marks}
-				valueLabelDisplay="on"
+				valueLabelDisplay="auto"
 				value={value || props.min}
+				valueLabelFormat={(number, index) => formatISO(number)}
 				onChangeCommitted={(event: React.SyntheticEvent | Event, value: number | Array<number>) => {
 					if (typeof value === "number") {
 						props.onChange(value);

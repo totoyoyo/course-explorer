@@ -1,7 +1,5 @@
 import * as d3 from "d3";
 
-
-
 export const hide_marks = () => {
 	let marks_selection = d3.selectAll(".MuiSlider-markLabel");
 	marks_selection.style("opacity", 0);
