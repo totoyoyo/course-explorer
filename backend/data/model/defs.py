@@ -23,6 +23,38 @@ def make_result(row, conn):
     result = AutotestResult(conn, *row)
     return result
 
+class AutotestResultWithDelta(AutotestResult):
+    def __init__(self, conn, feedback_id,
+                 score, request_time,
+                 feedback_requester, feedback_time,
+                 deliv, ref, is_master,
+                 commiter, visible_score,
+                 sha, parent_sha, prev_time,
+                 prev_score, prev_visible_score,
+                 true_delta, visible_delta):
+        self.conn = conn
+        self.feedback_id = feedback_id
+        self.score = score
+        self.request_time = request_time
+        self.feedback_requester = feedback_requester
+        self.feedback_time = feedback_time
+        self.deliv = deliv
+        self.ref = ref
+        self.is_master = is_master
+        self.commiter = commiter
+        self.visible_score = visible_score
+        self.sha = sha
+        self.parent_sha = parent_sha
+        self.prev_time = prev_time
+        self.prev_score = prev_score
+        self.prev_visible_score = prev_visible_score
+        self.true_delta = true_delta
+        self.visible_delta = visible_delta
+
+def make_result_with_delta(row, conn):
+    result = AutotestResultWithDelta(conn, *row)
+    return result
+
 class QueueVisit:
     def __init__(self, conn, anon_id,
                  enqueue, dequeue,
@@ -77,6 +109,9 @@ class Student:
 
     def autotest_results(self):
         return [make_result(res, self.conn) for res in self.conn.sql('SELECT res.* FROM autotest_results res, result_membership mem WHERE mem.anon_id = \"' + self.anon_id + '\" AND mem.feedback_id = res.feedback_id AND res.request_time <' + str(self.clock.time))]
+
+    def autotest_results_with_dela(self):
+        return [make_result(res, self.conn) for res in self.conn.sql('SELECT res.* FROM inf_autotest_results_with_deltas res, result_membership mem WHERE mem.anon_id = \"' + self.anon_id + '\" AND mem.feedback_id = res.feedback_id AND res.request_time <' + str(self.clock.time))]
 
 
 def make_student(row, conn, clock):
