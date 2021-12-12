@@ -62,42 +62,51 @@ class OurVisitor(DSLGrammarVisitor):
 
     def visitNumber(self, ctx: DSLGrammarParser.NumberContext):
         res = super().visitNumber(ctx)
-        if isinstance(res, attr.TimeVaryingAttribute) and ctx.aggr_op():
-            res = self.apply_aggregation(ctx, res)
+        # if isinstance(res, attr.TimeVaryingAttribute) and ctx.aggr_op():
+        #     res = self.apply_aggregation(ctx, res)
         if isinstance(res, attr.BasicAttribute):
             return res.get_value_for(self.student)  # when the attribute is compared we compute just in time
         return float(ctx.getText())
 
-    # TODO: Might need to change this, after the added visitGranularity_operator and visitModified_attributes
-    def visitGranularity_result(self,
-                                ctx: DSLGrammarParser.Granularity_resultContext):
-        res = super().visitGranularity_result(ctx)  # we must visit the child attribute
+    def visitModified_attributes(self, ctx:DSLGrammarParser.Modified_attributesContext):
+        res = super().visitModified_attributes(ctx)
+
         if isinstance(res, attr.TimeVaryingAttribute):
-            if len(ctx.getTokens(18)) > 0:
+            if ctx.granularity_operator():
+                return self.apply_granularity(ctx, res)
+            if ctx.aggr_op():
+                return self.apply_aggregation(ctx, res)
+
+        return res
+
+    def apply_granularity(self,
+                                ctx: DSLGrammarParser.Modified_attributesContext, res: attr.TimeVaryingAttribute):
+        if isinstance(res, attr.TimeVaryingAttribute):
+            if len(ctx.getTokens(12)) > 0:
                 res.set_granularity(attr.Granularity.DAILY)
-            elif len(ctx.getTokens(19)) > 0:
+            elif len(ctx.getTokens(13)) > 0:
                 res.set_granularity(attr.Granularity.WEEKLY)
-            elif len(ctx.getTokens(20)) > 0:
+            elif len(ctx.getTokens(14)) > 0:
                 res.set_granularity(attr.Granularity.MONTHLY)
-            elif len(ctx.getTokens(21)) > 0:
+            elif len(ctx.getTokens(15)) > 0:
                 res.set_granularity(attr.Granularity.MAX)  # TODO remove this
-            elif len(ctx.getTokens(22)) > 0:
+            elif len(ctx.getTokens(16)) > 0:
                 res.set_granularity(attr.Granularity.MAX)
         return res
 
 
-    def apply_aggregation(self, ctx: DSLGrammarParser.NumberContext, res: attr.TimeVaryingAttribute):
-        if len(ctx.getTokens(12)) > 0:
+    def apply_aggregation(self, ctx: DSLGrammarParser.Modified_attributesContext, res: attr.TimeVaryingAttribute):
+        if len(ctx.getTokens(17)) > 0:
             res.set_aggregation(attr.Aggregation.AVG)
-        elif len(ctx.getTokens(13)) > 0:
+        elif len(ctx.getTokens(18)) > 0:
             res.set_aggregation(attr.Aggregation.COUNT)
-        elif len(ctx.getTokens(14)) > 0:
+        elif len(ctx.getTokens(19)) > 0:
             res.set_aggregation(attr.Aggregation.MAX)
-        elif len(ctx.getTokens(15)) > 0:
+        elif len(ctx.getTokens(20)) > 0:
             res.set_aggregation(attr.Aggregation.MIN)
-        elif len(ctx.getTokens(16)) > 0:
+        elif len(ctx.getTokens(21)) > 0:
             res.set_aggregation(attr.Aggregation.SUM)
-        elif len(ctx.getTokens(17)) > 0:
+        elif len(ctx.getTokens(22)) > 0:
             res.set_aggregation(attr.Aggregation.LATEST)
         return res
 
@@ -161,7 +170,6 @@ def run_query(query, istudents):
 
     return [ii for ii in istudents if OurVisitor(ii).visit(tree)]
 
-# this is just an execution of an example query
 # from data.loader import get_students
 # from data.loader import get_clock
 # get_clock().time = 99999999999999
