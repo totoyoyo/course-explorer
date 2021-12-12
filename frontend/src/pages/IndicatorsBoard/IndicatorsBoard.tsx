@@ -9,7 +9,7 @@ import CircularPacking, {
 import { QueriedOutcome, selectOutcome } from "../../states/outcomeSlice";
 import { selectAllStudents } from "../../states/allStudentsSlice";
 import { SliderConfig, TimeSlider } from "../../components/TimeSlider/TimeSlider";
-import { formatISO, getTime, max, min } from "date-fns";
+import { format, getTime, max, min } from "date-fns";
 import { Box, List, ListItem, ListSubheader, styled, Typography, useTheme } from "@mui/material";
 import PieChartRatios, { RatioGroup, RatioProps } from "../../components/PieChartRatios/PieChartRatios";
 import {
@@ -186,7 +186,7 @@ export function IndicatorsBoard() {
 			marks: allDates.map((d: number) => {
 				return {
 					value: d,
-					label: formatISO(d)
+					label: format(d, "MM/dd/yyyy")
 				};
 			})
 		};
