@@ -187,7 +187,7 @@ export function IndicatorsSidebar(props: IndicatorsSidebarProps) {
 	}));
 
 	const isSubmitDisabled = () => {
-		return selectedDataset === undefined || !outcome || indicators.length === 0;
+		return selectedDataset === undefined || !outcome;
 	};
 
 	return (

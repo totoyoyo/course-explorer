@@ -12,7 +12,6 @@ import { Attribute, selectAttributes } from "../../states/attributesSlice";
 
 export function Overview() {
 	const selected: Dataset | undefined = useAppSelector(selectDatasets).selected;
-	const timeInterval: TimeInterval = useAppSelector(selectTimeInterval).interval;
 	const allStudentDetails: Map<number, StudentDetail[]> = useAppSelector(selectStudentDetails).details;
 	const selectedAttributes: Attribute[] = useAppSelector(selectAttributes).selected;
 	const [sliderIndex, setSliderIndex] = useState<number | undefined>(undefined);
@@ -26,19 +25,6 @@ export function Overview() {
 		setSliderConfigs(configs);
 		setSliderIndex(configs.min);
 	}, [allStudentDetails]);
-
-	useEffect(() => {
-		if (selected && timeInterval) {
-			dispatch(
-				queryAllStudentDetails({
-					datasetId: selected.id,
-					start: getTime(timeInterval.start),
-					end: getTime(timeInterval.end),
-					step: milliseconds(toFnsDuration(timeInterval.step))
-				})
-			);
-		}
-	}, [selected, timeInterval]);
 
 	const onSliderChange = (date: number) => {
 		setSliderIndex(date);

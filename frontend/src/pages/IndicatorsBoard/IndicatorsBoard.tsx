@@ -10,7 +10,7 @@ import { QueriedOutcome, selectOutcome } from "../../states/outcomeSlice";
 import { selectAllStudents } from "../../states/allStudentsSlice";
 import { SliderConfig, TimeSlider } from "../../components/TimeSlider/TimeSlider";
 import { formatISO, getTime, max, min } from "date-fns";
-import { List, ListItem, ListSubheader, Stack, styled, Typography } from "@mui/material";
+import { Box, List, ListItem, ListSubheader, Stack, styled, Typography, useTheme } from "@mui/material";
 import PieChartRatios, { RatioGroup, RatioProps } from "../../components/PieChartRatios/PieChartRatios";
 import {
 	queryWidgetStudentDetails,
@@ -27,6 +27,7 @@ export function IndicatorsBoard() {
 	const queriedOutcome: QueriedOutcome | undefined = useAppSelector(selectOutcome).queriedOutcome;
 	const allStudents = useAppSelector(selectAllStudents).students;
 	const [sliderIndex, setSliderIndex] = useState<number | undefined>(undefined);
+	const [sliderConfigs, setSliderConfigs] = useState<SliderConfig | undefined>(undefined);
 	const [packProps, setPackProps] = useState<CircularPackingProps>({
 		nodes: [],
 		links: [],
@@ -34,6 +35,18 @@ export function IndicatorsBoard() {
 	});
 	const [ratioProps, setRatioProps] = useState<RatioProps>({ nodes: [], links: [] });
 	const dispatch = useAppDispatch();
+	const theme = useTheme();
+
+	useEffect(() => {
+		if (queriedOutcome) {
+			const configs = getSliderConfigs(
+				queriedIndicators.map((i) => i.students),
+				queriedOutcome.students
+			);
+			setSliderConfigs(configs);
+			onSliderChange(configs.min);
+		}
+	}, [queriedIndicators, queriedOutcome]);
 
 	const constructNodeGroup = (name: string, tp: string[], fp: string[]): NodeGroup => {
 		return {
@@ -47,7 +60,7 @@ export function IndicatorsBoard() {
 								id: `${name}-true`,
 								name: "true",
 								children: tp.map((s) => {
-									return { id: `${name}-true-${s}`, name: s };
+									return { id: `${name}-true-${s}`, name: s.substring(0, 5) };
 								})
 							}
 					  ]),
@@ -58,7 +71,7 @@ export function IndicatorsBoard() {
 								id: `${name}-false`,
 								name: "false",
 								children: fp.map((s) => {
-									return { id: `${name}-false-${s}`, name: s };
+									return { id: `${name}-false-${s}`, name: s.substring(0, 5) };
 								})
 							}
 					  ])
@@ -183,22 +196,25 @@ export function IndicatorsBoard() {
 		}
 	};
 
-	if (queriedIndicators.length > 0 && queriedOutcome!) {
-		const sliderConfigs = getSliderConfigs(
-			queriedIndicators.map((i) => i.students),
-			queriedOutcome!.students
-		);
+	if (queriedIndicators.length > 0 && queriedOutcome! && sliderConfigs) {
 		return (
-			<div>
-				<Stack direction="row">
-					<Stack>
+			<Box sx={{ display: "flex", flexDirection: "column", height: "100%", padding: theme.spacing(2) }}>
+				<Box sx={{ display: "flex", flexDirection: "row", height: "100%" }}>
+					<Box
+						sx={{
+							display: "flex",
+							flexDirection: "column",
+							justifyContent: "flex-start",
+							height: "100%",
+							flexBasis: "80%"
+						}}>
 						<CircularPacking {...packProps} />
 						<PieChartRatios {...ratioProps} />
-					</Stack>
+					</Box>
 					<HistogramWidgetList sliderIndex={sliderIndex} />
-				</Stack>
+				</Box>
 				<TimeSlider onChange={onSliderChange} value={sliderIndex} {...sliderConfigs} />
-			</div>
+			</Box>
 		);
 	} else {
 		return <Typography>Nothing to show yet!</Typography>;
@@ -304,6 +320,6 @@ function HistogramWidgetList(props: HistogramWidgetListProps) {
 			</List>
 		);
 	} else {
-		return <Stack>Select indicator to see details</Stack>;
+		return <Box sx={{ flexBasis: "30%" }}>Select indicator to see details</Box>;
 	}
 }

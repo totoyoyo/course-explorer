@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { draw } from "./vis";
 import { Box } from "@mui/material";
+import { useResize } from "../useResize";
 
 export interface NodeGroup {
 	id: string;
@@ -21,11 +22,14 @@ export interface CircularPackingProps {
 }
 
 export default function CircularPacking(props: CircularPackingProps) {
-	useEffect(() => {
-		if (props.nodes.length > 0) {
-			draw(props.nodes, props.links, props.onSelectIndicator);
-		}
-	}, [props]);
+	const rootRef = useRef(null);
+	const size = useResize(rootRef);
 
-	return <Box sx={{ overflow: "hidden" }} className="vis-circular-packing" />;
+	useEffect(() => {
+		if (props.nodes.length > 0 && size) {
+			draw(props.nodes, props.links, props.onSelectIndicator, size);
+		}
+	}, [props, size]);
+
+	return <Box sx={{ flexBasis: "80%" }} ref={rootRef} className="vis-circular-packing" />;
 }

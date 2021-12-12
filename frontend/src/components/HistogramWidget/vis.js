@@ -21,7 +21,7 @@ const draw = (props) => {
 				.attr("y", 5)
 				.attr("fill", "currentColor")
 				.attr("text-anchor", "start")
-				.style("font", "10px sans-serif")
+				.style("font", "12px sans-serif")
 				.text(props.labelY)
 		)
 		.call((g) =>
@@ -31,7 +31,7 @@ const draw = (props) => {
 				.attr("y", 290)
 				.attr("fill", "currentColor")
 				.attr("text-anchor", "end")
-				.style("font", "10px sans-serif")
+				.style("font", "12px sans-serif")
 				.text(props.labelX)
 		);
 	const xAxisMax = d3.max(props.data, (d) => {

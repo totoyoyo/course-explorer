@@ -46,6 +46,7 @@ function App() {
 			easing: theme.transitions.easing.sharp,
 			duration: theme.transitions.duration.leavingScreen
 		}),
+		boxShadow: "none",
 		...(sidebarOpen && {
 			width: `calc(100% - ${SIDEBAR_WIDTH}px)`,
 			marginLeft: `${SIDEBAR_WIDTH}px`,

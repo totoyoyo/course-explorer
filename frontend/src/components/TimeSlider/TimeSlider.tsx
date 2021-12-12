@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Slider, Stack } from "@mui/material";
+import { Slider, Stack, useTheme } from "@mui/material";
 
 interface TimeSliderProps extends SliderConfig {
 	onChange: (date: number) => void;
@@ -17,9 +17,10 @@ export function TimeSlider(props: TimeSliderProps) {
 	useEffect(() => {
 		setValue(props.value);
 	}, [props]);
+	const theme = useTheme();
 
 	return (
-		<Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+		<Stack direction="row" spacing={2} sx={{ alignItems: "center", padding: theme.spacing(2) }}>
 			<Slider
 				aria-label="Time"
 				step={null}
