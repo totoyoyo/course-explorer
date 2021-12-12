@@ -16,7 +16,7 @@ MONTHLY_SECONDS = DAY_SECONDS * 30  # very rough
 
 
 def min_func(a, b):
-    return a[0] if a[0] < b[0] else b[0]
+    return a if a[0] < b[0] else b
 
 
 class Aggregation(Enum):
@@ -45,11 +45,11 @@ class TimeAccumulatingAttribute(BasicAttribute):
         attr_list = self.get_time_attribute_list(student)  # returns a list of tuples (time, data)
 
         split_lists = self.generate_split_lists(attr_list)
-        split_lists = [self.reduce_attribute_list(student, x[1]) for x in split_lists]
+        split_lists = [self.reduce_attribute_list(student, [y[1] for y in x]) for x in split_lists]
 
         match self.aggregation:
             case Aggregation.LATEST:
-                return split_lists[-1]
+                return split_lists[-1] if len(split_lists) > 0 else 0  # 0 as a default value
             case Aggregation.AVG:
                 return sum(split_lists) / len(split_lists)
             case Aggregation.MAX:
@@ -68,7 +68,7 @@ class TimeAccumulatingAttribute(BasicAttribute):
         if len(attr_list) == 1:
             return [[attr_list[0]]]
 
-        base_time = reduce(min_func, attr_list)
+        base_time = reduce(min_func, attr_list)[0]
 
         for attr in attr_list:
             rel_time = attr[0] - base_time
@@ -77,7 +77,7 @@ class TimeAccumulatingAttribute(BasicAttribute):
                 split_lists[steps] = []
             split_lists[steps].append(attr)
 
-        return split_lists.items()
+        return split_lists.values()
 
     def set_granularity(self, target):
         self.granularity = target
