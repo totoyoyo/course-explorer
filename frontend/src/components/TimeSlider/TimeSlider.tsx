@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Slider, Stack } from "@mui/material";
+import { hide_marks } from "./vis";
 
 interface TimeSliderProps extends SliderConfig {
 	onChange: (date: number) => void;
@@ -16,6 +17,7 @@ export function TimeSlider(props: TimeSliderProps) {
 	const [value, setValue] = useState<number | undefined>(undefined);
 	useEffect(() => {
 		setValue(props.value);
+		hide_marks();
 	}, [props]);
 
 	return (
@@ -26,6 +28,7 @@ export function TimeSlider(props: TimeSliderProps) {
 				min={props.min}
 				max={props.max}
 				marks={props.marks}
+				valueLabelDisplay="on"
 				value={value || props.min}
 				onChangeCommitted={(event: React.SyntheticEvent | Event, value: number | Array<number>) => {
 					if (typeof value === "number") {
