@@ -20,7 +20,7 @@ def make_attribute(name):
             return time_spent_with_ta_office_hours.TimeSpentWithTAOfficeHours()
         case 'score':
             return score.Score()
-        case 'time_spent_with_ta_office_hours':
+        case 'visible_score':
             return visible_score.VisibleScore()
 
 def get_all_attributes():
