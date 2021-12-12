@@ -30,7 +30,7 @@ export function TimeSlider(props: TimeSliderProps) {
 				marks={props.marks}
 				value={value || props.min}
 				valueLabelFormat={(value) => format(value, "Pp")}
-				valueLabelDisplay="on"
+				valueLabelDisplay="auto"
 				onChangeCommitted={(event: React.SyntheticEvent | Event, value: number | Array<number>) => {
 					if (typeof value === "number") {
 						props.onChange(value);
