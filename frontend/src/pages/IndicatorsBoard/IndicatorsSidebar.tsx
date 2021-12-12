@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import {
 	Button,
 	Divider,
@@ -95,44 +95,38 @@ function IndicatorsListSetting(props: IndicatorsListProps) {
 		setAnchorEl(null);
 	};
 
-	const listItems = indicators.map((i: Indicator) => {
-		return (
-			<ListItem
-				key={i.name}
-				secondaryAction={
-					<div>
-						<IconButton edge="end" aria-label="more" onClick={handleMoreClick}>
-							<MoreVertRoundedIcon />
-						</IconButton>
-						<Menu open={isMoreOpened} anchorEl={anchorEl} onClose={handleMoreClose}>
-							<MenuItem
-								key="edit"
-								onClick={() => {
-									handleEditClick(i);
-									handleMoreClose();
-								}}>
-								Edit
-							</MenuItem>
-							<MenuItem
-								key="delete"
-								onClick={() => {
-									handleDeleteClick(i);
-									handleMoreClose();
-								}}>
-								Delete
-							</MenuItem>
-						</Menu>
-					</div>
-				}>
-				<ListItemText primary={i.name} />
-			</ListItem>
-		);
-	});
 	return (
 		<Stack spacing={1}>
 			<Typography variant="h5">Indicators</Typography>
 			<List component="div" aria-labelledby="indicators-list-header">
-				{listItems}
+				{indicators.map((i: Indicator) => (
+					<ListItem key={i.name}>
+						<ListItemText primary={i.name} />
+						<div>
+							<IconButton edge="end" aria-label="more" onClick={handleMoreClick}>
+								<MoreVertRoundedIcon />
+							</IconButton>
+							<Menu open={isMoreOpened} anchorEl={anchorEl} onClose={handleMoreClose}>
+								<MenuItem
+									key="edit"
+									onClick={() => {
+										handleEditClick(i);
+										handleMoreClose();
+									}}>
+									Edit
+								</MenuItem>
+								<MenuItem
+									key="delete"
+									onClick={() => {
+										handleDeleteClick(i);
+										handleMoreClose();
+									}}>
+									Delete
+								</MenuItem>
+							</Menu>
+						</div>
+					</ListItem>
+				))}
 			</List>
 			<Button onClick={handleAddClick} variant="text" endIcon={<AddRoundedIcon />} aria-label="add">
 				Add new

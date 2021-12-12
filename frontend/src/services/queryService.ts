@@ -1,5 +1,6 @@
-import { AxiosResponse } from "axios";
 import axios, { errorHandler } from "./handler";
+import { AxiosResponse } from "axios";
+import { Attribute } from "../states/attributesSlice";
 
 export interface QueryRequest {
 	start: string;
@@ -10,7 +11,8 @@ export interface QueryRequest {
 }
 
 export interface QueryResponse {
-	[time: string]: string[];
+	results: { [time: string]: string[] };
+	attributes: Attribute[];
 }
 
 const query = (req: QueryRequest): Promise<QueryResponse> => {
