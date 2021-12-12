@@ -62,8 +62,6 @@ class OurVisitor(DSLGrammarVisitor):
 
     def visitNumber(self, ctx: DSLGrammarParser.NumberContext):
         res = super().visitNumber(ctx)
-        # if isinstance(res, attr.TimeVaryingAttribute) and ctx.aggr_op():
-        #     res = self.apply_aggregation(ctx, res)
         if isinstance(res, attr.BasicAttribute):
             return res.get_value_for(self.student)  # when the attribute is compared we compute just in time
         return float(ctx.getText())
