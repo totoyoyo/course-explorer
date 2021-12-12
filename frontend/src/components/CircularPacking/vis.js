@@ -93,7 +93,7 @@ export const select_student_mouse = () => {
 
 function mouseover(event, node) {
 	const current_name = node.data.name;
-	if (current_name.includes("student")) {
+	if (isLeaf(node)) {
 		const current = d3.selectAll("circle").filter((d) => d.data.name === current_name);
 		let curr_data = current.data();
 		let linkNodes = get_links_between_nodes(curr_data);
@@ -118,7 +118,7 @@ function mouseover(event, node) {
 }
 function mouseout(event, node) {
 	const current_name = node.data.name;
-	if (current_name.includes("student")) {
+	if (isLeaf(node)) {
 		const current = d3.selectAll("circle").filter((d) => d.data.name.includes(current_name));
 		current
 			.transition()
