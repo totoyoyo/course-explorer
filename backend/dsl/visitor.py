@@ -171,4 +171,4 @@ def run_query(query, istudents):
 # from data.loader import get_students
 # from data.loader import get_clock
 # get_clock().time = 99999999999999
-# print(run_query("((daily(student.num_piazza_posts) > 2) AND (student.num_piazza_posts <12))", get_students()))
+# print(run_query("((monthly(student.num_piazza_posts) > 2) AND (student.num_piazza_posts <12))", get_students()))
