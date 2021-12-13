@@ -3,7 +3,7 @@ import { RootState } from "./store";
 import StudentService, { StudentDetailListRequest, StudentDetailListResponse } from "../services/studentService";
 import { PayloadAction } from "@reduxjs/toolkit/dist/createAction";
 import { QueriedIndicator } from "./indicatorsSlice";
-import { queryAllStudentDetails, StudentDetail } from "./studentDetailsSlice";
+import { StudentDetail } from "./studentDetailsSlice";
 
 export interface WidgetStudentDetailsState {
 	selected: QueriedIndicator | undefined;

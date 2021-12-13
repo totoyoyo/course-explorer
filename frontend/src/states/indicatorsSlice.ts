@@ -91,7 +91,7 @@ export const indicatorsSlice = createSlice({
 				}
 			})
 			.addCase(queryAllIndicators.rejected, (state, action) => {
-				if (!state.loadingIndicators) {
+				if (state.loadingIndicators) {
 					state.loadingIndicators = false;
 				}
 			});

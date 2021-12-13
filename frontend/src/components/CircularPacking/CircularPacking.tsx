@@ -31,5 +31,5 @@ export default function CircularPacking(props: CircularPackingProps) {
 		}
 	}, [props, size]);
 
-	return <Box sx={{ flexBasis: "70%" }} ref={rootRef} className="vis-circular-packing" />;
+	return <Box sx={{ flexBasis: "75%" }} ref={rootRef} className="vis-circular-packing" />;
 }

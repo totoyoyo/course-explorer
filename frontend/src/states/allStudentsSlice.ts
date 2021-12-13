@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import StudentService, { StudentListResponse } from "../services/studentService";
 import { PayloadAction } from "@reduxjs/toolkit/dist/createAction";
-import { queryOutcome } from "./outcomeSlice";
 
 export interface AllStudentsState {
 	students: string[];

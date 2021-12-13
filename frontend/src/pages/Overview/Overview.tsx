@@ -66,7 +66,7 @@ export function Overview() {
 										labelY={labelY}
 									/>
 								) : (
-									<Skeleton variant="rectangular" height={"25%"} />
+									<Skeleton variant="rectangular" height={"100%"} />
 								)}
 							</Grid>
 						))}
