@@ -39,13 +39,18 @@ class DSLGrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by DSLGrammarParser#aggr_op.
-    def visitAggr_op(self, ctx:DSLGrammarParser.Aggr_opContext):
+    # Visit a parse tree produced by DSLGrammarParser#modified_attributes.
+    def visitModified_attributes(self, ctx:DSLGrammarParser.Modified_attributesContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by DSLGrammarParser#granularity_result.
-    def visitGranularity_result(self, ctx:DSLGrammarParser.Granularity_resultContext):
+    # Visit a parse tree produced by DSLGrammarParser#granularity_operator.
+    def visitGranularity_operator(self, ctx:DSLGrammarParser.Granularity_operatorContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by DSLGrammarParser#aggr_op.
+    def visitAggr_op(self, ctx:DSLGrammarParser.Aggr_opContext):
         return self.visitChildren(ctx)
 
 

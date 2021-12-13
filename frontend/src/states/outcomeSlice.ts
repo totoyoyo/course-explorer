@@ -4,6 +4,7 @@ import { RootState } from "./store";
 import { formatISO, milliseconds, parseISO } from "date-fns";
 import QueryService, { QueryResponse } from "../services/queryService";
 import { toFnsDuration } from "./timeIntervalSlice";
+import { Attribute } from "./attributesSlice";
 
 export interface Outcome {
 	query: string;
@@ -11,6 +12,7 @@ export interface Outcome {
 
 export interface QueriedOutcome extends Outcome {
 	students: Map<number, string[]>;
+	attributes: Attribute[];
 }
 
 export interface OutcomeState {
@@ -42,12 +44,13 @@ export const queryOutcome = createAsyncThunk<QueriedOutcome, void, { state: Root
 			name: "Outcome"
 		}).then((res: QueryResponse) => {
 			const students = new Map<number, string[]>();
-			Object.keys(res).forEach((time: string) => {
-				students.set(parseISO(time).getTime(), res[time]);
+			Object.keys(res.results).forEach((time: string) => {
+				students.set(parseISO(time).getTime(), res.results[time]);
 			});
 			return {
 				...outcome.outcome,
-				students: students
+				students: students,
+				attributes: res.attributes
 			};
 		});
 	}

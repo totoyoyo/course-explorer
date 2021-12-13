@@ -30,10 +30,8 @@ class AttributeExtractingVisitor(DSLGrammarVisitor):
     def visitNumber(self, ctx: DSLGrammarParser.NumberContext):
         return super().visitNumber(ctx)
 
-    def visitGranularity_result(self,
-                                ctx: DSLGrammarParser.Granularity_resultContext):
-        return super().visitGranularity_result(ctx)
-
+    def visitModified_attributes(self, ctx:DSLGrammarParser.Modified_attributesContext):
+        return super().visitModified_attributes(ctx)
 
     def visitAggr_op(self, ctx:DSLGrammarParser.Aggr_opContext):
         return self.visitAggr_op(ctx)
@@ -52,7 +50,6 @@ class AttributeExtractingVisitor(DSLGrammarVisitor):
         return super().visitStudent_attribute(ctx)
 
     def visitAttribute(self, ctx: DSLGrammarParser.AttributeContext):
-        print("found " + ctx.getText())
         return {ctx.getText()}
 
     def visitTime_lit(self, ctx: DSLGrammarParser.Time_litContext):

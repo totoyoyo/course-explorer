@@ -1,1 +1,1 @@
-((((student.what + student.what2) > 2.5) AND (student.why < 12)) OR (avg(student.sleep) < 7.5))
+((((student.what + student.what2) > 2.5) AND (student.why < 12)) OR ( sofar(avg(student.sleep)) < 7.5))

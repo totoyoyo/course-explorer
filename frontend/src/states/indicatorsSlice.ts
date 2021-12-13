@@ -3,6 +3,7 @@ import { RootState } from "./store";
 import QueryService, { QueryResponse } from "../services/queryService";
 import { formatISO, milliseconds, parseISO } from "date-fns";
 import { toFnsDuration } from "./timeIntervalSlice";
+import { Attribute } from "./attributesSlice";
 
 export interface Indicator {
 	name: string;
@@ -18,6 +19,7 @@ export function NewIndicator(): Indicator {
 
 export interface QueriedIndicator extends Indicator {
 	students: Map<number, string[]>;
+	attributes: Attribute[];
 }
 
 export interface IndicatorsState {
@@ -25,23 +27,8 @@ export interface IndicatorsState {
 	queriedIndicators: QueriedIndicator[];
 }
 
-const MOCK_INDICATORS: Indicator[] = [
-	{
-		name: "Indicator 1",
-		query: ""
-	},
-	{
-		name: "Indicator 2",
-		query: ""
-	},
-	{
-		name: "Indicator 3",
-		query: ""
-	}
-];
-
 const initialState: IndicatorsState = {
-	indicators: MOCK_INDICATORS,
+	indicators: [],
 	queriedIndicators: [] as QueriedIndicator[]
 };
 
@@ -57,12 +44,13 @@ export const queryAllIndicators = createAsyncThunk<QueriedIndicator[], void, { s
 				QueryService.query({ start: start, end: end, step: step, query: i.query, name: i.name }).then(
 					(res: QueryResponse) => {
 						const students = new Map<number, string[]>();
-						Object.keys(res).forEach((time: string) => {
-							students.set(parseISO(time).getTime(), res[time]);
+						Object.keys(res.results).forEach((time: string) => {
+							students.set(parseISO(time).getTime(), res.results[time]);
 						});
 						return {
 							...i,
-							students: students
+							students: students,
+							attributes: res.attributes
 						};
 					}
 				)
