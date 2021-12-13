@@ -5,7 +5,10 @@ import data.model.attribute.final_grade as final_grade
 import data.model.attribute.time_spent_with_ta_office_hours as time_spent_with_ta_office_hours
 import data.model.attribute.score.score as score
 import data.model.attribute.score.visible_score as visible_score
-
+import data.model.attribute.delta.total_delta as total_delta
+import data.model.attribute.delta.visible_total_delta as visible_total_delta
+import data.model.attribute.delta.avg_delta as avg_delta
+import data.model.attribute.delta.visible_avg_delta as visible_avg_delta
 
 def make_attribute(name):
     match name:
@@ -33,6 +36,14 @@ def make_attribute(name):
             return visible_score.VisibleScoreC2()
         case 'visible_score_c3':
             return visible_score.VisibleScoreC3()
+        case 'visible_total_delta':
+            return visible_total_delta.VisibleTotalDelta()
+        case 'total_delta':
+            return total_delta.TotalDelta()
+        case 'visible_avg_delta':
+            return visible_avg_delta.VisibleAvgDelta()
+        case 'avg_delta':
+            return avg_delta.AvgDelta()
 
 
 def get_all_attributes():
@@ -40,12 +51,14 @@ def get_all_attributes():
             'num_office_hours', 'final_grade',
             'time_spent_with_ta_office_hours', 'score_c0',
             'score_c1', 'score_c2', 'score_c3', 'visible_score_c1',
-            'visible_score_c2', 'visible_score_c3']
+            'visible_score_c2', 'visible_score_c3',
+            'visible_total_delta', 'total_delta',
+            'visible_avg_delta', 'avg_delta']
 
 
-# from data.loader import get_students, get_clock
-#
-#
+from data.loader import get_students, get_clock
+
+
 # def test_attributes():
 #     students = get_students()
 #     get_clock().time = 999999999999999

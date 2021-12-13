@@ -110,8 +110,8 @@ class Student:
     def autotest_results(self):
         return [make_result(res, self.conn) for res in self.conn.sql('SELECT res.* FROM autotest_results res, result_membership mem WHERE mem.anon_id = \"' + self.anon_id + '\" AND mem.feedback_id = res.feedback_id AND res.request_time <' + str(self.clock.time))]
 
-    def autotest_results_with_dela(self):
-        return [make_result(res, self.conn) for res in self.conn.sql('SELECT res.* FROM inf_autotest_results_with_deltas res, result_membership mem WHERE mem.anon_id = \"' + self.anon_id + '\" AND mem.feedback_id = res.feedback_id AND res.request_time <' + str(self.clock.time))]
+    def autotest_results_with_delta(self):
+        return [make_result_with_delta(res, self.conn) for res in self.conn.sql('SELECT res.* FROM inf_autotest_results_with_deltas res, result_membership mem WHERE mem.anon_id = \"' + self.anon_id + '\" AND mem.feedback_id = res.feedback_id AND res.request_time <' + str(self.clock.time))]
 
 
 def make_student(row, conn, clock):
