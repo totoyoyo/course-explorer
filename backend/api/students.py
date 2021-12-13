@@ -32,11 +32,12 @@ async def get_student_details(req: StudentDetailsRequest):
 
     students = get_students() if req.ids is None else [s for s in get_students() if (s.anon_id in req.ids)]
     clock = get_clock()
-    clock.time = start
+    clock.time = start - step
 
     results = {}
 
     while clock.time <= end:
+        clock.time += step
         students_at_time = []
         for s in students:
             attrib_map = {}
@@ -44,6 +45,5 @@ async def get_student_details(req: StudentDetailsRequest):
                 attrib_map[attrib] = make_attribute(attrib).get_value_for(s)
             students_at_time.append({"id": s.anon_id, "attributes": attrib_map})
         results[datetime.datetime.utcfromtimestamp(clock.time / 1000).strftime("%Y-%m-%dT%H:%M:%S%z")] = students_at_time
-        clock.time += step
 
     return results
