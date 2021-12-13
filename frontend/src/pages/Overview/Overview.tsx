@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../states/hooks";
 import { SliderConfig, TimeSlider } from "../../components/TimeSlider/TimeSlider";
 import { selectStudentDetails, StudentDetail } from "../../states/studentDetailsSlice";
-import { formatISO, getTime, max, min } from "date-fns";
+import { format, getTime, max, min } from "date-fns";
 import Grid from "@mui/material/Grid";
 import { Dataset, selectDatasets } from "../../states/datasetSlice";
 import { Attribute, selectAttributes } from "../../states/attributesSlice";
@@ -36,7 +36,7 @@ export function Overview() {
 			marks: allDates.map((d: number) => {
 				return {
 					value: d,
-					label: formatISO(d)
+					label: format(d, "MM/dd/yyyy")
 				};
 			})
 		};
