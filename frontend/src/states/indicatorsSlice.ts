@@ -25,11 +25,13 @@ export interface QueriedIndicator extends Indicator {
 export interface IndicatorsState {
 	indicators: Indicator[];
 	queriedIndicators: QueriedIndicator[];
+	loadingIndicators: boolean;
 }
 
 const initialState: IndicatorsState = {
 	indicators: [],
-	queriedIndicators: [] as QueriedIndicator[]
+	queriedIndicators: [] as QueriedIndicator[],
+	loadingIndicators: false
 };
 
 export const queryAllIndicators = createAsyncThunk<QueriedIndicator[], void, { state: RootState }>(
@@ -76,9 +78,23 @@ export const indicatorsSlice = createSlice({
 		}
 	},
 	extraReducers: (builder) => {
-		builder.addCase(queryAllIndicators.fulfilled, (state, action: PayloadAction<QueriedIndicator[]>) => {
-			state.queriedIndicators = action.payload;
-		});
+		builder
+			.addCase(queryAllIndicators.fulfilled, (state, action: PayloadAction<QueriedIndicator[]>) => {
+				if (state.loadingIndicators) {
+					state.queriedIndicators = action.payload;
+					state.loadingIndicators = false;
+				}
+			})
+			.addCase(queryAllIndicators.pending, (state, action) => {
+				if (!state.loadingIndicators) {
+					state.loadingIndicators = true;
+				}
+			})
+			.addCase(queryAllIndicators.rejected, (state, action) => {
+				if (!state.loadingIndicators) {
+					state.loadingIndicators = false;
+				}
+			});
 	}
 });
 

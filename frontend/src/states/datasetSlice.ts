@@ -14,11 +14,13 @@ export interface Dataset {
 export interface DatasetState {
 	datasets: Dataset[];
 	selected: Dataset | undefined;
+	loadingDatasets: boolean;
 }
 
 const initialState: DatasetState = {
 	datasets: [],
-	selected: undefined
+	selected: undefined,
+	loadingDatasets: false
 };
 
 export const queryDatasets = createAsyncThunk<Dataset[], void, { state: RootState }>("datasets/getAll", async () => {
@@ -36,9 +38,23 @@ export const datasetSlice = createSlice({
 		}
 	},
 	extraReducers: (builder) => {
-		builder.addCase(queryDatasets.fulfilled, (state, action: PayloadAction<Dataset[]>) => {
-			state.datasets = action.payload;
-		});
+		builder
+			.addCase(queryDatasets.fulfilled, (state, action: PayloadAction<Dataset[]>) => {
+				if (state.loadingDatasets) {
+					state.datasets = action.payload;
+					state.loadingDatasets = false;
+				}
+			})
+			.addCase(queryDatasets.pending, (state, action) => {
+				if (!state.loadingDatasets) {
+					state.loadingDatasets = true;
+				}
+			})
+			.addCase(queryDatasets.rejected, (state, action) => {
+				if (state.loadingDatasets) {
+					state.loadingDatasets = false;
+				}
+			});
 	}
 });
 

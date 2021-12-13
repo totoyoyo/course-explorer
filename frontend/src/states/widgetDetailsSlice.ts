@@ -3,16 +3,18 @@ import { RootState } from "./store";
 import StudentService, { StudentDetailListRequest, StudentDetailListResponse } from "../services/studentService";
 import { PayloadAction } from "@reduxjs/toolkit/dist/createAction";
 import { QueriedIndicator } from "./indicatorsSlice";
-import { StudentDetail } from "./studentDetailsSlice";
+import { queryAllStudentDetails, StudentDetail } from "./studentDetailsSlice";
 
 export interface WidgetStudentDetailsState {
 	selected: QueriedIndicator | undefined;
 	details: StudentDetail[];
+	loadingDetails: boolean;
 }
 
 const initialState: WidgetStudentDetailsState = {
 	selected: undefined,
-	details: [] as StudentDetail[]
+	details: [] as StudentDetail[],
+	loadingDetails: false
 };
 
 export const queryWidgetStudentDetails = createAsyncThunk<
@@ -44,9 +46,23 @@ export const widgetStudentDetailsSlice = createSlice({
 		}
 	},
 	extraReducers: (builder) => {
-		builder.addCase(queryWidgetStudentDetails.fulfilled, (state, action: PayloadAction<StudentDetail[]>) => {
-			state.details = action.payload;
-		});
+		builder
+			.addCase(queryWidgetStudentDetails.fulfilled, (state, action: PayloadAction<StudentDetail[]>) => {
+				if (state.loadingDetails) {
+					state.details = action.payload;
+					state.loadingDetails = false;
+				}
+			})
+			.addCase(queryWidgetStudentDetails.pending, (state, action) => {
+				if (!state.loadingDetails) {
+					state.loadingDetails = true;
+				}
+			})
+			.addCase(queryWidgetStudentDetails.rejected, (state, action) => {
+				if (state.loadingDetails) {
+					state.loadingDetails = false;
+				}
+			});
 	}
 });
 

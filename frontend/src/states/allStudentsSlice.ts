@@ -2,13 +2,16 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import StudentService, { StudentListResponse } from "../services/studentService";
 import { PayloadAction } from "@reduxjs/toolkit/dist/createAction";
+import { queryOutcome } from "./outcomeSlice";
 
 export interface AllStudentsState {
 	students: string[];
+	loadingAllStudents: boolean;
 }
 
 const initialState: AllStudentsState = {
-	students: []
+	students: [],
+	loadingAllStudents: false
 };
 
 export const queryStudentList = createAsyncThunk<string[], void, { state: RootState }>(
@@ -27,9 +30,23 @@ export const allStudentsSlice = createSlice({
 		// TODO: define as we need them
 	},
 	extraReducers: (builder) => {
-		builder.addCase(queryStudentList.fulfilled, (state, action: PayloadAction<string[]>) => {
-			state.students = action.payload;
-		});
+		builder
+			.addCase(queryStudentList.fulfilled, (state, action: PayloadAction<string[]>) => {
+				if (state.loadingAllStudents) {
+					state.students = action.payload;
+					state.loadingAllStudents = false;
+				}
+			})
+			.addCase(queryStudentList.pending, (state, action) => {
+				if (!state.loadingAllStudents) {
+					state.loadingAllStudents = true;
+				}
+			})
+			.addCase(queryStudentList.rejected, (state, action) => {
+				if (state.loadingAllStudents) {
+					state.loadingAllStudents = false;
+				}
+			});
 	}
 });
 

@@ -19,9 +19,6 @@ export const draw = (groups, size) => {
 	let y = d3.scaleBand().rangeRound([50, height]).domain(["Outcome"]).padding(0.25);
 	let y_axis = d3.axisRight(y).tickSize(0);
 
-	svg.append("g").attr("class", "x axis").attr("transform", "translate(0,50)").call(customXAxis);
-	svg.append("g").attr("class", "y axis").call(customYAxis);
-
 	let stack = d3.stack().keys(keys).order(d3.stackOrderNone).offset(d3.stackOffsetNone);
 
 	d3.select(".vis-pie-chart").append(() => svg.node());
@@ -93,7 +90,7 @@ export const draw = (groups, size) => {
 			return 50 + i * guessLength;
 		})
 		.attr("y", function (d, i) {
-			return 15;
+			return 10;
 		}) // 100 is where the first dot appears. 25 is the distance between dots
 		.attr("width", legendDotSize)
 		.attr("height", legendDotSize)
@@ -108,7 +105,7 @@ export const draw = (groups, size) => {
 			return 50 + i * guessLength + legendDotSize + 5;
 		})
 		.attr("y", function (d, i) {
-			return 30;
+			return 20;
 		}) // 100 is where the first dot appears. 25 is the distance between dots
 		.style("fill", function (d) {
 			return color(d);
@@ -129,16 +126,18 @@ export const draw = (groups, size) => {
 		.attr("text-anchor", "left")
 		.style("alignment-baseline", "middle");
 
+	svg.append("g").attr("class", "x axis").attr("transform", "translate(0,50)").call(customXAxis);
+	svg.append("g").attr("class", "y axis").call(customYAxis);
+
 	function customYAxis(g) {
 		g.call(y_axis);
 		g.call((g) => g.select(".domain").attr("transform", "translate(50,0)"));
-		// g.selectAll(".tick:not(:first-of-type) line").attr("stroke", "#777").attr("stroke-dasharray", "2,2");
 		g.selectAll(".tick text").attr("x", 2);
 	}
 
 	function customXAxis(g) {
 		g.call(x_axis);
 		g.selectAll(".tick:not(:first-of-type) line").attr("stroke", "#777").attr("stroke-dasharray", "2,2");
-		g.selectAll(".tick text").attr("y", 4).attr("dx", -4);
+		g.selectAll(".tick text").attr("y", -10).attr("dx", -4);
 	}
 };

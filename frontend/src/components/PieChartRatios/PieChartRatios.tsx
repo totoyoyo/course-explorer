@@ -33,5 +33,5 @@ export default function PieChartRatios(props: RatioProps) {
 		}
 	}, [props, size]);
 
-	return <Box sx={{ flexBasis: "20%" }} ref={rootRef} className="vis-pie-chart" />;
+	return <Box sx={{ flexBasis: "30%" }} ref={rootRef} className="vis-pie-chart" />;
 }
