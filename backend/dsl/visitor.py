@@ -66,7 +66,7 @@ class OurVisitor(DSLGrammarVisitor):
             return res.get_value_for(self.student)  # when the attribute is compared we compute just in time
         return float(ctx.getText())
 
-    def visitModified_attributes(self, ctx:DSLGrammarParser.Modified_attributesContext):
+    def visitModified_attributes(self, ctx: DSLGrammarParser.Modified_attributesContext):
         res = super().visitModified_attributes(ctx)
 
         if isinstance(res, attr.TimeVaryingAttribute):
@@ -78,7 +78,7 @@ class OurVisitor(DSLGrammarVisitor):
         return res
 
     def apply_granularity(self,
-                                ctx: DSLGrammarParser.Modified_attributesContext, res: attr.TimeVaryingAttribute):
+                          ctx: DSLGrammarParser.Modified_attributesContext, res: attr.TimeVaryingAttribute):
         if isinstance(res, attr.TimeVaryingAttribute):
             if len(ctx.getTokens(12)) > 0:
                 res.set_granularity(attr.Granularity.DAILY)
@@ -91,7 +91,6 @@ class OurVisitor(DSLGrammarVisitor):
             elif len(ctx.getTokens(16)) > 0:
                 res.set_granularity(attr.Granularity.MAX)
         return res
-
 
     def apply_aggregation(self, ctx: DSLGrammarParser.Modified_attributesContext, res: attr.TimeVaryingAttribute):
         if len(ctx.getTokens(17)) > 0:
@@ -108,9 +107,8 @@ class OurVisitor(DSLGrammarVisitor):
             res.set_aggregation(attr.Aggregation.LATEST)
         return res
 
-
-    def visitAggr_op(self, ctx:DSLGrammarParser.Aggr_opContext):
-        return self.visitAggr_op(ctx)
+    def visitAggr_op(self, ctx: DSLGrammarParser.Aggr_opContext):
+        return super().visitAggr_op(ctx)
 
     def visitArithmetic(self, ctx: DSLGrammarParser.ArithmeticContext):
         num1 = super().visitNumber(ctx.number()[0])

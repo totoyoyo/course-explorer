@@ -23,7 +23,7 @@ const getNodeStroke = (d) => {
 
 const getNodeColor = (d) => {
 	if (isLeaf(d)) {
-		return d.parent.data.name === "true" ? "#ffbde0" : "#bdffdc";
+		return d.parent.data.name === "true" ? "#66C2A5" : "#FC8D62";
 	} else {
 		return "white";
 	}
@@ -58,14 +58,14 @@ let selected = undefined;
 
 const getSelectNodeColor = (d) => {
 	if (isLeaf(d)) {
-		return d.parent.data.name === "true" ? "#ff00bb" : "#14d000";
+		return d.parent.data.name === "true" ? "#76ff03" : "#ff00bb";
 	} else {
 		return "white";
 	}
 };
 
 const getSelectLinkColor = (d) => {
-	return d.source.parent.data.name === "true" ? "#ff00bb" : "#14d000";
+	return d.source.parent.data.name === "true" ? "#76ff03" : "#ff00bb";
 };
 
 let selection_links = svg
