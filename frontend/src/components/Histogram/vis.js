@@ -33,6 +33,16 @@ const draw = (props) => {
 		.style("border-radius", "5px")
 		.style("color", "#fff");
 
+	const dynamicBins = d3
+		.select("body")
+		.append("input")
+		.attr("type", "number")
+		.attr("min", 1)
+		.attr("max", 100)
+		.attr("step", 10)
+		.attr("value", 20)
+		.attr("id", "nBin");
+
 	let svg = d3
 		.select(`.${props.attribute}-histogram`)
 		.append("svg")
@@ -60,57 +70,65 @@ const draw = (props) => {
 				.style("font", "12px sans-serif")
 				.text(props.labelX)
 		);
+	function update(nBin) {
+		const histogram = d3
+			.bin()
+			.value(function (d) {
+				return d[props.attribute];
+			})
+			.domain(x.domain()) // then the domain of the graphic
+			.thresholds(x.ticks(20)); //number of bins
+		//.thresholds(x.ticks(nBin));
+		const bins = histogram(props.data);
 
-	const histogram = d3
-		.bin()
-		.value(function (d) {
-			return d[props.attribute];
-		})
-		.domain(x.domain()) // then the domain of the graphic
-		.thresholds(x.ticks(10)); //number of bins
+		y.domain([
+			0,
+			d3.max(bins, function (d) {
+				return d.length;
+			}) + 5
+		]).ticks(1);
 
-	const bins = histogram(props.data);
+		var u = svg
+			.selectAll("rect")
+			.data(bins)
+			.enter()
+			.append("rect")
+			.attr("x", 0)
+			.style("cursor", "pointer")
+			.attr("fill", getBarColor())
+			.on("mouseover", function (e, d) {
+				d3.select(this).attr("fill", "#fdcc8b");
+				tooltip.style("visibility", "visible").text(`${d.length} students`);
+			})
+			.on("mousemove", function (event) {
+				tooltip.style("top", event.pageY - 10 + "px").style("left", event.pageX + 10 + "px");
+			})
+			.on("mouseout", function () {
+				d3.select(this).attr("fill", getBarColor());
+				tooltip.style("visibility", "hidden");
+			})
+			.attr("transform", function (d) {
+				return "translate(" + x(d.x0) + "," + y(d.length) + ")";
+			})
+			.attr("width", function (d) {
+				return x(d.x1) - x(d.x0);
+			})
+			.attr("height", function (d) {
+				return height - y(d.length);
+			});
+		u.exit().remove();
+		svg.append("g")
+			.attr("transform", "translate(0," + height + ")")
+			.call(d3.axisBottom(x));
 
-	y.domain([
-		0,
-		d3.max(bins, function (d) {
-			return d.length;
-		}) + 5
-	]).ticks(1);
+		svg.append("nBin").attr("x", 100).attr("y", 100); //Creates bins
+		update(20);
 
-	svg.selectAll("rect")
-		.data(bins)
-		.enter()
-		.append("rect")
-		.attr("x", 0)
-		.style("cursor", "pointer")
-		.attr("fill", getBarColor())
-		.on("mouseover", function (e, d) {
-			d3.select(this).attr("fill", "#fdcc8b");
-			tooltip.style("visibility", "visible").text(`${d.length} students`);
-		})
-		.on("mousemove", function (event) {
-			tooltip.style("top", event.pageY - 10 + "px").style("left", event.pageX + 10 + "px");
-		})
-		.on("mouseout", function () {
-			d3.select(this).attr("fill", getBarColor());
-			tooltip.style("visibility", "hidden");
-		})
-		.attr("transform", function (d) {
-			return "translate(" + x(d.x0) + "," + y(d.length) + ")";
-		})
-		.attr("width", function (d) {
-			return x(d.x1) - x(d.x0);
-		})
-		.attr("height", function (d) {
-			return height - y(d.length);
+		d3.select("#nBin").on("input", function () {
+			update(+this.value);
 		});
-
-	svg.append("g")
-		.attr("transform", "translate(0," + height + ")")
-		.call(d3.axisBottom(x));
-
-	svg.append("g").call(d3.axisLeft(y));
+		svg.append("g").call(d3.axisLeft(y));
+	}
 };
 
 export default draw;
