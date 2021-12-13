@@ -1,11 +1,12 @@
 import * as d3 from "d3";
 
-const margin = { top: 10, right: 30, bottom: 30, left: 40 },
-	width = 360 - margin.left - margin.right,
-	height = 300 - margin.top - margin.bottom;
+const margin = { top: 10, right: 30, bottom: 30, left: 40 };
 
-const draw = (props) => {
+const draw = (props, size) => {
 	d3.select(`.${props.attribute}-histogram-widget > *`).remove();
+
+	const width = size.width - margin.left - margin.right;
+	const height = 300 - margin.top - margin.bottom;
 
 	const svg = d3
 		.select(`.${props.attribute}-histogram-widget`)
@@ -21,7 +22,7 @@ const draw = (props) => {
 				.attr("y", 5)
 				.attr("fill", "currentColor")
 				.attr("text-anchor", "start")
-				.style("font", "10px sans-serif")
+				.style("font", "12px sans-serif")
 				.text(props.labelY)
 		)
 		.call((g) =>
@@ -31,7 +32,7 @@ const draw = (props) => {
 				.attr("y", 290)
 				.attr("fill", "currentColor")
 				.attr("text-anchor", "end")
-				.style("font", "10px sans-serif")
+				.style("font", "12px sans-serif")
 				.text(props.labelX)
 		);
 	const xAxisMax = d3.max(props.data, (d) => {

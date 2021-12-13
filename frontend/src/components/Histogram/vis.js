@@ -44,10 +44,10 @@ const draw = (props) => {
 			g
 				.append("text")
 				.attr("x", -margin.left + 45)
-				.attr("y", 5)
+				.attr("y", 0)
 				.attr("fill", "currentColor")
 				.attr("text-anchor", "start")
-				.style("font", "10px sans-serif")
+				.style("font", "12px sans-serif")
 				.text(props.labelY)
 		)
 		.call((g) =>
@@ -57,7 +57,7 @@ const draw = (props) => {
 				.attr("y", 237)
 				.attr("fill", "currentColor")
 				.attr("text-anchor", "end")
-				.style("font", "10px sans-serif")
+				.style("font", "12px sans-serif")
 				.text(props.labelX)
 		);
 
@@ -75,7 +75,7 @@ const draw = (props) => {
 		0,
 		d3.max(bins, function (d) {
 			return d.length;
-		}) + 1
+		}) + 5
 	]).ticks(1);
 
 	svg.selectAll("rect")
@@ -100,7 +100,7 @@ const draw = (props) => {
 			return "translate(" + x(d.x0) + "," + y(d.length) + ")";
 		})
 		.attr("width", function (d) {
-			return x(d.x1) - x(d.x0) - 1;
+			return x(d.x1) - x(d.x0);
 		})
 		.attr("height", function (d) {
 			return height - y(d.length);

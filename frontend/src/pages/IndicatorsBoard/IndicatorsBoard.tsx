@@ -9,8 +9,8 @@ import CircularPacking, {
 import { QueriedOutcome, selectOutcome } from "../../states/outcomeSlice";
 import { selectAllStudents } from "../../states/allStudentsSlice";
 import { SliderConfig, TimeSlider } from "../../components/TimeSlider/TimeSlider";
-import { formatISO, getTime, max, min } from "date-fns";
-import { List, ListItem, ListSubheader, Stack, styled, Typography } from "@mui/material";
+import { format, getTime, max, min } from "date-fns";
+import { Box, List, ListItem, ListSubheader, styled, Typography, useTheme } from "@mui/material";
 import PieChartRatios, { RatioGroup, RatioProps } from "../../components/PieChartRatios/PieChartRatios";
 import {
 	queryWidgetStudentDetails,
@@ -27,6 +27,7 @@ export function IndicatorsBoard() {
 	const queriedOutcome: QueriedOutcome | undefined = useAppSelector(selectOutcome).queriedOutcome;
 	const allStudents = useAppSelector(selectAllStudents).students;
 	const [sliderIndex, setSliderIndex] = useState<number | undefined>(undefined);
+	const [sliderConfigs, setSliderConfigs] = useState<SliderConfig | undefined>(undefined);
 	const [packProps, setPackProps] = useState<CircularPackingProps>({
 		nodes: [],
 		links: [],
@@ -34,6 +35,18 @@ export function IndicatorsBoard() {
 	});
 	const [ratioProps, setRatioProps] = useState<RatioProps>({ nodes: [], links: [] });
 	const dispatch = useAppDispatch();
+	const theme = useTheme();
+
+	useEffect(() => {
+		if (queriedOutcome) {
+			const configs = getSliderConfigs(
+				queriedIndicators.map((i) => i.students),
+				queriedOutcome.students
+			);
+			setSliderConfigs(configs);
+			onSliderChange(configs.min);
+		}
+	}, [queriedIndicators, queriedOutcome]);
 
 	const constructNodeGroup = (name: string, tp: string[], fp: string[]): NodeGroup => {
 		return {
@@ -70,16 +83,17 @@ export function IndicatorsBoard() {
 		outcomeStudents: string[],
 		indicatorStudents: { name: string; students: string[] }[]
 	): CircularPackingProps => {
-		const outcomeSet = new Set(outcomeStudents);
+		const outcomeSet = new Set(outcomeStudents.map((s) => s.substring(0, 5)));
 		let props: { nodeGroup: NodeGroup; link: Link }[] = [];
 		indicatorStudents.forEach((i: { name: string; students: string[] }) => {
-			if (outcomeSet.size > 0 && i.students.length > 0) {
+			const students = i.students.map((s) => s.substring(0, 5));
+			if (outcomeSet.size > 0 && students.length > 0) {
 				let tp: string[] = [],
 					fp: string[] = [],
 					fn = [];
-				const indicatorSet = new Set(i.students);
-				i.students.forEach((s) => (outcomeSet.has(s) ? tp.push(s) : fp.push(s)));
-				fn = outcomeStudents.filter((s: string) => !indicatorSet.has(s));
+				const indicatorSet = new Set(students);
+				students.forEach((s) => (outcomeSet.has(s) ? tp.push(s) : fp.push(s)));
+				fn = Array.from(outcomeSet).filter((s: string) => !indicatorSet.has(s));
 				let f1 = tp.length / (tp.length + 0.5 * (fp.length + fn.length));
 				props.push({
 					nodeGroup: constructNodeGroup(i.name, tp, fp),
@@ -92,7 +106,14 @@ export function IndicatorsBoard() {
 			}
 		});
 		return {
-			nodes: [constructNodeGroup("Outcome", outcomeStudents, []), ...props.map((p) => p.nodeGroup)],
+			nodes: [
+				constructNodeGroup(
+					"Outcome",
+					outcomeStudents.map((s) => s.substring(0, 5)),
+					[]
+				),
+				...props.map((p) => p.nodeGroup)
+			],
 			links: props.map((p) => p.link),
 			onSelectIndicator: (i: string | undefined) =>
 				dispatch(setSelectedIndicator(queriedIndicators.find((indicator) => indicator.name === i)))
@@ -165,7 +186,7 @@ export function IndicatorsBoard() {
 			marks: allDates.map((d: number) => {
 				return {
 					value: d,
-					label: formatISO(d)
+					label: format(d, "MM/dd/yyyy")
 				};
 			})
 		};
@@ -183,22 +204,37 @@ export function IndicatorsBoard() {
 		}
 	};
 
-	if (queriedIndicators.length > 0 && queriedOutcome!) {
-		const sliderConfigs = getSliderConfigs(
-			queriedIndicators.map((i) => i.students),
-			queriedOutcome!.students
-		);
+	if (queriedIndicators.length > 0 && queriedOutcome! && sliderConfigs) {
 		return (
-			<div>
-				<Stack direction="row">
-					<Stack>
+			<Box sx={{ display: "flex", flexDirection: "column", height: "100%", padding: theme.spacing(2) }}>
+				<Box sx={{ display: "flex", flexDirection: "row", height: "100%" }}>
+					<Box
+						sx={{
+							display: "flex",
+							flexDirection: "column",
+							justifyContent: "flex-start",
+							height: "100%",
+							width: "100%",
+							flexBasis: "80%"
+						}}>
 						<CircularPacking {...packProps} />
 						<PieChartRatios {...ratioProps} />
-					</Stack>
-					<HistogramWidgetList sliderIndex={sliderIndex} />
-				</Stack>
+					</Box>
+					<Box
+						sx={{
+							display: "flex",
+							height: "100%",
+							width: "100%",
+							flexBasis: "20%",
+							border: 1,
+							borderColor: "rgba(0, 0, 0, 0.12)",
+							margin: theme.spacing(1)
+						}}>
+						<HistogramWidgetList sliderIndex={sliderIndex} />
+					</Box>
+				</Box>
 				<TimeSlider onChange={onSliderChange} value={sliderIndex} {...sliderConfigs} />
-			</div>
+			</Box>
 		);
 	} else {
 		return <Typography>Nothing to show yet!</Typography>;
@@ -295,15 +331,16 @@ function HistogramWidgetList(props: HistogramWidgetListProps) {
 							</HistogramWidgetLegendItem>
 						</HistogramWidgetLegend>
 					</ListSubheader>
-				}>
+				}
+				sx={{ width: "100%" }}>
 				{attributes.map((attr) => (
-					<ListItem key={attr}>
+					<ListItem key={attr} sx={{ width: "100%" }}>
 						<HistogramWidget {...getHistogramWidgetProps(attr)} />
 					</ListItem>
 				))}
 			</List>
 		);
 	} else {
-		return <Stack>Select indicator to see details</Stack>;
+		return <Typography>Select an indicator to see details</Typography>;
 	}
 }

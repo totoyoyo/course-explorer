@@ -1,12 +1,5 @@
 import * as d3 from "d3";
 
-const pack = (data) =>
-	d3
-		.pack()
-		.size([width, height])
-		.padding(5)
-		.radius((d) => 10)(data);
-
 const isTopLevel = (d) => d.depth === 1;
 const isLeaf = (d) => d.children === undefined;
 const isInternal = (d) => d.depth > 1 && !isLeaf(d);
@@ -38,9 +31,7 @@ const getNodeColor = (d) => {
 
 let newNodes = [];
 let links = [];
-let width = 900;
-let height = 900;
-let svg = d3.create("svg").attr("width", width).attr("height", height);
+let svg = d3.create("svg");
 let link = svg.append("g").attr("class", "links").attr("stroke", "black").selectAll("line");
 let node = svg.append("g").attr("class", "nodes").selectAll("circle");
 let label = svg.append("g").attr("class", "labels").selectAll("text");
@@ -140,9 +131,20 @@ function mouseout(event, node) {
 }
 
 // Source: https://observablehq.com/@d3/zoomable-circle-packing
-export const draw = (groups, newLinks, onSelectIndicator) => {
+export const draw = (groups, newLinks, onSelectIndicator, size) => {
 	d3.select(".vis-circular-packing").append(() => svg.node());
+
+	const { width, height } = size;
+	svg.attr("width", width).attr("height", height);
+
+	const pack = (data) =>
+		d3
+			.pack()
+			.size([width, height])
+			.padding(5)
+			.radius((d) => 10)(data);
 	const root = pack(d3.hierarchy({ name: "root", children: groups }).sum((d) => 1));
+
 	root.children.forEach((d) => {
 		d.pack_x = d.r;
 		d.pack_y = d.r;
@@ -179,11 +181,16 @@ export const draw = (groups, newLinks, onSelectIndicator) => {
 	node.on("click", function (event, d) {
 		if (isTopLevel(d) && selected !== d) {
 			selected = d;
+			d3.select(this).attr("stroke-width", 3);
 			onSelectIndicator(d.data.name);
 		} else if (isInternal(d) && selected !== d.parent) {
 			selected = d.parent;
+			d3.selectAll("circle")
+				.filter((d) => d.data.name === selected.data.name)
+				.attr("stroke-width", 3);
 			onSelectIndicator(d.parent.data.name);
 		} else if (isTopLevel(d)) {
+			d3.select(this).attr("stroke-width", 1);
 			selected = undefined;
 			onSelectIndicator(selected);
 		} else {

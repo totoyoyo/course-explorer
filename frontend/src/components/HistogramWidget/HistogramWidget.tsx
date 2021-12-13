@@ -1,7 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import draw from "./vis";
 import { StudentDetail } from "../../states/studentDetailsSlice";
 import { Attribute } from "../../states/attributesSlice";
+import { useResize } from "../useResize";
+import { Box } from "@mui/material";
 
 export interface HistogramWidgetProps {
 	indicator: { name: string; students: Set<string> };
@@ -13,9 +15,14 @@ export interface HistogramWidgetProps {
 }
 
 export default function HistogramWidget(props: HistogramWidgetProps) {
-	useEffect(() => {
-		draw(props);
-	}, [props]);
+	const rootRef = useRef(null);
+	const size = useResize(rootRef);
 
-	return <div className={`${props.attribute}-histogram-widget`} />;
+	useEffect(() => {
+		if (size) {
+			draw(props, size);
+		}
+	}, [props, size]);
+
+	return <Box sx={{ width: "100%" }} className={`${props.attribute}-histogram-widget`} ref={rootRef} />;
 }

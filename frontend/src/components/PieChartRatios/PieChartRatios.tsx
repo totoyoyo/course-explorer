@@ -1,5 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { draw } from "./vis";
+import { Box } from "@mui/material";
+import { useResize } from "../useResize";
 
 export interface RatioGroup {
 	id: string;
@@ -22,11 +24,14 @@ export interface RatioProps {
 }
 
 export default function PieChartRatios(props: RatioProps) {
-	useEffect(() => {
-		if (props.nodes.length > 0) {
-			draw(props.nodes, props.links);
-		}
-	}, [props]);
+	const rootRef = useRef(null);
+	const size = useResize(rootRef);
 
-	return <div className="vis-pie-chart" style={{ paddingBottom: 25 }} />;
+	useEffect(() => {
+		if (props.nodes.length > 0 && size) {
+			draw(props.nodes, size);
+		}
+	}, [props, size]);
+
+	return <Box sx={{ flexBasis: "20%" }} ref={rootRef} className="vis-pie-chart" />;
 }

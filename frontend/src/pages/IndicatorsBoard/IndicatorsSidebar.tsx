@@ -12,8 +12,7 @@ import {
 	Stack,
 	styled,
 	TextField,
-	Typography,
-	useTheme
+	Typography
 } from "@mui/material";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import { useEffect, useState } from "react";
@@ -22,7 +21,6 @@ import {
 	selectIndicators,
 	remIndicator,
 	NewIndicator,
-	IndicatorsState,
 	queryAllIndicators
 } from "../../states/indicatorsSlice";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
@@ -33,9 +31,11 @@ import { IndicatorEditorAction, IndicatorEditorDialogProps } from "./IndicatorEd
 import { queryStudentList } from "../../states/allStudentsSlice";
 import { DatasetSetting } from "../../components/Setting/DatasetSetting";
 import { TimeIntervalSetting } from "../../components/Setting/TimeIntervalSetting";
+import { Dataset, selectDatasets } from "../../states/datasetSlice";
 
 function OutcomeSetting() {
 	const outcomeState: OutcomeState = useAppSelector(selectOutcome);
+	const selectedDataset: Dataset | undefined = useAppSelector(selectDatasets).selected;
 	const [query, setQuery] = useState<string>(outcomeState.outcome.query);
 	const dispatch = useAppDispatch();
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,12 +47,21 @@ function OutcomeSetting() {
 		dispatch(setOutcome({ query: query }));
 	};
 
+	const isDisabled = () => selectedDataset === undefined;
+
 	return (
 		<Stack>
 			<Typography variant="h5" mb={3}>
 				Outcome
 			</Typography>
-			<TextField id="outcome-query" label="Query" value={query} onChange={handleChange} onBlur={handleBlur} />
+			<TextField
+				id="outcome-query"
+				label="Query"
+				value={query}
+				onChange={handleChange}
+				onBlur={handleBlur}
+				disabled={isDisabled()}
+			/>
 		</Stack>
 	);
 }
@@ -61,8 +70,8 @@ export interface IndicatorsListProps {
 	setDialogProps: (props: IndicatorEditorDialogProps) => void;
 }
 function IndicatorsListSetting(props: IndicatorsListProps) {
-	const indicatorsState: IndicatorsState = useAppSelector(selectIndicators);
-	const indicators = indicatorsState.indicators;
+	const selectedDataset: Dataset | undefined = useAppSelector(selectDatasets).selected;
+	const indicators = useAppSelector(selectIndicators).indicators;
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const isMoreOpened = Boolean(anchorEl);
 	const dispatch = useAppDispatch();
@@ -94,6 +103,8 @@ function IndicatorsListSetting(props: IndicatorsListProps) {
 	const handleMoreClose = () => {
 		setAnchorEl(null);
 	};
+
+	const isAddDisabled = () => selectedDataset === undefined;
 
 	return (
 		<Stack spacing={1}>
@@ -128,7 +139,12 @@ function IndicatorsListSetting(props: IndicatorsListProps) {
 					</ListItem>
 				))}
 			</List>
-			<Button onClick={handleAddClick} variant="text" endIcon={<AddRoundedIcon />} aria-label="add">
+			<Button
+				onClick={handleAddClick}
+				variant="text"
+				endIcon={<AddRoundedIcon />}
+				aria-label="add"
+				disabled={isAddDisabled()}>
 				Add new
 			</Button>
 		</Stack>
@@ -144,7 +160,10 @@ export interface IndicatorsSidebarProps {
 
 export function IndicatorsSidebar(props: IndicatorsSidebarProps) {
 	const [isOpened, setIsOpened] = useState(props.isOpened);
-	const theme = useTheme();
+	const selectedDataset: Dataset | undefined = useAppSelector(selectDatasets).selected;
+	const outcome = useAppSelector(selectOutcome).outcome?.query;
+	const indicators = useAppSelector(selectIndicators).indicators;
+
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
@@ -164,6 +183,10 @@ export function IndicatorsSidebar(props: IndicatorsSidebarProps) {
 		...theme.mixins.toolbar,
 		justifyContent: "flex-end"
 	}));
+
+	const isSubmitDisabled = () => {
+		return selectedDataset === undefined || !outcome || indicators.length === 0;
+	};
 
 	return (
 		<Drawer
@@ -188,7 +211,7 @@ export function IndicatorsSidebar(props: IndicatorsSidebarProps) {
 				<TimeIntervalSetting />
 				<OutcomeSetting />
 				<IndicatorsListSetting setDialogProps={props.setDialogProps} />
-				<Button variant="contained" onClick={handleSubmitClick}>
+				<Button variant="contained" onClick={handleSubmitClick} disabled={isSubmitDisabled()}>
 					Submit
 				</Button>
 			</Stack>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Slider, Stack } from "@mui/material";
+import { Box, Slider, useTheme } from "@mui/material";
+import { format } from "date-fns";
 
 interface TimeSliderProps extends SliderConfig {
 	onChange: (date: number) => void;
@@ -9,7 +10,7 @@ interface TimeSliderProps extends SliderConfig {
 export interface SliderConfig {
 	min: number;
 	max: number;
-	marks: { value: number; label: string }[];
+	marks: { value: number; label?: string }[];
 }
 
 export function TimeSlider(props: TimeSliderProps) {
@@ -17,9 +18,10 @@ export function TimeSlider(props: TimeSliderProps) {
 	useEffect(() => {
 		setValue(props.value);
 	}, [props]);
+	const theme = useTheme();
 
 	return (
-		<Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+		<Box sx={{ padding: theme.spacing(1, 10) }}>
 			<Slider
 				aria-label="Time"
 				step={null}
@@ -27,12 +29,14 @@ export function TimeSlider(props: TimeSliderProps) {
 				max={props.max}
 				marks={props.marks}
 				value={value || props.min}
+				valueLabelFormat={(value) => format(value, "Pp")}
+				valueLabelDisplay="auto"
 				onChangeCommitted={(event: React.SyntheticEvent | Event, value: number | Array<number>) => {
 					if (typeof value === "number") {
 						props.onChange(value);
 					}
 				}}
 			/>
-		</Stack>
+		</Box>
 	);
 }

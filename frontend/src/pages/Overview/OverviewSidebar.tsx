@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import {
+	Button,
 	Divider,
 	Drawer,
 	FormControlLabel,
@@ -16,6 +17,9 @@ import { DatasetSetting } from "../../components/Setting/DatasetSetting";
 import { TimeIntervalSetting } from "../../components/Setting/TimeIntervalSetting";
 import { Dataset, selectDatasets } from "../../states/datasetSlice";
 import { Attribute, selectAttributes, handleSelection, setSelected } from "../../states/attributesSlice";
+import { queryAllStudentDetails } from "../../states/studentDetailsSlice";
+import { getTime, milliseconds } from "date-fns";
+import { selectTimeInterval, TimeInterval, toFnsDuration } from "../../states/timeIntervalSlice";
 
 export interface OverviewSidebarProps {
 	width: number;
@@ -61,6 +65,10 @@ function AttributeSetting() {
 }
 
 export function OverviewSidebar(props: OverviewSidebarProps) {
+	const selected: Dataset | undefined = useAppSelector(selectDatasets).selected;
+	const timeInterval: TimeInterval = useAppSelector(selectTimeInterval).interval;
+	const dispatch = useAppDispatch();
+
 	const SidebarHeader = styled("div")(({ theme }) => ({
 		display: "flex",
 		alignItems: "center",
@@ -68,6 +76,23 @@ export function OverviewSidebar(props: OverviewSidebarProps) {
 		...theme.mixins.toolbar,
 		justifyContent: "flex-end"
 	}));
+
+	const handleSubmitClick = () => {
+		if (selected && timeInterval) {
+			dispatch(
+				queryAllStudentDetails({
+					datasetId: selected.id,
+					start: getTime(timeInterval.start),
+					end: getTime(timeInterval.end),
+					step: milliseconds(toFnsDuration(timeInterval.step))
+				})
+			);
+		}
+	};
+
+	const isSubmitDisabled = () => {
+		return selected === undefined;
+	};
 
 	return (
 		<Drawer
@@ -90,6 +115,9 @@ export function OverviewSidebar(props: OverviewSidebarProps) {
 			<Stack m={2} spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
 				<DatasetSetting />
 				<TimeIntervalSetting />
+				<Button variant="contained" onClick={handleSubmitClick} disabled={isSubmitDisabled()}>
+					Submit
+				</Button>
 				<AttributeSetting />
 			</Stack>
 		</Drawer>
