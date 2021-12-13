@@ -7,7 +7,7 @@ class TimeSpentWithTAOfficeHours(TimeAccumulatingAttribute):
         return [(visit.answer_start,
                  (visit.answer_finish - visit.answer_start) / TO_SECONDS if visit.answer_finish is not None else 0)
                 for visit in
-                student.visits()]
+                student.visits() if visit.answer_start is not None]
 
     def reduce_attribute_list(self, student, list):
         return sum(list)

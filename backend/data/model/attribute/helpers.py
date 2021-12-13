@@ -72,12 +72,16 @@ class TimeAccumulatingAttribute(BasicAttribute):
 
         for attr in attr_list:
             rel_time = attr[0] - base_time
+
             steps = rel_time // self.get_granularity_step()
             if steps not in split_lists:
                 split_lists[steps] = []
             split_lists[steps].append(attr)
 
-        return split_lists.values()
+        items = list(split_lists.items())
+        items.sort(key=lambda x: x[0])
+        return [i[1] for i in items]
+
 
     def set_granularity(self, target):
         self.granularity = target
@@ -116,4 +120,4 @@ class TimeVaryingAttribute(TimeAccumulatingAttribute, ABC):
             case Granularity.MONTHLY:
                 return MONTHLY_SECONDS
             case Granularity.MAX:
-                return 0  # we want to cause infinite sampling
+                return 1  # we want to cause infinite sampling
