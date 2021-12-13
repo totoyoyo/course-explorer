@@ -1,9 +1,9 @@
 from data.model.attribute.helpers import TimeAccumulatingAttribute
 
 
-class NumCommits(TimeAccumulatingAttribute):
+class NumOfficeHours(TimeAccumulatingAttribute):
     def get_time_attribute_list(self, student):
-        return [(contrib.request_time, contrib) for contrib in student.autotest_results()]
+        return [(visit.enqueue, visit) for visit in student.visits()]
 
     def reduce_attribute_list(self, student, alist):
         return len(alist)

@@ -4,7 +4,7 @@ var x_var = "name";
 
 var keys = ["truePositives", "falsePositives", "trueNegatives", "falseNegatives"];
 
-var color = d3.scaleOrdinal(["#e41a1c", "#4daf4a", "#377eb8", "#984ea3"]);
+var color = d3.scaleOrdinal(["#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3"]);
 
 // Source: https://observablehq.com/@d3/zoomable-circle-packing
 export const draw = (groups, size) => {

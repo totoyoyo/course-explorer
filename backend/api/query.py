@@ -26,7 +26,16 @@ async def query(body: QueryRequest):
     results = {}
 
     while clock.time <= end:
-        results[datetime.datetime.utcfromtimestamp(clock.time / 1000).strftime("%Y-%m-%dT%H:%M:%S%z")] = [s.anon_id for s in run_query(body.query, students)]
+        results[datetime.datetime.utcfromtimestamp(clock.time / 1000).strftime("%Y-%m-%dT%H:%M:%S%z")] = \
+            [s.anon_id for
+             s in
+             run_query(
+                 body.query,
+                 students)]
         clock.time += step
 
+    results[datetime.datetime.utcfromtimestamp(end).strftime("%Y-%m-%dT%H:%M:%S%z")] = [s.anon_id for s in
+                                                                                        run_query(
+                                                                                            body.query,
+                                                                                            students)]
     return {"results": results, "attributes": extract_attributes(body.query)}

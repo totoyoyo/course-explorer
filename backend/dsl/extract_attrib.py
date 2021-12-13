@@ -34,7 +34,7 @@ class AttributeExtractingVisitor(DSLGrammarVisitor):
         return super().visitModified_attributes(ctx)
 
     def visitAggr_op(self, ctx:DSLGrammarParser.Aggr_opContext):
-        return self.visitAggr_op(ctx)
+        return super().visitAggr_op(ctx)
 
     def visitArithmetic(self, ctx: DSLGrammarParser.ArithmeticContext):
         return self.visitArithmetic(ctx)
