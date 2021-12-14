@@ -40,15 +40,19 @@ const draw = (props, size) => {
 	});
 	const x = d3
 		.scaleLinear()
-		.domain([0, xAxisMax + 5])
-		.range([0, width]);
+		.domain([
+			d3.min(props.data, function (d) {
+				return d[props.attribute];
+			}),
+			xAxisMax + 5
+		])
+		.rangeRound([0, width]);
 	svg.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
 
 	const histogram = d3
 		.bin()
 		.value((d) => d[props.attribute])
-		.domain(x.domain())
-		.thresholds(x.ticks(10));
+		.domain(x.domain());
 
 	const binsIndicator = histogram(props.data.filter((d) => props.indicator.students.has(d.id)));
 	const binsOutcome = histogram(props.data.filter((d) => props.outcome.students.has(d.id)));
