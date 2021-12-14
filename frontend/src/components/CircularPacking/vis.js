@@ -3,6 +3,13 @@ import * as d3 from "d3";
 const isTopLevel = (d) => d.depth === 1;
 const isLeaf = (d) => d.children === undefined;
 const isInternal = (d) => d.depth > 1 && !isLeaf(d);
+const getTopLevelName = (d) => {
+	if (isTopLevel(d)) {
+		return d.data.name;
+	} else {
+		return getTopLevelName(d.parent);
+	}
+};
 
 // recursively sets child pack x and y positions relative to its parent
 const setPackXY = (n, prevX, prevY, prevPX, prevPY) => {
@@ -179,21 +186,20 @@ export const draw = (groups, newLinks, onSelectIndicator, size) => {
 		.selection()
 		.merge(node);
 	node.on("click", function (event, d) {
-		if (isTopLevel(d) && selected !== d) {
-			selected = d;
-			d3.select(this).attr("stroke-width", 3);
-			onSelectIndicator(d.data.name);
-		} else if (isInternal(d) && selected !== d.parent) {
-			selected = d.parent;
+		const topLevelName = getTopLevelName(d);
+		if (selected !== topLevelName) {
 			d3.selectAll("circle")
-				.filter((d) => d.data.name === selected.data.name)
+				.filter((d) => d.data.name === selected)
+				.attr("stroke-width", 1);
+			selected = topLevelName;
+			d3.selectAll("circle")
+				.filter((d) => d.data.name === selected)
 				.attr("stroke-width", 3);
-			onSelectIndicator(d.parent.data.name);
-		} else if (isTopLevel(d)) {
-			d3.select(this).attr("stroke-width", 1);
-			selected = undefined;
 			onSelectIndicator(selected);
 		} else {
+			d3.selectAll("circle")
+				.filter((d) => d.data.name === selected)
+				.attr("stroke-width", 1);
 			selected = undefined;
 			onSelectIndicator(selected);
 		}
