@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from "@mui/material";
 import { useAppDispatch } from "../../states/hooks";
 import { Indicator, editIndicator, addIndicator } from "../../states/indicatorsSlice";
+import DSLCheatsheetLink from "../../components/DSLCheatsheetLink";
 
 export enum IndicatorEditorAction {
 	ADD = "Add",
@@ -48,6 +49,9 @@ export function IndicatorEditorDialog(props: IndicatorEditorDialogProps) {
 						onChange={(e) => setQuery(e.target.value)}
 						multiline
 						fullWidth
+						InputProps={{
+							endAdornment: <DSLCheatsheetLink />
+						}}
 					/>
 				</Stack>
 			</DialogContent>

@@ -12,10 +12,12 @@ import {
 	Stack,
 	styled,
 	TextField,
-	Typography
+	Typography,
+	InputAdornment
 } from "@mui/material";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import { useEffect, useState } from "react";
+import HelpIcon from "@mui/icons-material/Help";
 import {
 	Indicator,
 	selectIndicators,
@@ -32,6 +34,7 @@ import { queryStudentList } from "../../states/allStudentsSlice";
 import { DatasetSetting } from "../../components/Setting/DatasetSetting";
 import { TimeIntervalSetting } from "../../components/Setting/TimeIntervalSetting";
 import { Dataset, selectDatasets } from "../../states/datasetSlice";
+import DSLCheatsheetLink from "../../components/DSLCheatsheetLink";
 
 function OutcomeSetting() {
 	const outcomeState: OutcomeState = useAppSelector(selectOutcome);
@@ -61,6 +64,9 @@ function OutcomeSetting() {
 				onChange={handleChange}
 				onBlur={handleBlur}
 				disabled={isDisabled()}
+				InputProps={{
+					endAdornment: <DSLCheatsheetLink />
+				}}
 			/>
 		</Stack>
 	);
