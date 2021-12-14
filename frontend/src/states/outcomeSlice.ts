@@ -18,11 +18,13 @@ export interface QueriedOutcome extends Outcome {
 export interface OutcomeState {
 	outcome: Outcome;
 	queriedOutcome: QueriedOutcome | undefined;
+	loadingOutcome: boolean;
 }
 
 const initialState: OutcomeState = {
 	outcome: { query: "" },
-	queriedOutcome: undefined
+	queriedOutcome: undefined,
+	loadingOutcome: false
 };
 
 export const queryOutcome = createAsyncThunk<QueriedOutcome, void, { state: RootState }>(
@@ -61,9 +63,23 @@ export const outcomeSlice = createSlice({
 		}
 	},
 	extraReducers: (builder) => {
-		builder.addCase(queryOutcome.fulfilled, (state, action: PayloadAction<QueriedOutcome>) => {
-			state.queriedOutcome = action.payload;
-		});
+		builder
+			.addCase(queryOutcome.fulfilled, (state, action: PayloadAction<QueriedOutcome>) => {
+				if (state.loadingOutcome) {
+					state.queriedOutcome = action.payload;
+					state.loadingOutcome = false;
+				}
+			})
+			.addCase(queryOutcome.pending, (state, action) => {
+				if (!state.loadingOutcome) {
+					state.loadingOutcome = true;
+				}
+			})
+			.addCase(queryOutcome.rejected, (state, action) => {
+				if (state.loadingOutcome) {
+					state.loadingOutcome = false;
+				}
+			});
 	}
 });
 

@@ -10,7 +10,7 @@ import { QueriedOutcome, selectOutcome } from "../../states/outcomeSlice";
 import { selectAllStudents } from "../../states/allStudentsSlice";
 import { SliderConfig, TimeSlider } from "../../components/TimeSlider/TimeSlider";
 import { format, getTime, max, min } from "date-fns";
-import { Box, List, ListItem, ListSubheader, styled, Typography, useTheme } from "@mui/material";
+import { Box, List, ListItem, ListSubheader, Skeleton, Stack, styled, Typography, useTheme } from "@mui/material";
 import PieChartRatios, { RatioGroup, RatioProps } from "../../components/PieChartRatios/PieChartRatios";
 import {
 	queryWidgetStudentDetails,
@@ -21,11 +21,12 @@ import { Attribute } from "../../states/attributesSlice";
 import HistogramWidget, { HistogramWidgetProps } from "../../components/HistogramWidget/HistogramWidget";
 import { Dataset, selectDatasets } from "../../states/datasetSlice";
 import { StudentDetail } from "../../states/studentDetailsSlice";
+import { FullPageCircularLoader } from "../../components/loaders";
 
 export function IndicatorsBoard() {
-	const queriedIndicators: QueriedIndicator[] = useAppSelector(selectIndicators).queriedIndicators;
-	const queriedOutcome: QueriedOutcome | undefined = useAppSelector(selectOutcome).queriedOutcome;
-	const allStudents = useAppSelector(selectAllStudents).students;
+	const { loadingIndicators, queriedIndicators } = useAppSelector(selectIndicators);
+	const { loadingOutcome, queriedOutcome } = useAppSelector(selectOutcome);
+	const { loadingAllStudents, students } = useAppSelector(selectAllStudents);
 	const [sliderIndex, setSliderIndex] = useState<number | undefined>(undefined);
 	const [sliderConfigs, setSliderConfigs] = useState<SliderConfig | undefined>(undefined);
 	const [packProps, setPackProps] = useState<CircularPackingProps>({
@@ -144,7 +145,7 @@ export function IndicatorsBoard() {
 	const computeRatioProps = (
 		outcomeStudents: string[],
 		indicatorStudents: { name: string; students: string[] }[],
-		allStudents: string[]
+		students: string[]
 	): RatioProps => {
 		const outcomeSet = new Set(outcomeStudents);
 		const props: { nodeGroup: RatioGroup; link: Link }[] = indicatorStudents.map(
@@ -157,7 +158,7 @@ export function IndicatorsBoard() {
 				fn = outcomeStudents.filter((s: string) => !indicatorSet.has(s));
 				let f1 = tp.length / (tp.length + 0.5 * (fp.length + fn.length));
 				return {
-					nodeGroup: constructRatioGroup(i.name, tp, fp, allStudents, outcomeStudents),
+					nodeGroup: constructRatioGroup(i.name, tp, fp, students, outcomeStudents),
 					link: {
 						source: "Outcome",
 						target: i.name,
@@ -168,7 +169,7 @@ export function IndicatorsBoard() {
 		);
 		return {
 			nodes: [
-				constructRatioGroup("Outcome", outcomeStudents, [], allStudents, outcomeStudents),
+				constructRatioGroup("Outcome", outcomeStudents, [], students, outcomeStudents),
 				...props.map((p) => p.nodeGroup)
 			],
 			links: props.map((p) => p.link)
@@ -200,11 +201,15 @@ export function IndicatorsBoard() {
 				return { name: i.name, students: i.students.get(date) || [] };
 			});
 			setPackProps(computeCircularPackProps(outcomeStudents, indicatorStudents));
-			setRatioProps(computeRatioProps(outcomeStudents, indicatorStudents, allStudents));
+			setRatioProps(computeRatioProps(outcomeStudents, indicatorStudents, students));
 		}
 	};
 
-	if (queriedIndicators.length > 0 && queriedOutcome! && sliderConfigs) {
+	const isLoading = () => loadingOutcome || loadingIndicators || loadingAllStudents;
+
+	if (isLoading()) {
+		return <FullPageCircularLoader />;
+	} else if (queriedIndicators.length > 0 && queriedOutcome! && sliderConfigs) {
 		return (
 			<Box sx={{ display: "flex", flexDirection: "column", height: "100%", padding: theme.spacing(2) }}>
 				<Box sx={{ display: "flex", flexDirection: "row", height: "100%" }}>
@@ -237,7 +242,19 @@ export function IndicatorsBoard() {
 			</Box>
 		);
 	} else {
-		return <Typography>Nothing to show yet!</Typography>;
+		return (
+			<Stack
+				direction="column"
+				spacing={2}
+				sx={{
+					justifyContent: "center",
+					height: "100%",
+					alignItems: "center"
+				}}>
+				<Typography variant="h4">Nothing to see yet!</Typography>
+				<Typography>Configure outcome and indicators in the sidebar.</Typography>
+			</Stack>
+		);
 	}
 }
 
@@ -246,11 +263,13 @@ export interface HistogramWidgetListProps {
 }
 
 function HistogramWidgetList(props: HistogramWidgetListProps) {
-	const widgetDetails: StudentDetail[] = useAppSelector(selectWidgetStudentDetails).details;
+	const { loadingDetails, details }: { loadingDetails: boolean; details: StudentDetail[] } =
+		useAppSelector(selectWidgetStudentDetails);
 	const selectedIndicator: QueriedIndicator | undefined = useAppSelector(selectWidgetStudentDetails).selected;
 	const queriedOutcome: QueriedOutcome | undefined = useAppSelector(selectOutcome).queriedOutcome;
 	const selectedDataset: Dataset | undefined = useAppSelector(selectDatasets).selected;
 	const dispatch = useAppDispatch();
+	const theme = useTheme();
 
 	const getHistogramWidgetProps = (attr: Attribute): HistogramWidgetProps => {
 		const indicator = {
@@ -260,7 +279,7 @@ function HistogramWidgetList(props: HistogramWidgetListProps) {
 		return {
 			indicator: indicator,
 			outcome: { name: "Outcome", students: new Set(queriedOutcome!.students.get(props.sliderIndex!) || []) },
-			data: widgetDetails,
+			data: details,
 			attribute: attr,
 			labelX: attr,
 			labelY: "Number of Students"
@@ -308,7 +327,7 @@ function HistogramWidgetList(props: HistogramWidgetListProps) {
 		margin: 0
 	}));
 
-	if (selectedIndicator && queriedOutcome && widgetDetails.length > 0 && props.sliderIndex) {
+	if (selectedIndicator && queriedOutcome && props.sliderIndex) {
 		const attributes = Array.from(new Set(selectedIndicator.attributes.concat(queriedOutcome.attributes)));
 		return (
 			<List
@@ -332,15 +351,23 @@ function HistogramWidgetList(props: HistogramWidgetListProps) {
 						</HistogramWidgetLegend>
 					</ListSubheader>
 				}
-				sx={{ width: "100%" }}>
+				sx={{ width: "100%", height: "100%" }}>
 				{attributes.map((attr) => (
 					<ListItem key={attr} sx={{ width: "100%" }}>
-						<HistogramWidget {...getHistogramWidgetProps(attr)} />
+						{!loadingDetails ? (
+							<HistogramWidget {...getHistogramWidgetProps(attr)} />
+						) : (
+							<Skeleton variant="rectangular" width="100%" height="300px" />
+						)}
 					</ListItem>
 				))}
 			</List>
 		);
 	} else {
-		return <Typography>Select an indicator to see details</Typography>;
+		return (
+			<Box sx={{ padding: theme.spacing(1), textAlign: "center" }}>
+				<Typography>Configure dataset in the sidebar</Typography>
+			</Box>
+		);
 	}
 }

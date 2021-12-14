@@ -16,10 +16,12 @@ export interface StudentDetail {
 
 export interface StudentDetailsState {
 	details: Map<number, StudentDetail[]>;
+	loadingDetails: boolean;
 }
 
 const initialState: StudentDetailsState = {
-	details: new Map<number, StudentDetail[]>()
+	details: new Map<number, StudentDetail[]>(),
+	loadingDetails: false
 };
 
 export const queryAllStudentDetails = createAsyncThunk<
@@ -44,12 +46,23 @@ export const studentDetailsSlice = createSlice({
 	initialState: initialState,
 	reducers: {},
 	extraReducers: (builder) => {
-		builder.addCase(
-			queryAllStudentDetails.fulfilled,
-			(state, action: PayloadAction<Map<number, StudentDetail[]>>) => {
-				state.details = action.payload;
-			}
-		);
+		builder
+			.addCase(queryAllStudentDetails.fulfilled, (state, action: PayloadAction<Map<number, StudentDetail[]>>) => {
+				if (state.loadingDetails) {
+					state.details = action.payload;
+					state.loadingDetails = false;
+				}
+			})
+			.addCase(queryAllStudentDetails.pending, (state, action) => {
+				if (!state.loadingDetails) {
+					state.loadingDetails = true;
+				}
+			})
+			.addCase(queryAllStudentDetails.rejected, (state, action) => {
+				if (state.loadingDetails) {
+					state.loadingDetails = false;
+				}
+			});
 	}
 });
 

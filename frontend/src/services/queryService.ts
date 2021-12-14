@@ -17,7 +17,7 @@ export interface QueryResponse {
 
 const query = (req: QueryRequest): Promise<QueryResponse> => {
 	return axios
-		.post("/query", req)
+		.post("/query/", req)
 		.then((res: AxiosResponse<QueryResponse>) => {
 			return res.data;
 		})

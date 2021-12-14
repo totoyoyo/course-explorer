@@ -1,12 +1,21 @@
 import { Dataset, selectDatasets, setSelected } from "../../states/datasetSlice";
 import { useAppDispatch, useAppSelector } from "../../states/hooks";
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
+import {
+	Box,
+	CircularProgress,
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+	SelectChangeEvent,
+	Typography
+} from "@mui/material";
 import { setEndTime, setStartTime } from "../../states/timeIntervalSlice";
 import React from "react";
 import { parseISO } from "date-fns";
 
 export function DatasetSetting() {
-	const datasets: Dataset[] = useAppSelector(selectDatasets).datasets;
+	const { loadingDatasets, datasets } = useAppSelector(selectDatasets);
 	const selected: Dataset | undefined = useAppSelector(selectDatasets).selected;
 	const dispatch = useAppDispatch();
 
@@ -32,13 +41,17 @@ export function DatasetSetting() {
 					value={selected?.id || ""}
 					label="Dataset"
 					onChange={handleChange}>
-					{datasets.map((d: Dataset) => {
-						return (
-							<MenuItem key={d.id} value={d.id}>
-								{d.name}
-							</MenuItem>
-						);
-					})}
+					{loadingDatasets ? (
+						<CircularProgress />
+					) : (
+						datasets.map((d: Dataset) => {
+							return (
+								<MenuItem key={d.id} value={d.id}>
+									{d.name}
+								</MenuItem>
+							);
+						})
+					)}
 				</Select>
 			</FormControl>
 		</Box>

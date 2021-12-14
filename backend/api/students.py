@@ -22,7 +22,7 @@ async def get_all_students():
     return {"ids": [s.anon_id for s in get_students()]}
 
 
-@router.post("/details", response_model=StudentDetailsResponse)
+@router.post("/details/", response_model=StudentDetailsResponse)
 async def get_student_details(req: StudentDetailsRequest):
     start = int(req.start)
     end = int(req.end)
