@@ -64,6 +64,8 @@ class OurVisitor(DSLGrammarVisitor):
         res = super().visitNumber(ctx)
         if hasattr(res, 'get_value_for'):
             return res.get_value_for(self.student)  # when the attribute is compared we compute just in time
+        if type(res) == int or type(res) == float:
+            return res
         return float(ctx.getText())
 
     def visitModified_attributes(self, ctx: DSLGrammarParser.Modified_attributesContext):
@@ -166,7 +168,7 @@ def run_query(query, istudents):
 
     return [ii for ii in istudents if OurVisitor(ii).visit(tree)]
 
-# from data.loader import get_students
-# from data.loader import get_clock
-# get_clock().time = 99999999999999
-# print(run_query("((student.time_spent_with_ta_office_hours / 60) > 10)", get_students()))
+from data.loader import get_students
+from data.loader import get_clock
+get_clock().time = 99999999999999
+print(run_query("((student.num_piazza_actions < 5) AND ((student.time_spent_with_ta_office_hours / 60) > (2 * 60)))", get_students()))
