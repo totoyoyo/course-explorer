@@ -147,7 +147,7 @@ function App() {
 								<Tab label={TabID.INDICATORS} value={TabID.INDICATORS} />
 							</Tabs>
 						</Box>
-						<TabPanel index={TabID.OVERVIEW} value={tabIndex}>
+						<TabPanel index={TabID.OVERVIEW} value={tabIndex} sx={{ height: "calc(100% - 130px)" }}>
 							<Overview />
 						</TabPanel>
 						<TabPanel index={TabID.INDICATORS} value={tabIndex}>
@@ -207,12 +207,13 @@ export function Sidebar(props: SidebarProps) {
 
 interface TabPanelProps {
 	children?: React.ReactNode;
+	sx?: object;
 	index: TabID;
 	value: TabID;
 }
 
 function TabPanel(props: TabPanelProps) {
-	const { children, value, index, ...other } = props;
+	const { children, value, index, sx, ...other } = props;
 
 	return (
 		<Box
@@ -220,7 +221,7 @@ function TabPanel(props: TabPanelProps) {
 			hidden={value !== index}
 			id={`tabpanel-${index}`}
 			{...other}
-			sx={{ flexGrow: 1, height: "100%" }}>
+			sx={{ flexGrow: 1, height: "100%", ...sx }}>
 			{value === index && children}
 		</Box>
 	);

@@ -53,23 +53,25 @@ export function Overview() {
 					padding: theme.spacing(2),
 					height: "100%"
 				}}>
-				<Grid container spacing={2} sx={{ height: "100%" }}>
+				<Grid container spacing={2} sx={{ height: "calc(100% - 70px)", overflow: "scroll" }}>
 					{selected.attributes
 						.filter((attr) => selectedAttributes.includes(attr))
-						.map((attr: string, index: number) => (
-							<Grid item xs={2} sm={4} md={4} key={index}>
-								{!loadingDetails && sliderIndex ? (
+						.map((attr: string, index: number) =>
+							!loadingDetails && sliderIndex ? (
+								<Grid item xs="auto" key={index}>
 									<Histogram
 										data={details.get(sliderIndex) || []}
 										attribute={attr}
 										labelX={attr}
 										labelY={labelY}
 									/>
-								) : (
+								</Grid>
+							) : (
+								<Grid item xs={6} lg={4} key={index}>
 									<Skeleton variant="rectangular" height={"100%"} sx={{ maxHeight: "300px" }} />
-								)}
-							</Grid>
-						))}
+								</Grid>
+							)
+						)}
 				</Grid>
 				{!loadingDetails && sliderIndex && sliderConfigs ? (
 					<TimeSlider onChange={onSliderChange} value={sliderIndex} {...sliderConfigs} />
