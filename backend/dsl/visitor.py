@@ -62,14 +62,14 @@ class OurVisitor(DSLGrammarVisitor):
 
     def visitNumber(self, ctx: DSLGrammarParser.NumberContext):
         res = super().visitNumber(ctx)
-        if isinstance(res, attr.BasicAttribute):
+        if hasattr(res, 'get_value_for'):
             return res.get_value_for(self.student)  # when the attribute is compared we compute just in time
         return float(ctx.getText())
 
     def visitModified_attributes(self, ctx: DSLGrammarParser.Modified_attributesContext):
         res = super().visitModified_attributes(ctx)
 
-        if isinstance(res, attr.TimeVaryingAttribute):
+        if isinstance(res, attr.TimeAccumulatingAttribute):
             if ctx.granularity_operator():
                 return self.apply_granularity(ctx, res)
             if ctx.aggr_op():
@@ -78,8 +78,8 @@ class OurVisitor(DSLGrammarVisitor):
         return res
 
     def apply_granularity(self,
-                          ctx: DSLGrammarParser.Modified_attributesContext, res: attr.TimeVaryingAttribute):
-        if isinstance(res, attr.TimeVaryingAttribute):
+                          ctx: DSLGrammarParser.Modified_attributesContext, res: attr.TimeAccumulatingAttribute):
+        if isinstance(res, attr.TimeAccumulatingAttribute):
             if len(ctx.getTokens(12)) > 0:
                 res.set_granularity(attr.Granularity.DAILY)
             elif len(ctx.getTokens(13)) > 0:
@@ -92,7 +92,7 @@ class OurVisitor(DSLGrammarVisitor):
                 res.set_granularity(attr.Granularity.MAX)
         return res
 
-    def apply_aggregation(self, ctx: DSLGrammarParser.Modified_attributesContext, res: attr.TimeVaryingAttribute):
+    def apply_aggregation(self, ctx: DSLGrammarParser.Modified_attributesContext, res: attr.TimeAccumulatingAttribute):
         if len(ctx.getTokens(17)) > 0:
             res.set_aggregation(attr.Aggregation.AVG)
         elif len(ctx.getTokens(18)) > 0:
@@ -111,8 +111,8 @@ class OurVisitor(DSLGrammarVisitor):
         return super().visitAggr_op(ctx)
 
     def visitArithmetic(self, ctx: DSLGrammarParser.ArithmeticContext):
-        num1 = super().visitNumber(ctx.number()[0])
-        num2 = super().visitNumber(ctx.number()[1])
+        num1 = self.visitNumber(ctx.number()[0])
+        num2 = self.visitNumber(ctx.number()[1])
         if len(ctx.getTokens(23)):
             return num1 + num2
         if len(ctx.getTokens(24)):
@@ -169,4 +169,4 @@ def run_query(query, istudents):
 # from data.loader import get_students
 # from data.loader import get_clock
 # get_clock().time = 99999999999999
-# print(run_query("((monthly(student.num_piazza_posts) > 2) AND (student.num_piazza_posts <12))", get_students()))
+# print(run_query("((student.time_spent_with_ta_office_hours / 60) > 10)", get_students()))

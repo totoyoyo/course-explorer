@@ -49,7 +49,7 @@ export interface StudentDetailListResponse {
 
 const getStudentDetails = (req: StudentDetailListRequest): Promise<StudentDetailListResponse> => {
 	return axios
-		.post("/students/details", req)
+		.post("/students/details/", req)
 		.then((res: AxiosResponse<StudentDetailListResponse>) => {
 			return res.data;
 		})

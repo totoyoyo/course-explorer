@@ -1,5 +1,5 @@
 import Histogram from "../../components/Histogram/Histogram";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Skeleton, Stack, Typography, useTheme } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../states/hooks";
 import { SliderConfig, TimeSlider } from "../../components/TimeSlider/TimeSlider";
@@ -11,7 +11,8 @@ import { Attribute, selectAttributes } from "../../states/attributesSlice";
 
 export function Overview() {
 	const selected: Dataset | undefined = useAppSelector(selectDatasets).selected;
-	const allStudentDetails: Map<number, StudentDetail[]> = useAppSelector(selectStudentDetails).details;
+	const { loadingDetails, details }: { loadingDetails: boolean; details: Map<number, StudentDetail[]> } =
+		useAppSelector(selectStudentDetails);
 	const selectedAttributes: Attribute[] = useAppSelector(selectAttributes).selected;
 	const [sliderIndex, setSliderIndex] = useState<number | undefined>(undefined);
 	const [sliderConfigs, setSliderConfigs] = useState<SliderConfig | undefined>(undefined);
@@ -19,10 +20,10 @@ export function Overview() {
 	const theme = useTheme();
 
 	useEffect(() => {
-		const configs = getSliderConfigs(allStudentDetails);
+		const configs = getSliderConfigs(details);
 		setSliderConfigs(configs);
 		setSliderIndex(configs.max);
-	}, [allStudentDetails]);
+	}, [details]);
 
 	const onSliderChange = (date: number) => {
 		setSliderIndex(date);
@@ -42,32 +43,54 @@ export function Overview() {
 		};
 	};
 
-	return sliderIndex && selected && sliderConfigs ? (
-		<Box
-			sx={{
-				display: "flex",
-				flexDirection: "column",
-				justifyContent: "space-between",
-				padding: theme.spacing(2),
-				height: "100%"
-			}}>
-			<Grid container spacing={2}>
-				{selected.attributes
-					.filter((attr) => selectedAttributes.includes(attr))
-					.map((attr: string, index: number) => (
-						<Grid item xs={2} sm={4} md={4} key={index}>
-							<Histogram
-								data={allStudentDetails.get(sliderIndex) || []}
-								attribute={attr}
-								labelX={attr}
-								labelY={labelY}
-							/>
-						</Grid>
-					))}
-			</Grid>
-			<TimeSlider onChange={onSliderChange} value={sliderIndex} {...sliderConfigs} />
-		</Box>
-	) : (
-		<Typography>Nothing to show yet!</Typography>
-	);
+	if (selected && (loadingDetails || details.size > 0)) {
+		return (
+			<Box
+				sx={{
+					display: "flex",
+					flexDirection: "column",
+					justifyContent: "space-between",
+					padding: theme.spacing(2),
+					height: "100%"
+				}}>
+				<Grid container spacing={2} sx={{ height: "100%" }}>
+					{selected.attributes
+						.filter((attr) => selectedAttributes.includes(attr))
+						.map((attr: string, index: number) => (
+							<Grid item xs={2} sm={4} md={4} key={index}>
+								{!loadingDetails && sliderIndex ? (
+									<Histogram
+										data={details.get(sliderIndex) || []}
+										attribute={attr}
+										labelX={attr}
+										labelY={labelY}
+									/>
+								) : (
+									<Skeleton variant="rectangular" height={"100%"} sx={{ maxHeight: "300px" }} />
+								)}
+							</Grid>
+						))}
+				</Grid>
+				{!loadingDetails && sliderIndex && sliderConfigs ? (
+					<TimeSlider onChange={onSliderChange} value={sliderIndex} {...sliderConfigs} />
+				) : (
+					<Skeleton variant="text" />
+				)}
+			</Box>
+		);
+	} else {
+		return (
+			<Stack
+				direction="column"
+				spacing={2}
+				sx={{
+					justifyContent: "center",
+					height: "100%",
+					alignItems: "center"
+				}}>
+				<Typography variant="h4">Nothing to see yet!</Typography>
+				<Typography>Configure dataset in the sidebar</Typography>
+			</Stack>
+		);
+	}
 }

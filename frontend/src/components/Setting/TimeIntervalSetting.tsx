@@ -11,6 +11,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { FormControl, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material";
 import { DateTimePicker } from "@mui/lab";
 import { Dataset, selectDatasets } from "../../states/datasetSlice";
+import { parseISO } from "date-fns";
 
 export function TimeIntervalSetting() {
 	const timeIntervalState: TimeIntervalState = useAppSelector(selectTimeInterval);
@@ -26,6 +27,7 @@ export function TimeIntervalSetting() {
 			dispatch(setStep({ length: Number(len.value), granularity: stepGranularity }));
 		}
 	};
+	const defaultDate = new Date();
 
 	const isDisabled = () => selectedDataset === undefined;
 
@@ -38,8 +40,8 @@ export function TimeIntervalSetting() {
 			</Typography>
 			<DateTimePicker
 				disabled={isDisabled()}
-				minDate={interval.start}
-				maxDate={interval.end}
+				minDate={selectedDataset ? parseISO(selectedDataset.start) : defaultDate}
+				maxDate={selectedDataset ? parseISO(selectedDataset.end) : defaultDate}
 				value={interval.start}
 				label="Start"
 				onChange={(value) => {
@@ -49,7 +51,7 @@ export function TimeIntervalSetting() {
 			/>
 			<DateTimePicker
 				disabled={isDisabled()}
-				minDate={interval.start}
+				minDate={selectedDataset ? parseISO(selectedDataset.start) : defaultDate}
 				maxDate={interval.end}
 				value={interval.end}
 				label="End"

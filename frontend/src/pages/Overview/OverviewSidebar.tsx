@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
 	Button,
 	Divider,
@@ -16,7 +16,7 @@ import { useAppDispatch, useAppSelector } from "../../states/hooks";
 import { DatasetSetting } from "../../components/Setting/DatasetSetting";
 import { TimeIntervalSetting } from "../../components/Setting/TimeIntervalSetting";
 import { Dataset, selectDatasets } from "../../states/datasetSlice";
-import { Attribute, selectAttributes, handleSelection, setSelected } from "../../states/attributesSlice";
+import { Attribute, selectAttributes, handleSelection } from "../../states/attributesSlice";
 import { queryAllStudentDetails } from "../../states/studentDetailsSlice";
 import { getTime, milliseconds } from "date-fns";
 import { selectTimeInterval, TimeInterval, toFnsDuration } from "../../states/timeIntervalSlice";
@@ -31,12 +31,6 @@ function AttributeSetting() {
 	const selectedDataset: Dataset | undefined = useAppSelector(selectDatasets).selected;
 	const selectedAttributes: Attribute[] = useAppSelector(selectAttributes).selected;
 	const dispatch = useAppDispatch();
-
-	useEffect(() => {
-		if (selectedDataset) {
-			dispatch(setSelected(selectedDataset.attributes));
-		}
-	}, [selectedDataset]);
 
 	const handleCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
 		dispatch(handleSelection(event.target.name));
@@ -67,6 +61,7 @@ function AttributeSetting() {
 export function OverviewSidebar(props: OverviewSidebarProps) {
 	const selected: Dataset | undefined = useAppSelector(selectDatasets).selected;
 	const timeInterval: TimeInterval = useAppSelector(selectTimeInterval).interval;
+	const selectedAttributes: Attribute[] = useAppSelector(selectAttributes).selected;
 	const dispatch = useAppDispatch();
 
 	const SidebarHeader = styled("div")(({ theme }) => ({
@@ -84,7 +79,8 @@ export function OverviewSidebar(props: OverviewSidebarProps) {
 					datasetId: selected.id,
 					start: getTime(timeInterval.start),
 					end: getTime(timeInterval.end),
-					step: milliseconds(toFnsDuration(timeInterval.step))
+					step: milliseconds(toFnsDuration(timeInterval.step)),
+					attributes: selectedAttributes
 				})
 			);
 		}

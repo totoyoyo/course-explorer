@@ -8,7 +8,7 @@ export interface DatasetResponse {
 
 const getDatasets = (): Promise<DatasetResponse> => {
 	return axios
-		.get("/datasets")
+		.get("/datasets/")
 		.then((res: AxiosResponse<DatasetResponse>) => {
 			return res.data;
 		})
