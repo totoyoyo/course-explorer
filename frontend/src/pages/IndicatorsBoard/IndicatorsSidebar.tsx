@@ -35,6 +35,7 @@ import { DatasetSetting } from "../../components/Setting/DatasetSetting";
 import { TimeIntervalSetting } from "../../components/Setting/TimeIntervalSetting";
 import { Dataset, selectDatasets } from "../../states/datasetSlice";
 import DSLCheatsheetLink from "../../components/DSLCheatsheetLink";
+import { setSelectedIndicator } from "../../states/widgetDetailsSlice";
 
 function OutcomeSetting() {
 	const outcomeState: OutcomeState = useAppSelector(selectOutcome);
@@ -61,6 +62,7 @@ function OutcomeSetting() {
 				id="outcome-query"
 				label="Query"
 				value={query}
+				multiline
 				onChange={handleChange}
 				onBlur={handleBlur}
 				disabled={isDisabled()}
@@ -180,6 +182,7 @@ export function IndicatorsSidebar(props: IndicatorsSidebarProps) {
 		dispatch(queryAllIndicators());
 		dispatch(queryOutcome());
 		dispatch(queryStudentList());
+		dispatch(setSelectedIndicator(undefined));
 	};
 
 	const SidebarHeader = styled("div")(({ theme }) => ({

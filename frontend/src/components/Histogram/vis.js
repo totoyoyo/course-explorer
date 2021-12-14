@@ -12,14 +12,18 @@ const draw = (props) => {
 		height = 250 - margin.top - margin.bottom;
 
 	const xAxisMax = d3.max(props.data, (d) => +d[props.attribute]);
-
-	const y = d3.scaleLinear().range([height, 0]);
+	const y = d3.scaleLinear().rangeRound([height, 0]);
 
 	// X axis --> range
 	const x = d3
 		.scaleLinear()
-		.domain([0, xAxisMax + 5])
-		.range([0, width]);
+		.domain([
+			d3.min(props.data, function (d) {
+				return d[props.attribute];
+			}),
+			xAxisMax + 15
+		])
+		.rangeRound([0, width]);
 
 	const tooltip = d3
 		.select("body")
@@ -66,8 +70,7 @@ const draw = (props) => {
 		.value(function (d) {
 			return d[props.attribute];
 		})
-		.domain(x.domain()) // then the domain of the graphic
-		.thresholds(x.ticks(10)); //number of bins
+		.domain(x.domain()); // then the domain of the graphic
 
 	const bins = histogram(props.data);
 
