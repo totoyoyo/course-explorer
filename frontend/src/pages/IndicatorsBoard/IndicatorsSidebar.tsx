@@ -59,6 +59,7 @@ function OutcomeSetting() {
 				id="outcome-query"
 				label="Query"
 				value={query}
+				multiline
 				onChange={handleChange}
 				onBlur={handleBlur}
 				disabled={isDisabled()}

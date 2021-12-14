@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../states/hooks";
 import { QueriedIndicator, selectIndicators } from "../../states/indicatorsSlice";
-import CircularPacking, {
+import {
+	CircularPacking,
+	CircularPackingLegend,
 	CircularPackingProps,
 	Link,
 	NodeGroup
@@ -223,7 +225,10 @@ export function IndicatorsBoard() {
 							flexBasis: "80%"
 						}}>
 						<CircularPacking {...packProps} />
-						<PieChartRatios {...ratioProps} />
+						<Box sx={{ display: "flex", flexDirection: "row", width: "100%", flexBasis: "25%" }}>
+							<PieChartRatios {...ratioProps} />
+							<CircularPackingLegend {...packProps} />
+						</Box>
 					</Box>
 					<Box
 						sx={{
@@ -337,14 +342,14 @@ function HistogramWidgetList(props: HistogramWidgetListProps) {
 							<HistogramWidgetLegendItem>
 								<HistogramWidgetLegendColor
 									className="histogram-widget-legend-color"
-									style={{ background: "#69b3a2" }}
+									style={{ background: "#69b3a2", opacity: "0.6" }}
 								/>
 								<HistogramWidgetLegendText>{selectedIndicator.name}</HistogramWidgetLegendText>
 							</HistogramWidgetLegendItem>
 							<HistogramWidgetLegendItem>
 								<HistogramWidgetLegendColor
 									className="histogram-widget-legend-color"
-									style={{ background: "#404080" }}
+									style={{ background: "black", opacity: "0.6" }}
 								/>
 								<HistogramWidgetLegendText>Outcome</HistogramWidgetLegendText>
 							</HistogramWidgetLegendItem>
