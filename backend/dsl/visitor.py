@@ -168,7 +168,7 @@ def run_query(query, istudents):
 
     return [ii for ii in istudents if OurVisitor(ii).visit(tree)]
 
-from data.loader import get_students
-from data.loader import get_clock
-get_clock().time = 99999999999999
-print(run_query("((student.num_piazza_actions < 5) AND ((student.time_spent_with_ta_office_hours / 60) > (2 * 60)))", get_students()))
+# from data.loader import get_students
+# from data.loader import get_clock
+# get_clock().time = 99999999999999
+# print(run_query("((student.num_piazza_actions < 5) AND ((student.time_spent_with_ta_office_hours / 60) > (2 * 60)))", get_students()))

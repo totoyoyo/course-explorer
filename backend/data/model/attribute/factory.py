@@ -2,7 +2,7 @@ import data.model.attribute.num_piazza_actions as num_piazza_actions
 import data.model.attribute.num_commits as num_commits
 import data.model.attribute.num_office_hours as num_office_hours
 import data.model.attribute.final_grade as final_grade
-import data.model.attribute.time_spent_with_ta_office_hours as time_spent_with_ta_office_hours
+import data.model.attribute.minutes_spent_with_ta_office_hours as minutes_spent_with_ta_office_hours
 import data.model.attribute.score.score as score
 import data.model.attribute.score.visible_score as visible_score
 import data.model.attribute.delta.total_delta as total_delta
@@ -28,8 +28,8 @@ def make_attribute(name):
             return num_office_hours.NumOfficeHours()
         case 'final_grade':
             return final_grade.FinalGrade()
-        case 'time_spent_with_ta_office_hours':
-            return time_spent_with_ta_office_hours.TimeSpentWithTAOfficeHours()
+        case 'minutes_spent_with_ta_office_hours':
+            return minutes_spent_with_ta_office_hours.MinutesSpentWithTAOfficeHours()
         case 'score_c0':
             return score.ScoreC0()
         case 'score_c1':
