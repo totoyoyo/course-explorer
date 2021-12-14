@@ -22,7 +22,7 @@ export function Overview() {
 	useEffect(() => {
 		const configs = getSliderConfigs(details);
 		setSliderConfigs(configs);
-		setSliderIndex(configs.min);
+		setSliderIndex(configs.max);
 	}, [details]);
 
 	const onSliderChange = (date: number) => {

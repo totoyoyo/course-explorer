@@ -74,6 +74,7 @@ export function TimeIntervalSetting() {
 						variant="outlined"
 						value={interval.step.length}
 						inputRef={stepLenRef}
+						inputProps={{ min: 1 }}
 					/>
 					<Select
 						onChange={(e: SelectChangeEvent<string>) => {
