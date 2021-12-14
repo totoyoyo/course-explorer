@@ -3,7 +3,6 @@ import { PayloadAction } from "@reduxjs/toolkit/dist/createAction";
 import { RootState } from "./store";
 
 export enum Granularity {
-	HOURS = "hours",
 	DAYS = "days",
 	WEEKS = "weeks",
 	MONTHS = "months"
@@ -16,8 +15,6 @@ export interface Duration {
 
 export const toFnsDuration = (d: Duration) => {
 	switch (d.granularity) {
-		case Granularity.HOURS:
-			return { hours: d.length };
 		case Granularity.DAYS:
 			return { days: d.length };
 		case Granularity.WEEKS:

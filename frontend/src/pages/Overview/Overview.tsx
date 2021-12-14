@@ -21,7 +21,7 @@ export function Overview() {
 	useEffect(() => {
 		const configs = getSliderConfigs(allStudentDetails);
 		setSliderConfigs(configs);
-		setSliderIndex(configs.min);
+		setSliderIndex(configs.max);
 	}, [allStudentDetails]);
 
 	const onSliderChange = (date: number) => {
