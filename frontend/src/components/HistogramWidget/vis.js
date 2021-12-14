@@ -97,7 +97,7 @@ const draw = (props, size) => {
 		.attr("height", function (d) {
 			return height - y(d.length);
 		})
-		.style("fill", "#404080")
+		.style("fill", "black")
 		.style("opacity", 0.6);
 };
 

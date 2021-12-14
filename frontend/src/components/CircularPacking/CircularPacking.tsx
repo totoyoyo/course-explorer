@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { draw } from "./vis";
-import { Box } from "@mui/material";
+import { Box, Divider, Stack, Typography, useTheme } from "@mui/material";
 import { useResize } from "../useResize";
 
 export interface NodeGroup {
@@ -21,7 +21,7 @@ export interface CircularPackingProps {
 	onSelectIndicator: (i: string) => void;
 }
 
-export default function CircularPacking(props: CircularPackingProps) {
+export function CircularPacking(props: CircularPackingProps) {
 	const rootRef = useRef(null);
 	const size = useResize(rootRef);
 
@@ -32,4 +32,19 @@ export default function CircularPacking(props: CircularPackingProps) {
 	}, [props, size]);
 
 	return <Box sx={{ flexBasis: "75%" }} ref={rootRef} className="vis-circular-packing" />;
+}
+
+export function CircularPackingLegend(props: CircularPackingProps) {
+	const theme = useTheme();
+	return (
+		<Box sx={{ flexBasis: "10%", padding: theme.spacing(0, 1) }}>
+			<Typography variant={"h5"}>F-Score</Typography>
+			<Divider />
+			<Stack spacing={theme.spacing(1)} sx={{ margin: theme.spacing(1, 0) }}>
+				{props.links.map((link, i) => (
+					<Typography variant={"subtitle1"} key={i}>{`${link.target}: ${link.value.toFixed(3)}`}</Typography>
+				))}
+			</Stack>
+		</Box>
+	);
 }
