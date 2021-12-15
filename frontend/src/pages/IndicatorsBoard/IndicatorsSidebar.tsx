@@ -81,6 +81,7 @@ function IndicatorsListSetting(props: IndicatorsListProps) {
 	const selectedDataset: Dataset | undefined = useAppSelector(selectDatasets).selected;
 	const indicators = useAppSelector(selectIndicators).indicators;
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [moreIndicator, setMoreIndicator] = useState<null | Indicator>(null);
 	const isMoreOpened = Boolean(anchorEl);
 	const dispatch = useAppDispatch();
 
@@ -104,12 +105,14 @@ function IndicatorsListSetting(props: IndicatorsListProps) {
 		dispatch(remIndicator(i.name));
 	};
 
-	const handleMoreClick = (event: React.MouseEvent<HTMLElement>) => {
+	const handleMoreClick = (event: React.MouseEvent<HTMLElement>, i: Indicator) => {
 		setAnchorEl(event.currentTarget);
+		setMoreIndicator(i);
 	};
 
 	const handleMoreClose = () => {
 		setAnchorEl(null);
+		setMoreIndicator(null);
 	};
 
 	const isAddDisabled = () => selectedDataset === undefined;
@@ -118,34 +121,39 @@ function IndicatorsListSetting(props: IndicatorsListProps) {
 		<Stack spacing={1}>
 			<Typography variant="h5">Indicators</Typography>
 			<List component="div" aria-labelledby="indicators-list-header">
-				{indicators.map((i: Indicator) => (
-					<ListItem key={i.name}>
-						<ListItemText primary={i.name} />
-						<div>
-							<IconButton edge="end" aria-label="more" onClick={handleMoreClick}>
-								<MoreVertRoundedIcon />
-							</IconButton>
-							<Menu open={isMoreOpened} anchorEl={anchorEl} onClose={handleMoreClose}>
-								<MenuItem
-									key="edit"
-									onClick={() => {
-										handleEditClick(i);
-										handleMoreClose();
-									}}>
-									Edit
-								</MenuItem>
-								<MenuItem
-									key="delete"
-									onClick={() => {
-										handleDeleteClick(i);
-										handleMoreClose();
-									}}>
-									Delete
-								</MenuItem>
-							</Menu>
-						</div>
-					</ListItem>
-				))}
+				{indicators.map((i: Indicator) => {
+					return (
+						<ListItem key={i.name}>
+							<ListItemText primary={i.name} />
+							<div>
+								<IconButton edge="end" aria-label="more" onClick={(e) => handleMoreClick(e, i)}>
+									<MoreVertRoundedIcon />
+								</IconButton>
+								<Menu
+									open={isMoreOpened && moreIndicator !== null && moreIndicator.name === i.name}
+									anchorEl={anchorEl}
+									onClose={handleMoreClose}>
+									<MenuItem
+										key={"editInd" + i.name}
+										onClick={() => {
+											handleEditClick(i);
+											handleMoreClose();
+										}}>
+										Edit
+									</MenuItem>
+									<MenuItem
+										key={"deleteInd" + i.name}
+										onClick={() => {
+											handleDeleteClick(i);
+											handleMoreClose();
+										}}>
+										Delete
+									</MenuItem>
+								</Menu>
+							</div>
+						</ListItem>
+					);
+				})}
 			</List>
 			<Button
 				onClick={handleAddClick}
