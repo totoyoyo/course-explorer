@@ -49,7 +49,7 @@ export function IndicatorsBoard() {
 			setSliderConfigs(configs);
 			onSliderChange(configs.min);
 		}
-	}, [queriedIndicators, queriedOutcome]);
+	}, [queriedIndicators, queriedOutcome, students]);
 
 	const constructNodeGroup = (name: string, tp: string[], fp: string[]): NodeGroup => {
 		return {
