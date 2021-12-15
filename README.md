@@ -9,7 +9,7 @@ Our frontend was bootstrapped with [Create React App](https://github.com/faceboo
 In our backend, we used [Fast API](https://fastapi.tiangolo.com/) and [Uvicorn](https://www.uvicorn.org/) to serve the REST APIs defined for our project. 
 The raw dataset is in a `.sqlite` format, which we load internally into our own data structures. 
 To access the different attributes we defined, we implemented a domain-specific language (DSL) specifically for querying data from our backend. 
-The instructions for using our DSL can be found [here](https://github.students.cs.ubc.ca/tokaeo/course-explorer/wiki/Cheatsheet).
+The instructions for using our DSL can be found [here](https://gist.github.com/falkirks/74be2706cd63fc20ca1beee3e918a1ea).
 
 The DSL parser and lexer were generated from our grammar using [Antlr](https://www.antlr.org/), an automatic parser generator. 
 We wrote the DSL grammar in `DSLGrammar.g4`, with which Antlr uses to generate the lexer and parser files.
@@ -119,8 +119,9 @@ which should open a new tab to http://localhost:3000 automatically.
 
 ## DSL Cheatsheet
 
-https://github.students.cs.ubc.ca/tokaeo/course-explorer/wiki/Cheatsheet
+https://gist.github.com/falkirks/74be2706cd63fc20ca1beee3e918a1ea
+
 
 ## Demo Video
-
-- 
+- Short version: https://www.youtube.com/watch?v=-yWqeSw0s-k
+- Long version: https://www.youtube.com/watch?v=ly-if4Qrb2k
