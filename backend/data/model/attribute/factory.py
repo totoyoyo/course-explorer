@@ -58,7 +58,7 @@ def get_all_attributes():
     return ['num_piazza_actions', 'num_piazza_questions',
             'num_piazza_answers', 'num_commits',
             'num_office_hours', 'final_grade',
-            'time_spent_with_ta_office_hours', 'score_c0',
+            'minutes_spent_with_ta_office_hours', 'score_c0',
             'score_c1', 'score_c2', 'score_c3', 'visible_score_c1',
             'visible_score_c2', 'visible_score_c3',
             'visible_total_delta', 'total_delta',
