@@ -37,7 +37,7 @@ course-explorer
     - `services/` ← for API
     - `states/` ← states for data (uses Redux)
     - `App.tsx`
-    - `index.tsx` ← the usual App and index files
+    - `index.tsx` ← the usual App and index files to define the overall appearance
     - ...
   - ... ← Files for managing project dependencies (with yarn package manager)
   
