@@ -40,8 +40,7 @@ course-explorer
     - `index.tsx` ← the usual App and index files
     - ...
   - ... ← Files for managing project dependencies (with yarn package manager)
-
-For data
+  
 
 ## Running the Application
 To run our app, run both the backend and the frontend.
