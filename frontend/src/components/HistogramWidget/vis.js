@@ -22,7 +22,7 @@ const draw = (props, size) => {
 				.attr("y", 5)
 				.attr("fill", "currentColor")
 				.attr("text-anchor", "start")
-				.style("font", "12px sans-serif")
+				.style("font", "14px sans-serif")
 				.text(props.labelY)
 		)
 		.call((g) =>
@@ -32,7 +32,7 @@ const draw = (props, size) => {
 				.attr("y", 290)
 				.attr("fill", "currentColor")
 				.attr("text-anchor", "end")
-				.style("font", "12px sans-serif")
+				.style("font", "14px sans-serif")
 				.text(props.labelX)
 		);
 	const xAxisMax = d3.max(props.data, (d) => {
@@ -63,7 +63,7 @@ const draw = (props, size) => {
 		d3.max([...binsOutcome, ...binsIndicator], function (d) {
 			return d.length;
 		}) + 1
-	]).ticks(1);
+	]);
 	svg.append("g").call(d3.axisLeft(y));
 
 	svg.selectAll("rect-indicator")
