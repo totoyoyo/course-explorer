@@ -6,8 +6,14 @@ Our project is divided up into a frontend and a backend component.
 Our frontend was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). In particular, we use React components from Materials UI, applying customized CSS via styled components. For frontend state management, we use [Redux](https://redux.js.org/), which gives all our individual components access to a consistent global state. For data visualizations, we use [D3](https://d3js.org/).
 
 
-In our backend, we used [Fast API](https://fastapi.tiangolo.com/) and [Uvicorn](https://www.uvicorn.org/) to serve the REST APIs defined for our project. The raw dataset is in a `.sqlite` format, which we load internally into our own data structures. To access the different attributes we defined, we implemented a domain-specific language (DSL) specifically for querying data from our backend. 
-This is done using [Antlr](https://www.antlr.org/), an automaic parser generator. We wrote the DSL grammar in `DSLGrammar.g4`, with which Antlr uses to generate the lexer and parser files.  Then, we implemented the visitors found in the `dsl` directory to evaluate each DSL query for our dataset.
+In our backend, we used [Fast API](https://fastapi.tiangolo.com/) and [Uvicorn](https://www.uvicorn.org/) to serve the REST APIs defined for our project. 
+The raw dataset is in a `.sqlite` format, which we load internally into our own data structures. 
+To access the different attributes we defined, we implemented a domain-specific language (DSL) specifically for querying data from our backend. 
+The instructions for using our DSL can be found [here](https://github.students.cs.ubc.ca/tokaeo/course-explorer/wiki/Cheatsheet).
+
+The DSL parser and lexer were generated from our grammar using [Antlr](https://www.antlr.org/), an automatic parser generator. 
+We wrote the DSL grammar in `DSLGrammar.g4`, with which Antlr uses to generate the lexer and parser files.
+Then, we implemented the visitors found in the `dsl` directory to evaluate each DSL query for our dataset.
 
 
 Here is a tree overview of the project structure, with some annotations about what each directory or file means.
@@ -41,6 +47,15 @@ course-explorer
     - ...
   - ... ← Files for managing project dependencies (with yarn package manager)
   
+## Dependencies
+
+These are the dependencies that will not be automatically installed on your machine. Crucially, our code relies on the latest version of Python, Python 3.10 (for match-case statements). The rest will be handled by package managers, but those managers should also be installed prior to following the instructions below.
+
+- Python 3.10
+- Pip
+- Pipenv
+- Npm
+- Yarn
 
 ## Running the Application
 To run our app, run both the backend and the frontend.
@@ -102,6 +117,9 @@ yarn start
 ```
 which should open a new tab to http://localhost:3000 automatically.
 
+## DSL Cheatsheet
+
+https://github.students.cs.ubc.ca/tokaeo/course-explorer/wiki/Cheatsheet
 
 ## Demo Video
 
