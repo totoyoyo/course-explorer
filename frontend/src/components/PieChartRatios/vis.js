@@ -132,7 +132,7 @@ export const draw = (groups, size) => {
 	function customYAxis(g) {
 		g.call(y_axis);
 		g.call((g) => g.select(".domain").attr("transform", "translate(50,0)"));
-		g.selectAll(".tick text").attr("x", 2);
+		g.selectAll(".tick text").attr("x", 2).attr("font-size", "14px");
 	}
 
 	function customXAxis(g) {

@@ -12,12 +12,10 @@ import {
 	Stack,
 	styled,
 	TextField,
-	Typography,
-	InputAdornment
+	Typography
 } from "@mui/material";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import { useEffect, useState } from "react";
-import HelpIcon from "@mui/icons-material/Help";
 import {
 	Indicator,
 	selectIndicators,
