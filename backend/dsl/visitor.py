@@ -148,7 +148,11 @@ class OurVisitor(DSLGrammarVisitor):
 
 class OurErrorListener(ErrorListener):
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
-        raise Exception("Something happened")
+        raise Exception(
+            f"Msg : {msg}",
+            f"Offending symbol : {offendingSymbol}",
+            f"Linecol : {line}:{column}",
+        )
 
 
 def run_query(query, istudents):
