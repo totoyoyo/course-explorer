@@ -1,4 +1,5 @@
 # Course Friction Explorer
+*The dataset file has been removed to protect the privacy of students.*
 
 ## Project Overview
 
